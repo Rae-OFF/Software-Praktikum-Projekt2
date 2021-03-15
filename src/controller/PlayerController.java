@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PlayerController {
 
-	private PlayerController playerController;
+
 
 	private MainController mainController;
 

@@ -1,5 +1,7 @@
 package controller;
 
+import model.Card;
+import model.CardStack;
 import model.Move;
 import model.Action;
 
@@ -9,7 +11,11 @@ public class GameController {
 
 	private MainController mainController;
 
+
+
 	public Move currentMove() {
+
+
 		return null;
 	}
 
@@ -22,6 +28,7 @@ public class GameController {
 	}
 
 	public void init() {
+
 
 	}
 

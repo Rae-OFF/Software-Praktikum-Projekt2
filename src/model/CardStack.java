@@ -4,13 +4,13 @@ import java.util.List;
 
 public class CardStack {
 
-	private List<Card> card;
+	private List<Card> cards;
 
 	public List<Card> getCard() {
-		return card;
+		return cards;
 	}
 
-	public void setCard(List<Card> card) {
-		this.card = card;
+	public void setCard(List<Card> cards) {
+		this.cards = cards;
 	}
 }

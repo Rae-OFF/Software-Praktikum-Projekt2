@@ -16,7 +16,7 @@ public class Move {
 
 	private Card shipToDefend;
 
-	private List<Card> card;
+	private Card card;
 
 	private List<PlayerState> playerState;
 
@@ -72,11 +72,11 @@ public class Move {
 		this.shipToDefend = shipToDefend;
 	}
 
-	public List<Card> getCard() {
+	public Card getCard() {
 		return card;
 	}
 
-	public void setCard(List<Card> card) {
+	public void setCard(Card card) {
 		this.card = card;
 	}
 
