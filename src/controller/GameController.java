@@ -1,10 +1,8 @@
 package controller;
 
-import model.Card;
-import model.CardStack;
-import model.Move;
-import model.Action;
+import model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
@@ -21,9 +19,22 @@ public class GameController {
 
 	public void changeActor(Move move) {
 
+		List<PlayerState> players = move.getPlayerState();
+
+		for (int index =0; index< players.size(); index++){
+
+			if(move.getActor().equals(players.get(index))) {
+				move.setActor(players.get((index++)%players.size()));
+				break;
+			}
+		}
+
+
 	}
 
 	public void finishRound(Move move) {
+
+
 
 	}
 

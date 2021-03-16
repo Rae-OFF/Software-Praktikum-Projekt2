@@ -1,12 +1,18 @@
 package model;
 
-public class Ship extends Card {
+public class Ship implements Card {
 
 	private Colour colour;
 
 	private int coins;
 
 	private int force;
+
+	public Ship(Colour colour, int coins, int force) {
+		this.colour = colour;
+		this.coins = coins;
+		this.force = force;
+	}
 
 	public Colour getColour() {
 		return colour;

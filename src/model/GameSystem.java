@@ -4,20 +4,22 @@ import java.util.List;
 
 public class GameSystem {
 
-	private List<Player> player;
+	private List<Player> players;
 
 	private List<Game> games;
 
 	private Game currentGame;
 
-	private GameSystem gameSystem;
-
-	public List<Player> getPlayer() {
-		return player;
+	public GameSystem(List<Player> players) {
+		this.players = players;
 	}
 
-	public void setPlayer(List<Player> player) {
-		this.player = player;
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(List<Player> players) {
+		this.players = players;
 	}
 
 	public List<Game> getGames() {
@@ -36,11 +38,5 @@ public class GameSystem {
 		this.currentGame = currentGame;
 	}
 
-	public GameSystem getGameSystem() {
-		return gameSystem;
-	}
 
-	public void setGameSystem(GameSystem gameSystem) {
-		this.gameSystem = gameSystem;
-	}
 }

@@ -12,6 +12,12 @@ public class Player {
 
 	private PlayerType playerType;
 
+	public Player(String name, PlayerType playerType) {
+		this.name = name;
+		this.playerType = playerType;
+		this.cardField = new CardStack();
+	}
+
 	public String getName() {
 		return name;
 	}

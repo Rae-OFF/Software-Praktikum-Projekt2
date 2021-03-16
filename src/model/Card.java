@@ -1,5 +1,5 @@
 package model;
 
-public abstract class Card {
+public interface Card {
 
 }

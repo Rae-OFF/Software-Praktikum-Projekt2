@@ -3,16 +3,39 @@ package model;
 public class PlayerState {
 
 
-	private CardStack cardStack;
+	private CardStack cards;
+
+	private CardStack coins;
 
 	private Player player;
 
-	public CardStack getCardStack() {
-		return cardStack;
+	public PlayerState(PlayerState skeleton) {
+
+		this(skeleton.getPlayer());
+		this.cards = new CardStack(skeleton.getCards());
+		this.coins = new CardStack(skeleton.getCoins());
+
 	}
 
-	public void setCardStack(CardStack cardStack) {
-		this.cardStack = cardStack;
+	public PlayerState(Player player) {
+		this.player = player;
+		this.cards = new CardStack();
+	}
+
+	public CardStack getCards() {
+		return cards;
+	}
+
+	public CardStack getCoins() {
+		return coins;
+	}
+
+	public void setCoins(CardStack coins) {
+		this.coins = coins;
+	}
+
+	public void setCards(CardStack cards) {
+		this.cards = cards;
 	}
 
 	public Player getPlayer() {
