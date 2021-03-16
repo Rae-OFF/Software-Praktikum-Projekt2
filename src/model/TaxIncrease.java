@@ -1,6 +1,6 @@
 package model;
 
-public class TaxIncrease extends Card {
+public class TaxIncrease implements Card {
 
 	private boolean typeSwords;
 
@@ -9,6 +9,10 @@ public class TaxIncrease extends Card {
 	}
 
 	public void setTypeSwords(boolean typeSwords) {
+		this.typeSwords = typeSwords;
+	}
+
+	public TaxIncrease(boolean typeSwords) {
 		this.typeSwords = typeSwords;
 	}
 }

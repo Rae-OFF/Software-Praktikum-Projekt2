@@ -6,8 +6,10 @@ public class Action {
 
 	private Card affectedCard;
 
-	private Action action;
-
+	public Action(ActionType actionType, Card affectedCard) {
+		this.actionType = actionType;
+		this.affectedCard = affectedCard;
+	}
 
 	public ActionType getActionType() {
 		return actionType;

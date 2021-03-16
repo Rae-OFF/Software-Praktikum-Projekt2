@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Move {
@@ -16,13 +17,44 @@ public class Move {
 
 	private Card shipToDefend;
 
-	private Card card;
-
 	private List<PlayerState> playerState;
 
-	private CardStack cardStack;
+	private CardStack harbour;
 
 	private Action action;
+
+	public Move(PlayerState actor, boolean phase1, PlayerState activePlayer, Action action) {
+		this.actor = actor;
+		this.phase1 = phase1;
+		this.activePlayer = activePlayer;
+		this.action = action;
+		this.playerState = new ArrayList<>();
+		this.harbour = new CardStack();
+		this.cardPile = new CardStack();
+		this.discardPile = new CardStack();
+
+
+	}
+
+	public Move(Move skeleton) {
+
+		this.actor = skeleton.getActor();
+		this.phase1 = skeleton.isPhase1();
+		this.activePlayer = skeleton.getActivePlayer();
+		this.harbour = new CardStack(skeleton.getHarbour());
+		this.cardPile = new CardStack(skeleton.getCardPile());
+		this.discardPile = new CardStack(skeleton.getDiscardPile());
+		this.shipToDefend = skeleton.getShipToDefend();
+		this.playerState = new ArrayList<>();
+		this.action = skeleton.getAction();
+
+		for(PlayerState playerState: skeleton.getPlayerState()){
+
+			this.playerState.add(new PlayerState(playerState));
+		}
+
+
+	}
 
 	public CardStack getDiscardPile() {
 		return discardPile;
@@ -72,13 +104,6 @@ public class Move {
 		this.shipToDefend = shipToDefend;
 	}
 
-	public Card getCard() {
-		return card;
-	}
-
-	public void setCard(Card card) {
-		this.card = card;
-	}
 
 	public List<PlayerState> getPlayerState() {
 		return playerState;
@@ -88,12 +113,12 @@ public class Move {
 		this.playerState = playerState;
 	}
 
-	public CardStack getCardStack() {
-		return cardStack;
+	public CardStack getHarbour() {
+		return harbour;
 	}
 
-	public void setCardStack(CardStack cardStack) {
-		this.cardStack = cardStack;
+	public void setHarbour(CardStack harbour) {
+		this.harbour = harbour;
 	}
 
 	public Action getAction() {

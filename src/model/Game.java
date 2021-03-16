@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
@@ -20,11 +21,26 @@ public class Game {
 
 	private CardStack cardStack;
 
-	private List<Move> move;
+	private List<Move> moves;
 
 	private List<PlayerState> playerState;
 
 	private Move lastMove;
+
+	public Game(boolean defaultVariant, PlayerState startPlayer, boolean shuffleCards, List<Player> player, CardStack cardStack) {
+		this.defaultVariant = defaultVariant;
+		this.startPlayer = startPlayer;
+		this.shuffleCards = shuffleCards;
+		this.player = player;
+		this.cardStack = cardStack;
+		this.highscoreEnabled = true;
+		this.ongoing = true;
+		this.jesterEnabled = false;
+		this.moves = new ArrayList<>();
+		this.playerState = new ArrayList<>();
+
+
+	}
 
 	public CardStack getHarbour() {
 		return null;
@@ -98,6 +114,8 @@ public class Game {
 		return cardStack;
 	}
 
+
+
 	public void setCardStack(CardStack cardStack) {
 		this.cardStack = cardStack;
 	}
@@ -110,15 +128,15 @@ public class Game {
 		this.playerState = playerState;
 	}
 
-	public List<Move> getMove() {
-		return move;
+	public List<Move> getMoves() {
+		return moves;
 	}
 
 	public void setLastMove(Move move) {
 		this.lastMove = move;
 	}
 
-	public void setMove(List<Move> move) {
-		this.move = move;
+	public void setMoves(List<Move> move) {
+		this.moves = move;
 	}
 }

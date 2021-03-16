@@ -1,6 +1,6 @@
 package model;
 
-public class Person extends Card {
+public class Person implements Card {
 
 	private int price;
 
@@ -8,11 +8,32 @@ public class Person extends Card {
 
 	private String name;
 
+
+
 	private int swords;
 
 	private Colour colour;
 
 	private PersonType personType;
+
+	public Person() {
+	}
+
+	public void setValues(int price, int victoryPoints, int swords){
+
+		this.price = price;
+		this.victoryPoints = victoryPoints;
+		this.swords = swords;
+	}
+
+	public void setMetaData(String name, Colour colour, PersonType personType){
+
+		this.name= name;
+		this.colour = colour;
+		this.personType = personType;
+
+	}
+
 
 	public int getPrice() {
 		return price;
