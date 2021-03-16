@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 /**
  * Klasse für Aktionen
  */
@@ -8,6 +10,8 @@ public class Action {
 	private ActionType actionType;
 
 	private Card affectedCard;
+
+	private List<Card> materials;
 
 	/**
 	 * Konstruktor für Action.
@@ -36,5 +40,22 @@ public class Action {
 	 */
 	public void setActionType(ActionType actionType) {
 		this.actionType = actionType;
+	}
+
+	/**
+	 *
+	 * @return Gibt eine Liste von Karten der Materialien zurück (für Expedition).
+	 */
+	public List<Card> getMaterials() {
+		return materials;
+	}
+
+	/**
+	 * Setzt die Materialien.
+	 * @param materials
+	 * 		Bekommt eine Liste von Karten übergeben.
+	 */
+	public void setMaterials(List<Card> materials) {
+		this.materials = materials;
 	}
 }
