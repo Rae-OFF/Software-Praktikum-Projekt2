@@ -11,8 +11,6 @@ public class Player {
 
 	private int wins;
 
-	private CardStack cardField; //TODO Warum hat der Player einen Kartenstapel?
-
 	private PlayerType playerType;
 
 	/**
@@ -26,7 +24,6 @@ public class Player {
 	public Player(String name, PlayerType playerType) {
 		this.name = name;
 		this.playerType = playerType;
-		this.cardField = new CardStack();
 	}
 
 	/**
@@ -78,23 +75,6 @@ public class Player {
 	 */
 	public void setWins(int wins) {
 		this.wins = wins;
-	}
-
-	/**
-	 *
-	 * @return Gibt den Kartenstapel zurück.
-	 */
-	public CardStack getCardField() {
-		return cardField;
-	}
-
-	/**
-	 * Setzt den Kartenstapel.
-	 * @param cardField
-	 * 		Bekommt einen Kartenstapel zurück.
-	 */
-	public void setCardField(CardStack cardField) {
-		this.cardField = cardField;
 	}
 
 	/**
