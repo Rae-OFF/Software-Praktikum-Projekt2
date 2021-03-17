@@ -20,7 +20,7 @@ public class Move {
 
 	private Card shipToDefend;
 
-	private List<PlayerState> playerState;
+	private List<PlayerState> players;
 
 	private CardStack harbour;
 
@@ -47,7 +47,7 @@ public class Move {
 		this.phase1 = phase1;
 		this.activePlayer = activePlayer;
 		this.action = action;
-		this.playerState = new ArrayList<>();
+		this.players = new ArrayList<>();
 		this.harbour = new CardStack();
 		this.cardPile = new CardStack();
 		this.discardPile = new CardStack();
@@ -71,16 +71,14 @@ public class Move {
 		this.cardPile = new CardStack(skeleton.getCardPile());
 		this.discardPile = new CardStack(skeleton.getDiscardPile());
 		this.shipToDefend = skeleton.getShipToDefend();
-		this.playerState = new ArrayList<>();
+		this.players = new ArrayList<>();
 		this.action = skeleton.getAction();
 		this.buyLimit = skeleton.getBuyLimit();
 
-		for(PlayerState playerState: skeleton.getPlayerState()){
+		for(PlayerState playerState: skeleton.getPlayers()){
 
-			this.playerState.add(new PlayerState(playerState));
+			this.players.add(new PlayerState(playerState));
 		}
-
-
 	}
 
 	/**
@@ -189,17 +187,17 @@ public class Move {
 	 *
 	 * @return Gibt eine Liste aller Spielerzustände des Zuges zurück.
 	 */
-	public List<PlayerState> getPlayerState() {
-		return playerState;
+	public List<PlayerState> getPlayers() {
+		return players;
 	}
 
 	/**
 	 * Setzt die Liste aller Spielerzustände des Zuges.
-	 * @param playerState
+	 * @param players
 	 * 		Bekommt eine Liste von Spielerzuständen.
 	 */
-	public void setPlayerState(List<PlayerState> playerState) {
-		this.playerState = playerState;
+	public void setPlayers(List<PlayerState> players) {
+		this.players = players;
 	}
 
 	/**

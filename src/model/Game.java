@@ -28,6 +28,8 @@ public class Game {
 
 	private List<PlayerState> playerStates;
 
+
+
 	private Move lastMove;
 
 	/**
@@ -237,6 +239,10 @@ public class Game {
 	 */
 	public List<Move> getMoves() {
 		return moves;
+	}
+
+	public Move getLastMove() {
+		return lastMove;
 	}
 
 	/**

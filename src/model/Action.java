@@ -58,4 +58,12 @@ public class Action {
 	public void setMaterials(List<Card> materials) {
 		this.materials = materials;
 	}
+
+	public Card getAffectedCard() {
+		return affectedCard;
+	}
+
+	public void setAffectedCard(Card affectedCard) {
+		this.affectedCard = affectedCard;
+	}
 }

@@ -76,4 +76,8 @@ public class Ship implements Card {
 	public void setForce(int force) {
 		this.force = force;
 	}
+
+	public Ship(){
+
+	}
 }
