@@ -55,7 +55,7 @@ public class CardController extends MainController {
 	public void execJester(Move move, Action action) {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
-		List<PlayerState> players = move.getPlayerState();
+		List<PlayerState> players = move.getPlayers();
 		PlayerState player = move.getActivePlayer();
 		Card topCard = move.getCardPile().getCards().get(0);
 
@@ -124,7 +124,7 @@ public class CardController extends MainController {
 
 		List<Card>cardPile = move.getCardPile().getCards();
 		Card currentCard = cardPile.get(0);
-		List<PlayerState> playerStateList = move.getPlayerState();
+		List<PlayerState> playerStateList = move.getPlayers();
 		int maxSwords;
 		int minShild;
 		List<PlayerState> maxSworsPlayerState = new ArrayList<>();

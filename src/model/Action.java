@@ -67,11 +67,4 @@ public class Action {
 		this.materials = materials;
 	}
 
-	public Card getAffectedCard() {
-		return affectedCard;
-	}
-
-	public void setAffectedCard(Card affectedCard) {
-		this.affectedCard = affectedCard;
-	}
 }
