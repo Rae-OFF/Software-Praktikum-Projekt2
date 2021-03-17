@@ -47,4 +47,51 @@ public class CardStack {
 	public void setCards(List<Card> cards) {
 		this.cards = cards;
 	}
+
+	/**
+	 *
+	 * @return Gibt die oberste Karte vom Stapel zurück (und entfernt diese vom Stapel).
+	 */
+	public Card pop(){
+		return this.getCards().remove(0);
+	}
+
+	/**
+	 * @param numberOf
+	 * 		Bekommt übergeben wie viele Karten vom Kartenstapel abgenommen werden sollen.
+	 * @return Gibt eine Liste von Karten zurück.
+	 */
+	public List<Card> popList(int numberOf){
+		List<Card> cards = new ArrayList<>();
+		for(int i = 0; i <= numberOf; i++) {
+			cards.add(this.getCards().get(i));
+		}
+		/*for(int j = 0; j <= numberOf; j++){
+			//this.getCards().remove(j);	//TODO suspicious remove entfernen
+		}*/
+		return cards;
+	}
+
+	/**
+	 * @param newCard
+	 * 		Bekommt die Karte übergeben die dem Stapel hinzugefügt werden soll.
+	 */
+	public void push(Card newCard){
+		this.getCards().add(newCard);
+	}
+
+	/**
+	 * @param newCards
+	 * 		Bekommt die Liste der Karten übergeben, die dem Stapel hinzugefügt werden sollen.
+	 */
+	public void pushList(List<Card> newCards){
+		this.getCards().addAll(newCards);
+	}
+
+	/**
+	 * @return Gibt die oberste Karte zurück ohne diese zu entfernen.
+	 */
+	public Card peek(){
+		return this.getCards().get(0);
+	}
 }
