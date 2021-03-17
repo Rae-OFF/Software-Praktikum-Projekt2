@@ -12,6 +12,9 @@ public class Move {
 
 	private CardStack cardPile;
 
+	private CardStack expeditionPile;
+
+
 	private PlayerState actor;
 
 	private boolean phase1;
@@ -113,6 +116,22 @@ public class Move {
 	 */
 	public void setCardPile(CardStack cardPile) {
 		this.cardPile = cardPile;
+	}
+
+	/**
+	 *
+	 * @return Gibt den Expeditionstapel zurück.
+	 */
+
+	public CardStack getExpeditionPile() {
+		return expeditionPile;
+	}
+	/**
+	 * Setzt den Expeditionstapel
+	 * @return expeditionsPile
+	 */
+	public void setExpeditionPile(CardStack expeditionPile) {
+		this.expeditionPile = expeditionPile;
 	}
 
 	/**

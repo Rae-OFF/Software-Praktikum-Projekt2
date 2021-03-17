@@ -13,6 +13,14 @@ public class Action {
 
 	private List<Card> materials;
 
+	public Card getAffectedCard() {
+		return affectedCard;
+	}
+
+	public void setAffectedCard(Card affectedCard) {
+		this.affectedCard = affectedCard;
+	}
+
 	/**
 	 * Konstruktor für Action.
 	 * @param actionType
