@@ -254,7 +254,9 @@ public class Game {
 
 		int index = moves.indexOf(lastMove);
 		if(index != moves.size() -1){
-			moves.subList(index + 1, moves.size()).clear();
+			for(int i = index + 1; i < moves.size(); i++){
+				moves.remove(i);
+			}
 		}
 		this.lastMove = move;
 	}
