@@ -18,7 +18,8 @@ public class CardController {
 
 	public CardController(MainController mainController) {
 		this.mainController = mainController;
-		this.gameController = mainController.getGameController();
+		GameController gameController = mainController.getGameController();
+		this.gameController = gameController;
 	}
 
 	/**
@@ -127,7 +128,7 @@ public class CardController {
 		if(card instanceof TaxIncrease){
 
 			taxIncrease(move);
-		}else if(card instanceof Exception){
+		}else if(card instanceof Expedition){
 
 			move.getExpeditionPile().getCards().add(card);  //if is Expedition, put it in expedition's pile
 

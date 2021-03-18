@@ -36,10 +36,13 @@ public class MainController {
 		this.hardAi = new HardAi(this);
 		this.mediumAi = new MediumAi(this);
 		this.easyAi = new EasyAi(this);
-		this.cardController = new CardController(this);
 		this.gameController = new GameController(this);
+
+
 		this.ioController = new IoController(this);
 		this.highscoreController = new HighscoreController(this);
+
+		this.cardController = new CardController(this);
 
 	}
 

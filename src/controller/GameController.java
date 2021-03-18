@@ -61,28 +61,29 @@ public class GameController {
 	 */
 	public void finishRound(Move move) {
 		Action lastAction = mainController.getGameController().currentMove().getAction();
-		CardStack harbour = move.getHarbour();
-		List<Card> harbourCards = harbour.getCards();
-		if (move.isPhase1()) {
-			//ab diesem Punkt darf man nicht weiter ziehen
-			if (lastAction.getActionType().equals(SKIP) ||  isZonked(move)) {
-				if (harbourCards.size() == 0) {
-					mainController.getCardController().execJester(move, lastAction);
-					changeActivePlayer(move);
-				}else {
-					changeActor(move);
-					move.setPhase1(false);
+		if(lastAction != null) {
+			CardStack harbour = move.getHarbour();
+			List<Card> harbourCards = harbour.getCards();
+			if (move.isPhase1()) {
+				//ab diesem Punkt darf man nicht weiter ziehen
+				if (lastAction.getActionType().equals(SKIP) || isZonked(move)) {
+					if (harbourCards.size() == 0) {
+						mainController.getCardController().execJester(move, lastAction);
+						changeActivePlayer(move);
+					} else {
+						changeActor(move);
+						move.setPhase1(false);
+					}
 				}
-			}
-		}else {//Exception caught in drawCard (TaxIncrease/Expedition cards only)
-			if( move.getActivePlayer().equals(move.getActor()) || harbourCards.size() == 0){
-				changeActivePlayer(move);
-				move.setPhase1(true);
-				move.getDiscardPile().getCards().addAll(harbourCards);
-				move.getHarbour().getCards().clear();
-			}
-			else if(lastAction.getActionType().equals(SKIP)){
-				changeActor(move);
+			} else {//Exception caught in drawCard (TaxIncrease/Expedition cards only)
+				if (move.getActivePlayer().equals(move.getActor()) || harbourCards.size() == 0) {
+					changeActivePlayer(move);
+					move.setPhase1(true);
+					move.getDiscardPile().getCards().addAll(harbourCards);
+					move.getHarbour().getCards().clear();
+				} else if (lastAction.getActionType().equals(SKIP)) {
+					changeActor(move);
+				}
 			}
 		}
 	}
@@ -195,6 +196,7 @@ public class GameController {
 				mainController.getCardController().shuffle(nextMove, action);
 				break;*/
 		}
+		nextMove.setAction(action);
 		finishRound(nextMove);
 		return nextMove;
 	}
@@ -219,7 +221,7 @@ public class GameController {
 
 		//DRAW_CARD;
 		if( actor == activePlayer && !isZonked(move)) {
-			results.add(new Action(DRAW_CARD,move.getCardPile().getCards().get(0)));
+			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
 		if(move.getShipToDefend() == null) {
@@ -231,10 +233,10 @@ public class GameController {
 			}
 		}else{
 			//DEFEND
-			results.add(new Action(DEFEND,move.getCardPile().getCards().get(0)));
+			results.add(new Action(DEFEND,move.getCardPile().peek()));
 
 			//ACCEPT_SHIP
-			results.add(new Action(ACCEPT_SHIP,move.getCardPile().getCards().get(0)));
+			results.add(new Action(ACCEPT_SHIP,move.getCardPile().peek()));
 		}
 
 		//BUY_PERSON;
@@ -345,11 +347,11 @@ public class GameController {
 		 */
 		public boolean isZonked (Move move){
 			// neue Karte aufdecken
-			Card currentCard = move.getCardPile().peek();
+			Card currentCard = move.getHarbour().peek();
 			List<Card> harbour = move.getHarbour().getCards();
 			if (currentCard instanceof Ship) {
 				for (Card card : harbour) {
-					if (card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
+					if (!card.equals(currentCard) && card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
 						move.getDiscardPile().pushList(move.getHarbour().getCards());
 						move.getHarbour().getCards().clear();
 						return true;

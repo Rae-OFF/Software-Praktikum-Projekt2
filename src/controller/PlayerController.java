@@ -22,8 +22,9 @@ public class PlayerController {
 	 * 		Bekommt eine Aktion.
 	 */
 	public void executeAction(Action action) {
-		Move currentMove = mainController.getGameController().currentMove();
-		Move newMove= mainController.getGameController().generateMove(currentMove, action);
+		GameController gameController = mainController.getGameController();
+		Move currentMove = gameController.currentMove();
+		Move newMove= gameController.generateMove(currentMove, action);
 		mainController.getGameSystem().getCurrentGame().setLastMove(newMove);
 	}
 

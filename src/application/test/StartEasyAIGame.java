@@ -1,9 +1,6 @@
 package application.test;
 
-import controller.EasyAi;
-import controller.GameController;
-import controller.MainController;
-import controller.PlayerController;
+import controller.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -53,8 +50,10 @@ public class StartEasyAIGame extends Application {
 
         EasyAi easyAi = mainController.getEasyAi();
 
+        CardController cardController = mainController.getCardController();
 
 
+        int i = 0;
         while(gameController.currentGameIsRunning()){
 
             PlayerState actor = gameController.getActor();
@@ -71,12 +70,15 @@ public class StartEasyAIGame extends Application {
 
             playerController.executeAction(action);
 
-            try{
+            System.out.println("Round: " + i);
+            i++;
+
+/*            try{
                 sleep(5000);
             }
             catch (Exception e){
                 e.printStackTrace();
-            }
+            }*/
 
 
 
