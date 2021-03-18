@@ -13,6 +13,8 @@ public class GameSystem {
 
 	private Game currentGame;
 
+	private List<Player> highscoreList;
+
 	/**
 	 * Konstruktor.
 	 * @param players
@@ -73,5 +75,20 @@ public class GameSystem {
 		this.currentGame = currentGame;
 	}
 
+	/**
+	 *
+	 * @return Gibt die Highscore Liste zurück.
+	 */
+	public List<Player> getHighscoreList() {
+		return highscoreList;
+	}
 
+	/**
+	 * Setzt die Highscore Liste.
+	 * @param highscoreList
+	 * 		Bekommt eine Liste von Spielern übergeben.
+	 */
+	public void setHighscoreList(List<Player> highscoreList) {
+		this.highscoreList = highscoreList;
+	}
 }
