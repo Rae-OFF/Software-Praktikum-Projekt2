@@ -63,12 +63,9 @@ public class CardStack {
 	 */
 	public List<Card> popList(int numberOf){
 		List<Card> cards = new ArrayList<>();
-		for(int i = 0; i <= numberOf; i++) {
-			cards.add(this.getCards().get(i));
+		for(int i = 0; i <= numberOf; i++){
+			cards.add(this.getCards().remove(0));
 		}
-		/*for(int j = 0; j <= numberOf; j++){
-			//this.getCards().remove(j);	//TODO suspicious remove entfernen
-		}*/
 		return cards;
 	}
 
