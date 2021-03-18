@@ -34,4 +34,13 @@ public class TaxIncrease implements Card {
 	}
 
 
+	@Override
+	public boolean equals(Card card) {
+		if (card instanceof  TaxIncrease){
+			return (this.typeSwords == ((TaxIncrease) card).isTypeSwords());
+		}
+		else{
+			return false;
+		}
+	}
 }
