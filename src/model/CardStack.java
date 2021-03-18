@@ -63,12 +63,9 @@ public class CardStack {
 	 */
 	public List<Card> popList(int numberOf){
 		List<Card> cards = new ArrayList<>();
-		for(int i = 0; i <= numberOf; i++) {
-			cards.add(this.getCards().get(i));
+		for(int i = 0; i <= numberOf; i++){
+			cards.add(this.getCards().remove(0));
 		}
-		/*for(int j = 0; j <= numberOf; j++){
-			//this.getCards().remove(j);	//TODO suspicious remove entfernen
-		}*/
 		return cards;
 	}
 
@@ -92,6 +89,22 @@ public class CardStack {
 	 * @return Gibt die oberste Karte zurück ohne diese zu entfernen.
 	 */
 	public Card peek(){
-		return this.getCards().get(0);
+		if(this.getCards().get(0) != null){
+			return this.getCards().get(0);
+		}
+
+		else{
+			return null;
+		}
+
+	}
+
+	/**
+	 *
+	 * @return
+	 */
+
+	public int getSize(){
+		return this.cards.size();
 	}
 }

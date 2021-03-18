@@ -14,7 +14,6 @@ public class Move {
 
 	private CardStack expeditionPile;
 
-
 	private PlayerState actor;
 
 	private boolean phase1;
@@ -54,6 +53,7 @@ public class Move {
 		this.harbour = new CardStack();
 		this.cardPile = new CardStack();
 		this.discardPile = new CardStack();
+		this.expeditionPile = new CardStack();
 
 
 
@@ -77,6 +77,7 @@ public class Move {
 		this.players = new ArrayList<>();
 		this.action = skeleton.getAction();
 		this.buyLimit = skeleton.getBuyLimit();
+		this.expeditionPile = new CardStack(skeleton.getExpeditionPile());
 
 		for(PlayerState playerState: skeleton.getPlayers()){
 
@@ -128,7 +129,8 @@ public class Move {
 	}
 	/**
 	 * Setzt den Expeditionstapel
-	 * @return expeditionsPile
+	 * @param expeditionPile
+	 * 		Bekommt einen Kartenstapel übergeben.s
 	 */
 	public void setExpeditionPile(CardStack expeditionPile) {
 		this.expeditionPile = expeditionPile;

@@ -251,6 +251,13 @@ public class Game {
 	 * 		Bekommt den Zug übergeben.
 	 */
 	public void setLastMove(Move move) {
+
+		int index = moves.indexOf(lastMove);
+		if(index != moves.size() -1){
+			for(int i = index + 1; i < moves.size(); i++){
+				moves.remove(i);
+			}
+		}
 		this.lastMove = move;
 	}
 
