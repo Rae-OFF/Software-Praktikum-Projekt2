@@ -11,9 +11,11 @@ import java.util.Random;
  */
 public class EasyAi extends AiController {
 
-	private AiController aiController;
-
 	private MainController mainController;
+
+	public EasyAi(MainController mainController){
+		this.mainController = mainController;
+	}
 
 	@Override
 	public Action getAction(Move move){

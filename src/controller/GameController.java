@@ -16,6 +16,9 @@ public class GameController {
 
 	private MainController mainController;
 
+	public GameController(MainController mainController) {
+		this.mainController = mainController;
+	}
 
 
 	/**
@@ -120,12 +123,36 @@ public class GameController {
 		}
 
 		Game game = new Game(variant, states.get(0), shuffleCards, playersOrdered, cardPile);
+		game.setPlayerStates(states);
 
 
 		game.setPlayerStates(states);
 
 		mainController.getGameSystem().setCurrentGame(game);
 
+		Move move = new Move(null, true, null, null);
+		Card firstCard = cardPile.pop();
+		move.setCardPile(cardPile);
+		move.getHarbour().push(firstCard);
+		move.setPlayers(game.getPlayerStates());
+		move.setActor(states.get(0));
+		move.setActivePlayer(states.get(0));
+
+		game.setLastMove(move);
+
+
+	}
+
+	public PlayerState getActivePlayer(){
+		return currentMove().getActivePlayer();
+	}
+
+	public PlayerState getActor(){
+		return currentMove().getActor();
+	}
+
+	public boolean currentGameIsRunning(){
+		return mainController.getGameSystem().getCurrentGame().isOngoing();
 	}
 
 
@@ -164,9 +191,9 @@ public class GameController {
 			case ACCEPT_SHIP:
 				//mainController.getCardController().(nextMove, action);
 				break;
-			case SHUFFLE:
-				mainController.getGameController().shuffleDiscardPile(nextMove);
-				break;
+/*			case SHUFFLE:
+				mainController.getCardController().shuffle(nextMove, action);
+				break;*/
 		}
 		finishRound(nextMove);
 		return nextMove;

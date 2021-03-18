@@ -9,6 +9,10 @@ public class IoController {
 
 	private MainController mainController;
 
+	public IoController(MainController mainController) {
+		this.mainController = mainController;
+	}
+
 	/**
 	 * Lädt einen Spielstand.
 	 */

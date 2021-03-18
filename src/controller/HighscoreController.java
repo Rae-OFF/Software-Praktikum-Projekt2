@@ -10,6 +10,11 @@ public class HighscoreController {
 
 	private MainController mainController;
 
+	public HighscoreController(MainController mainController) {
+		this.mainController = mainController;
+	}
+
+
 	/**
 	 *
 	 * @return Gibt die LIste der Spieler die in der Highscoreliste stehen zurück.

@@ -131,6 +131,14 @@ jacocoLogTestCoverage {
     }
 }
 
+task startAIGame(type: JavaExec){
+    description = "Starte das AI Game in einer Konsole"
+    main = 'application.test.StartEasyAIGameRunner'
+    classpath = sourceSets.main.runtimeClasspath
+    applicationName = 'Start AI Game'
+    group = 'application'
+}
+
 
 mainClassName = 'application.Runner'
 

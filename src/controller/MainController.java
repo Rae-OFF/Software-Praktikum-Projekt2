@@ -1,6 +1,8 @@
 package controller;
 
+import model.Action;
 import model.GameSystem;
+import model.Move;
 
 /**
  * MainController, verwaltet die anderen Controller.
@@ -9,11 +11,7 @@ public class MainController {
 
 	private GameSystem gameSystem;
 
-	private MainController mainController;
-
 	private PlayerController playerController;
-
-	private AiController aiController;
 
 	private HardAi hardAi;
 
@@ -33,6 +31,15 @@ public class MainController {
 	 * Konstruktor.
 	 */
 	public MainController() {
+		this.gameSystem = new GameSystem();
+		this.playerController = new PlayerController(this);
+		this.hardAi = new HardAi(this);
+		this.mediumAi = new MediumAi(this);
+		this.easyAi = new EasyAi(this);
+		this.cardController = new CardController(this);
+		this.gameController = new GameController(this);
+		this.ioController = new IoController(this);
+		this.highscoreController = new HighscoreController(this);
 
 	}
 
@@ -44,13 +51,7 @@ public class MainController {
 		return gameSystem;
 	}
 
-	/**
-	 *
-	 * @return Gibt den MainController zurück.
-	 */
-	public MainController getMainController() {
-		return mainController;
-	}
+	public void setGameSystem(GameSystem gameSystem) {this.gameSystem = gameSystem;}
 
 	/**
 	 *
@@ -58,14 +59,6 @@ public class MainController {
 	 */
 	public PlayerController getPlayerController() {
 		return playerController;
-	}
-
-	/**
-	 *
-	 * @return Gibt den KI Controller zurück.
-	 */
-	public AiController getAiController() {
-		return aiController;
 	}
 
 	/**

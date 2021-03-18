@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,11 +18,17 @@ public class GameSystem {
 
 	/**
 	 * Konstruktor.
-	 * @param players
-	 * 		Bekommt eine Liste aller Spieler.
+	 *
 	 */
-	public GameSystem(List<Player> players) {
+/*	public GameSystem(List<Player> players) {
 		this.players = players;
+	}*/
+
+	public GameSystem(){
+		this.players = new ArrayList<>();
+		this.games = new ArrayList<>();
+		this.getHighscoreList();
+		this.currentGame = null;
 	}
 
 	/**

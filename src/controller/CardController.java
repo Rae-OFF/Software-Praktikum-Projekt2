@@ -10,9 +10,16 @@ import static model.PersonType.*;
 /**
  * Verwaltet die Karten.
  */
-public class CardController extends MainController {
+public class CardController {
 
    private MainController mainController;
+
+   private GameController gameController;
+
+	public CardController(MainController mainController) {
+		this.mainController = mainController;
+		this.gameController = mainController.getGameController();
+	}
 
 	/**
 	 * Führt den Admiral Effekt aus (liegen mehr als 5 Karten in der Hafenauslage,
@@ -198,7 +205,7 @@ public class CardController extends MainController {
 			List<Integer> shildList = new ArrayList<>();   // create a list number of shilds of all each player
 			for (PlayerState playerState : players) {
 
-				int playerShield = getPlayerController().getVictoryPoints(playerState,move);
+				int playerShield = mainController.getPlayerController().getVictoryPoints(playerState,move);
 
 				if(minShield > playerShield){              //get the minimum number
 					minShield = playerShield;
@@ -259,7 +266,7 @@ public class CardController extends MainController {
 		PlayerState player = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
-		int money = getPlayerController().getCoins(actor,move);  // get total amount of coins from actor
+		int money = mainController.getPlayerController().getCoins(actor,move);  // get total amount of coins from actor
 		int personPrice = ((Person)action.getAffectedCard()).getPrice();  // get price of this Person card
 
 		if(money >= personPrice ){
@@ -380,10 +387,10 @@ public class CardController extends MainController {
 
 			if (action.getActionType().equals(SKIP)) {
 				if (player != move.getActor()) {
-					getGameController().changeActor(move);
+					gameController.changeActor(move);
 
 				} else {
-					getGameController().changeActivePlayer(move);
+					gameController.changeActivePlayer(move);
 				}
 
 			}

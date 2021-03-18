@@ -10,6 +10,10 @@ public class HardAi extends AiController {
 
 	private MainController mainController;
 
+	public HardAi(MainController mainController) {
+		this.mainController = mainController;
+	}
+
 
 	@Override
 	public Action getAction(Move move) {
