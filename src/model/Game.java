@@ -62,7 +62,6 @@ public class Game {
 		this.moves = new ArrayList<>();
 		this.playerStates = new ArrayList<>();
 
-
 	}
 
 	/**

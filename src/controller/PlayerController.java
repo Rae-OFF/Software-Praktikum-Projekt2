@@ -34,12 +34,12 @@ public class PlayerController {
 	 * @param random
 	 * 		Bekommt übergeben ob die Reihenfolge zufällig sein soll(true) oder nicht(false).
 	 */
-	public void setPlayerOrder(List<Player> playerList, boolean random) {
+	public List<Player> setPlayerOrder(List<Player> playerList, boolean random) {
 		if(!random){
-			mainController.getGameSystem().getCurrentGame().setPlayers(playerList);
+			return playerList;
 		}else{
 			Collections.shuffle(playerList);
-			mainController.getGameSystem().getCurrentGame().setPlayers(playerList);
+			return playerList;
 		}
 	}
 

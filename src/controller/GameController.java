@@ -16,14 +16,7 @@ public class GameController {
 
 	private MainController mainController;
 
-	public Card pop(CardStack stack){
 
-		Card card = stack.getCards().get(0);
-
-		stack.getCards().remove(card);
-
-		return card;
-	}
 
 	/**
 	 *
@@ -31,6 +24,19 @@ public class GameController {
 	 */
 	public Move currentMove() {
 		return mainController.getGameSystem().getCurrentGame().getLastMove();
+	}
+
+	public List<Card> popCardPile (Move move, int num) {
+		CardStack cardStack = move.getCardPile();
+		List<Card> popCardPile = new ArrayList<>();
+		for( int i = 0; i< num ; i++ ){
+			if(cardStack.peek()!=null){
+				popCardPile.add(cardStack.pop());
+			}else{
+				shuffleDiscardPile(move);
+			}
+		}
+		return popCardPile;
 	}
 
 	/**
@@ -84,19 +90,42 @@ public class GameController {
 	 */
 
 	// nicht fertig. Nach Ergaenzung von CardFactory Controller wird die Methode fertig gemacht.
-	public void init() {
+	public void init(String cardPilePath, List<Player> players, boolean variant, boolean shuffleCards, boolean randomPlayerOrder) {
 
-		CardStack discardPile = mainController.getGameSystem().getCurrentGame().getDiscardPile();
-		CardStack harbourPile = mainController.getGameSystem().getCurrentGame().getHarbour();
-		CardStack cardPile = new CardStack(); //  defaultCards in CardFactoryController
-		mainController.getCardController().shuffle(null, null);
-		if(mainController.getGameSystem().getPlayers().size()<5){
-			for(Card card : cardPile.getCards()){
-				if( card instanceof Expedition /*&&((Expedition) card).getRequirements().equals()*/ ){ //Eigenschaft von SonderExpedition fehlt noch
-					cardPile.getCards().remove(card);
-				}
+		PlayerController playerController = mainController.getPlayerController();
+
+		CardStack discardPile = new CardStack();
+		CardStack harbourPile = new CardStack();
+		CardStack cardPile;
+		if(cardPilePath == null){
+			if(players.size() < 5){
+				cardPile = CardFactory.newCardsWithoutSpecial();
 			}
+			else{
+				cardPile = CardFactory.newCardsWithSpecial(); //  defaultCards in CardFactoryController
+			}
+
+		}else{
+			cardPile = mainController.getIoController().loadCardDeck(cardPilePath);
 		}
+		List<Player> playersOrdered = playerController.setPlayerOrder(players, randomPlayerOrder);
+
+		List<PlayerState> states = new ArrayList<>();
+		for(Player player : playersOrdered){
+			PlayerState tplayerState = new PlayerState(player);
+			CardStack stack = new CardStack();
+			stack.setCards(cardPile.popList(3));
+			tplayerState.setCoins(stack);
+			states.add(tplayerState);
+		}
+
+		Game game = new Game(variant, states.get(0), shuffleCards, playersOrdered, cardPile);
+
+
+		game.setPlayerStates(states);
+
+		mainController.getGameSystem().setCurrentGame(game);
+
 	}
 
 
@@ -112,6 +141,9 @@ public class GameController {
 	public Move generateMove(Move move, Action action){
 		Move nextMove = new Move(move);
 		switch ( action.getActionType()){
+			case DRAW_CARD:
+				mainController.getCardController().drawCard(nextMove, action);
+				break;
 			case TAKE_SHIP:
 				mainController.getCardController().takeShip(nextMove, action);
 				break;
@@ -128,10 +160,10 @@ public class GameController {
 				mainController.getCardController().skip(nextMove, action);
 				break;
 			//Es gibt keine Methode acceptShip() in CardController;
-			/*case ACCEPT_SHIP:
+			//TODO: ACCEPT_SHIP entfernen?
+			case ACCEPT_SHIP:
 				//mainController.getCardController().(nextMove, action);
 				break;
-			 */
 			case SHUFFLE:
 				mainController.getCardController().shuffle(nextMove, action);
 				break;
@@ -212,7 +244,7 @@ public class GameController {
 		if(moveList.lastIndexOf(currentMove()) > 0 ) {
 			// zu letzte move zuruekgehen und das undoMove in moveList hinzufuegen
 			Move undoMove = moveList.get(moveList.indexOf(currentMove()) - 1);
-			moveList.add(undoMove);
+			mainController.getGameSystem().getCurrentGame().setLastMove(undoMove);
 		}
 	}
 
@@ -226,7 +258,7 @@ public class GameController {
 		if(moveList.lastIndexOf(currentMove()) < moveList.size()-1) {
 			// zu naechste move zuruekgehen und redoMove in moveList hinzufuegen.
 			Move redoMove = moveList.get(moveList.indexOf(currentMove()) + 1);
-			moveList.add(redoMove);
+			mainController.getGameSystem().getCurrentGame().setLastMove(redoMove);
 		}
 	}
 
@@ -244,13 +276,11 @@ public class GameController {
 			List<Card> discardPile = move.getDiscardPile().getCards();
 			List<Card> initCards = mainController.getGameSystem().getCurrentGame().getInitCardPile().getCards();
 			List<Card> newCards = new ArrayList<>();
-			int indexOfNewCards = 0;
 			// discardPile nach initCards sortieren und in newCards hinzufuegen
 			for (Card initCard : initCards) {
 				for( Card discard : discardPile ){
 					if(initCard.equals(discard)){
-						newCards.set(indexOfNewCards,discard);
-						indexOfNewCards++;
+						newCards.add(discard);
 					}
 				}
 			}
@@ -288,13 +318,13 @@ public class GameController {
 		 */
 		public boolean isZonked (Move move){
 			// neue Karte aufdecken
-			Card currentCard = pop(move.getCardPile());
+			Card currentCard = move.getCardPile().peek();
 			List<Card> harbour = move.getHarbour().getCards();
 			if (currentCard instanceof Ship) {
 				for (Card card : harbour) {
 					if (card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
-						move.setDiscardPile(move.getHarbour());
-						harbour.clear();
+						move.getDiscardPile().pushList(move.getHarbour().getCards());
+						move.getHarbour().getCards().clear();
 						return true;
 					}
 				}
@@ -302,30 +332,6 @@ public class GameController {
 			return false;
 		}
 
-
-		/*/**
-		 * Entscheided ob ein Schiff abgewehrt werden soll oder nicht,
-		 * @param defend
-		 * 		Bekommt übergeben ob es abgewehrt werden soll (true) oder nicht (false).
-		 * @param move
-		 * 		Bekommt einen Zug übergeben.
-		 * @return Gibt eine Aktion zurück.
-		 */
-		/*
-		public Action decideShipAction ( boolean defend, Move move){
-			Action action = move.getAction();
-			if (defend) {
-				List<Card> discardPile = move.getDiscardPile().getCards();
-				discardPile.add(move.getCardPile().getCards().get(0));
-				action.setActionType(DEFEND);
-				return action;
-			} else {
-				List<Card> harbour = move.getDiscardPile().getCards();
-				harbour.add(move.getCardPile().getCards().get(0));
-				action.setActionType(ACCEPT_SHIP);
-				return action;
-			}
-		}*/
 
 		/**
 		 * Wechselt den aktiven Spieler.

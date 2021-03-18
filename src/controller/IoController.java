@@ -1,5 +1,7 @@
 package controller;
 
+import model.CardStack;
+
 /**
  * Verwaltet die IO.
  */
@@ -26,8 +28,8 @@ public class IoController {
 	 * @param path
 	 * 		Bekommt den Ort an dem sich das Kartendeck befindet übergeben.
 	 */
-	public void loadCardDeck(String path) {
-
+	public CardStack loadCardDeck(String path) {
+		return null;
 	}
 
 }

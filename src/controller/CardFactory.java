@@ -424,7 +424,7 @@ public class CardFactory {
          * generate Expedition
          * @return  CardStack obj
          */
-    public List<Card> generateExpedition() {
+    public List<Card> generateExpedition(boolean withSpecial) {
 
         Map<PersonType, Integer> requirements = new HashMap<>();
 
@@ -460,7 +460,10 @@ public class CardFactory {
         requirements.put(SETTLER, 1);
         requirements.put(PRIEST, 1);
         Expedition special = new Expedition(requirements,3,5);
-        cards.add(special);
+        if(withSpecial){
+            cards.add(special);
+        }
+
 
         return cards;
     }
@@ -469,18 +472,14 @@ public class CardFactory {
      *
      * @return get the 6th special Expedition card
      */
-    public Card getSpecial(){
 
-        return generateExpedition().get(5);
-
-         }
 
     /**
      *
      *
       * @return a CardStack with all 120 cards
      */
-    public static CardStack newCards(){
+    public static CardStack newCardsWithoutSpecial(){
 
             CardStack stack = new CardStack();
             List<Card> cards = stack.getCards();
@@ -503,7 +502,37 @@ public class CardFactory {
             cards.addAll(newList.generateSailor());
             cards.addAll(newList.generateSettlerCaptain());
             cards.addAll(newList.generateTaxIncrease());
-            cards.addAll(newList.generateExpedition());
+            cards.addAll(newList.generateExpedition(false));
+
+
+        return stack;
+
+    }
+
+    public static CardStack newCardsWithSpecial(){
+
+        CardStack stack = new CardStack();
+        List<Card> cards = stack.getCards();
+
+        CardFactory newList = new CardFactory();
+
+        cards.addAll(newList.generateBlueShips());
+        cards.addAll(newList.generateRedShips());
+        cards.addAll(newList.generateBlackShips());
+        cards.addAll(newList.generateYellowShips());
+        cards.addAll(newList.generateGreenShips());
+
+        cards.addAll(newList.generateAdmiral());
+        cards.addAll(newList.generateGovernor());
+        cards.addAll(newList.generateJackOfAllTrader());
+        cards.addAll(newList.generateJester());
+        cards.addAll(newList.generateMademoiselles());
+        cards.addAll(newList.generatePriest());
+        cards.addAll(newList.generatePirate());
+        cards.addAll(newList.generateSailor());
+        cards.addAll(newList.generateSettlerCaptain());
+        cards.addAll(newList.generateTaxIncrease());
+        cards.addAll(newList.generateExpedition(true));
 
 
         return stack;
