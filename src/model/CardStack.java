@@ -91,4 +91,13 @@ public class CardStack {
 	public Card peek(){
 		return this.getCards().get(0);
 	}
+
+	/**
+	 *
+	 * @return
+	 */
+
+	public int getSize(){
+		return this.cards.size();
+	}
 }
