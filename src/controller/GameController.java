@@ -5,6 +5,7 @@ import model.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static model.ActionType.*;
 
@@ -14,6 +15,15 @@ import static model.ActionType.*;
 public class GameController {
 
 	private MainController mainController;
+
+	public Card pop(CardStack stack){
+
+		Card card = stack.getCards().get(0);
+
+		stack.getCards().remove(card);
+
+		return card;
+	}
 
 	/**
 	 *
@@ -30,16 +40,9 @@ public class GameController {
 	 */
 	public void changeActor(Move move) {
 		List<PlayerState> playerList = move.getPlayers();
-		for (int index = 0; index < playerList.size(); index++) {
-			if (playerList.get(index).equals(move.getActor())) {
-				if (index != playerList.size() - 1) {
-					move.setActor(playerList.get(index + 1));
-				} else {
-					move.setActor(playerList.get(0));
-				}
-				break;
-			}
-		}
+		PlayerState actor = move.getActor();
+		int index = (playerList.indexOf(actor)+1) % playerList.size();
+		move.setActor(playerList.get(index));
 	}
 
 	/**
@@ -79,19 +82,17 @@ public class GameController {
 	/**
 	 * Führt das initialie Starten des Spiels aus (alle Spieler bekommen 3 Münzen, Nachziehstapel etc.)
 	 */
+
+	// nicht fertig. Nach Ergaenzung von CardFactory Controller wird die Methode fertig gemacht.
 	public void init() {
-		//Move initMove = new Move((PlayerState actor, boolean phase1, PlayerState activePlayer, Action action));
-		//Action initAction =  new Action();
 
 		CardStack discardPile = mainController.getGameSystem().getCurrentGame().getDiscardPile();
 		CardStack harbourPile = mainController.getGameSystem().getCurrentGame().getHarbour();
-		CardStack cardPile = new CardStack();
+		CardStack cardPile = new CardStack(); //  defaultCards in CardFactoryController
 		mainController.getCardController().shuffle(null, null);
-
-
 		if(mainController.getGameSystem().getPlayers().size()<5){
 			for(Card card : cardPile.getCards()){
-				if( card instanceof Expedition ){ //Eigenschaft von SonderExpedition fehlt noch
+				if( card instanceof Expedition /*&&((Expedition) card).getRequirements().equals()*/ ){ //Eigenschaft von SonderExpedition fehlt noch
 					cardPile.getCards().remove(card);
 				}
 			}
@@ -111,13 +112,29 @@ public class GameController {
 	public Move generateMove(Move move, Action action){
 		Move nextMove = new Move(move);
 		switch ( action.getActionType()){
-			case SKIP:
-				mainController.getCardController().skip(nextMove, action);
-				break;
 			case TAKE_SHIP:
 				mainController.getCardController().takeShip(nextMove, action);
 				break;
-
+			case BUY_PERSON:
+				mainController.getCardController().buyPerson(nextMove, action);
+				break;
+			case DEFEND:
+				mainController.getCardController().defend(nextMove, action);
+				break;
+			case START_EXPEDITION:
+				mainController.getCardController().startExpedition(nextMove, action);
+				break;
+			case SKIP:
+				mainController.getCardController().skip(nextMove, action);
+				break;
+			//Es gibt keine Methode acceptShip() in CardController;
+			/*case ACCEPT_SHIP:
+				//mainController.getCardController().(nextMove, action);
+				break;
+			 */
+			case SHUFFLE:
+				mainController.getCardController().shuffle(nextMove, action);
+				break;
 		}
 		finishRound(nextMove);
 		return nextMove;
@@ -191,7 +208,12 @@ public class GameController {
 	 * 		Bekommt einen Zug.
 	 */
 	public void undo(Move move) {
-
+		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
+		if(moveList.lastIndexOf(currentMove()) > 0 ) {
+			// zu letzte move zuruekgehen und das undoMove in moveList hinzufuegen
+			Move undoMove = moveList.get(moveList.indexOf(currentMove()) - 1);
+			moveList.add(undoMove);
+		}
 	}
 
 	/**
@@ -200,7 +222,12 @@ public class GameController {
 	 * 		Bekommt einen Zug.
 	 */
 	public void redo(Move move) {
-
+		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
+		if(moveList.lastIndexOf(currentMove()) < moveList.size()-1) {
+			// zu naechste move zuruekgehen und redoMove in moveList hinzufuegen.
+			Move redoMove = moveList.get(moveList.indexOf(currentMove()) + 1);
+			moveList.add(redoMove);
+		}
 	}
 
 	/**
@@ -210,17 +237,25 @@ public class GameController {
 	 */
 	public void shuffleDiscardPile(Move move) {
 
-		CardStack discardPile = move.getDiscardPile();
 		if (mainController.getGameSystem().getCurrentGame().isShuffleCards()) {
 			Collections.shuffle(move.getDiscardPile().getCards());
 			move.setCardPile(move.getDiscardPile());
 		} else {
-			CardStack initCard = mainController.getGameSystem().getCurrentGame().getInitCardPile();
-			for (Card card : initCard.getCards()) {
-				if (card instanceof Person) {
-
+			List<Card> discardPile = move.getDiscardPile().getCards();
+			List<Card> initCards = mainController.getGameSystem().getCurrentGame().getInitCardPile().getCards();
+			List<Card> newCards = new ArrayList<>();
+			int indexOfNewCards = 0;
+			// discardPile nach initCards sortieren und in newCards hinzufuegen
+			for (Card initCard : initCards) {
+				for( Card discard : discardPile ){
+					if(initCard.equals(discard)){
+						newCards.set(indexOfNewCards,discard);
+						indexOfNewCards++;
+					}
 				}
 			}
+			move.getDiscardPile().getCards().clear();
+			move.getCardPile().getCards().addAll(newCards);
 		}
 	}
 
@@ -231,19 +266,12 @@ public class GameController {
 		 * 		Bekommt einen Zug.
 		 */
 		public void finishGame (Move move){
+
 			PlayerState startPlayer = mainController.getGameSystem().getCurrentGame().getStartPlayer();
 			List<PlayerState> playerList = move.getPlayers();
 			//Der Spieler rechts neben dem Startspieler ist der letzte aktive Spieler dieser Partie
-			for (int index = 0; index < playerList.size(); index++) {
-				if (playerList.get(index).equals(startPlayer)) {
-					if (index != playerList.size() - 1) {
-						mainController.getGameSystem().getCurrentGame().setStartPlayer(playerList.get(index + 1));
-						break;
-					} else {
-						mainController.getGameSystem().getCurrentGame().setStartPlayer(playerList.get(0));
-					}
-				}
-			}
+			int index = playerList.indexOf(startPlayer)+1 % playerList.size();
+			mainController.getGameSystem().getCurrentGame().setStartPlayer(playerList.get(index));
 			//Siegpunkte in HighscoreList hinzufuegen
 			for (PlayerState playerState : playerList) {
 				playerState.getPlayer().setScore(playerState.getPlayer().getWins());
@@ -259,14 +287,14 @@ public class GameController {
 		 * 		weiterspielen kann.
 		 */
 		public boolean isZonked (Move move){
-			Card currentCard = move.getCardPile().getCards().get(0);
+			// neue Karte aufdecken
+			Card currentCard = pop(move.getCardPile());
 			List<Card> harbour = move.getHarbour().getCards();
-			move.getCardPile().getCards().remove(0);
 			if (currentCard instanceof Ship) {
 				for (Card card : harbour) {
 					if (card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
 						move.setDiscardPile(move.getHarbour());
-						harbour.removeAll(harbour);
+						harbour.clear();
 						return true;
 					}
 				}
@@ -310,6 +338,8 @@ public class GameController {
 			int index = playerList.indexOf(activePlayer)+1 % playerList.size();
 			move.setActivePlayer(playerList.get(index));
 		}
+
+
 	}
 
 
