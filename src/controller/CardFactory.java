@@ -3,7 +3,9 @@ package controller;
 import model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static model.Colour.*;
 import static model.PersonType.*;
@@ -114,7 +116,6 @@ public class CardFactory {
             cards.add(new Ship(YELLOW, 4, 4));
 
         return cards;
-
     }
 
     /**
@@ -181,9 +182,6 @@ public class CardFactory {
 
     public List<Card> generateTrader(){
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
-
         Person trader = new Person();
 
         trader.setValues(3,1,0);
@@ -224,8 +222,6 @@ public class CardFactory {
 
     public List<Card> generateSettlerCaptain() {
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
 // add SETTLERS
         Person settler = new Person();
 
@@ -273,7 +269,6 @@ public class CardFactory {
      * @return CardStack obj
      */
     public List<Card> generateJackOfAllTrader() {
-
 
         Person jack = new Person();
 
@@ -342,8 +337,6 @@ public class CardFactory {
      */
     public List<Card> generateSailor() {
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
 // add Sailor - 10 cards (1 LOST)
         Person sailor = new Person();
 
@@ -374,8 +367,6 @@ public class CardFactory {
      */
     public List<Card> generateMademoiselles() {
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
         Person mademoiselles = new Person();
 // add	Mademoiselles - 4 cards
         mademoiselles.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
@@ -396,11 +387,7 @@ public class CardFactory {
      */
     public List<Card> generateGovernor() {
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
-
-// add Governors 4 cards
-
+        // add Governors 4 cards
         Person governor = new Person();
 
         governor.setMetaData(PersonType.GOVERNOR.name(), null,PersonType.GOVERNOR);
@@ -409,7 +396,6 @@ public class CardFactory {
 
             cards.add(governor);
         }
-
         return cards;
     }
 
@@ -419,9 +405,6 @@ public class CardFactory {
      * @return  CardStack obj
      */
     public List<Card> generateTaxIncrease() {
-
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
 
 //add taxIncrease - 4 cards
 
@@ -436,22 +419,68 @@ public class CardFactory {
         return cards;
     }
 
-
         /**
          *
          * generate Expedition
          * @return  CardStack obj
          */
-   /*  public List<Card> generateExpedition() {
+    public List<Card> generateExpedition() {
 
+        Map<PersonType, Integer> requirements = new HashMap<>();
 
-        Expedition expedition = new Expedition(PRIEST,2, 4);
-        cards.add(expedition);
+ // add expedition with 2 anchor
+        requirements.put(CAPTAIN, 2);
+        Expedition anchor = new Expedition(requirements,2,4);
+        cards.add(anchor);
+
+// add expedition with 2 houses
+        requirements.put(SETTLER, 2);
+        Expedition house = new Expedition(requirements,2,4);
+        cards.add(house);
+
+ // add expedition with 2 houses
+        requirements.put(PRIEST, 2);
+        Expedition cross = new Expedition(requirements,2,4);
+        cards.add(cross);
+
+// add expedition with 2 crosses + 1 hous
+        requirements.put(PRIEST, 2);
+        requirements.put(SETTLER, 1);
+        Expedition crossHouse = new Expedition(requirements,3,6);
+        cards.add(crossHouse);
+
+// add expedition with 2 anchors + 1 hous
+        requirements.put(CAPTAIN, 2);
+        requirements.put(SETTLER, 1);
+        Expedition anchorHouse = new Expedition(requirements,3,6);
+        cards.add(anchorHouse);
+
+// add expedition with 2 anchors + 1 hous
+        requirements.put(CAPTAIN, 1);
+        requirements.put(SETTLER, 1);
+        requirements.put(PRIEST, 1);
+        Expedition special = new Expedition(requirements,3,5);
+        cards.add(special);
+
         return cards;
     }
- */
 
-        public CardStack newCards(){
+    /**
+     *
+     * @return get the 6th special Expedition card
+     */
+    public Card getSpecial(){
+
+        return generateExpedition().get(5);
+
+         }
+
+    /**
+     *
+     *
+      * @return a CardStack with all 120 cards
+     */
+    public static CardStack newCards(){
 
             CardStack stack = new CardStack();
             List<Card> cards = stack.getCards();
@@ -474,7 +503,7 @@ public class CardFactory {
             cards.addAll(newList.generateSailor());
             cards.addAll(newList.generateSettlerCaptain());
             cards.addAll(newList.generateTaxIncrease());
-
+            cards.addAll(newList.generateExpedition());
 
 
         return stack;
