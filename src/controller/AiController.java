@@ -1,6 +1,8 @@
 package controller;
 
 import model.Action;
+import model.Move;
+import model.PlayerState;
 
 /**
  * Abstrakte Klasse für alle KIs.
@@ -15,8 +17,11 @@ public abstract class AiController {
 	 *
 	 * @return Gibt die Aktion zurück die die KI ausführen soll.
 	 */
-	public Action getAction() {
-		return null;
+	public abstract Action getAction(Move move);
+
+
+	public void setAsActor(PlayerState ai){
+
 	}
 
 }

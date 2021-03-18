@@ -165,7 +165,7 @@ public class GameController {
 				//mainController.getCardController().(nextMove, action);
 				break;
 			case SHUFFLE:
-				mainController.getCardController().shuffle(nextMove, action);
+				mainController.getGameController().shuffleDiscardPile(nextMove);
 				break;
 		}
 		finishRound(nextMove);

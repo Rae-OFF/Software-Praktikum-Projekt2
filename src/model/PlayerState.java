@@ -17,11 +17,11 @@ public class PlayerState {
 	 * 		Bekommt einen Spielerzustand übergeben.
 	 * Erstellt einen neuen Spielerzustanden der die gleichen Inhalte hat wie der übergebene.
 	 */
+
 	public PlayerState(PlayerState skeleton) {
 		this(skeleton.getPlayer());
 		this.cards = new CardStack(skeleton.getCards());
 		this.coins = new CardStack(skeleton.getCoins());
-
 	}
 
 	/**

@@ -396,15 +396,14 @@ public class CardController extends MainController {
 		 * @param action
 		 * 		Bekommt die Aktion übergeben.
 		 */
-
-
+/*
 		public void shuffle (Move move, Action action){
 
 			if (action.getActionType() == SHUFFLE) {
-
-				Collections.shuffle(CardFactory.newCards().getCards());
+				Collections.shuffle(CardFactory.newCardsWithSpecial().getCards());
 			}
 
 		}
+ */
 
 	}
