@@ -130,8 +130,59 @@ public class GameController {
 	 * @return Gibt eine Liste von Aktionen zurück.
 	 */
 	public List<Action> getPossibleActions(Move move) {
+		List<Action> results = new ArrayList<>();
 
-		return null;
+		List<Card> harbourCards = move.getHarbour().getCards();
+		List<Card> expeditionCards = move.getExpeditionPile().getCards();
+		List<Card> playerCards = move.getActivePlayer().getCards().getCards();
+		PlayerState activePlayer = move.getActivePlayer();
+		PlayerState actor = move.getActor();
+
+		//check if actor owns Mademoiselle
+		//count Governors and set buyLimit
+
+		//DRAW_CARD;
+		if( actor == activePlayer && !isZonked(move)) {
+			results.add(new Action(DRAW_CARD,move.getCardPile().getCards().get(0)));
+		}
+
+		if(move.getShipToDefend() == null) {
+			//TAKE_SHIP;
+			for (Card card : harbourCards) {
+				if(card instanceof Ship){
+					results.add(new Action(TAKE_SHIP, card));
+				}
+			}
+		}else{
+			//DEFEND
+			results.add(new Action(DEFEND,move.getCardPile().getCards().get(0)));
+
+			//ACCEPT_SHIP
+			results.add(new Action(ACCEPT_SHIP,move.getCardPile().getCards().get(0)));
+		}
+
+		//BUY_PERSON;
+		for (Card card : harbourCards) {
+			if(card instanceof Person){
+				if(move.getBuyLimit() >0 && ((Person) card).getPrice() <= actor.getCoins().getCards().size())
+				results.add(new Action(BUY_PERSON, card));
+			}
+		}
+
+
+		//START_EXPEDITION;
+		for(Card expedition : expeditionCards){
+			if(expedition instanceof Expedition){
+				// Test if current expedition card is claimable
+				results.add(new Action(START_EXPEDITION, expedition));
+			}
+
+		}
+
+		//SKIP;
+		results.add(new Action(SKIP, null));
+
+		return results;
 	}
 
 	/**
