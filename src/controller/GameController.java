@@ -90,25 +90,42 @@ public class GameController {
 	 */
 
 	// nicht fertig. Nach Ergaenzung von CardFactory Controller wird die Methode fertig gemacht.
-	public void init(String cardPilePath) {
+	public void init(String cardPilePath, List<Player> players, boolean variant, boolean shuffleCards, boolean randomPlayerOrder) {
+
+		PlayerController playerController = mainController.getPlayerController();
 
 		CardStack discardPile = new CardStack();
 		CardStack harbourPile = new CardStack();
-		CardStack cardPile ;
+		CardStack cardPile;
 		if(cardPilePath == null){
-			cardPile = CardFactory.newCards(); //  defaultCards in CardFactoryController
+			if(players.size() < 5){
+				cardPile = CardFactory.newCardsWithoutSpecial();
+			}
+			else{
+				cardPile = CardFactory.newCardsWithSpecial(); //  defaultCards in CardFactoryController
+			}
+
 		}else{
 			cardPile = mainController.getIoController().loadCardDeck(cardPilePath);
 		}
-		mainController.getCardController().shuffle(null, null);
-		if(mainController.getGameSystem().getPlayers().size()<5){
-			for(Card card : cardPile.getCards()){
-				if( card instanceof Expedition /*&&((Expedition) card).getRequirements().equals()*/ ){ //Eigenschaft von SonderExpedition fehlt noch
+		List<Player> playersOrdered = playerController.setPlayerOrder(players, randomPlayerOrder);
 
-					cardPile.getCards().remove(card);
-				}
-			}
+		List<PlayerState> states = new ArrayList<>();
+		for(Player player : playersOrdered){
+			PlayerState tplayerState = new PlayerState(player);
+			CardStack stack = new CardStack();
+			stack.setCards(cardPile.popList(3));
+			tplayerState.setCoins(stack);
+			states.add(tplayerState);
 		}
+
+		Game game = new Game(variant, states.get(0), shuffleCards, playersOrdered, cardPile);
+
+
+		game.setPlayerStates(states);
+
+		mainController.getGameSystem().setCurrentGame(game);
+
 	}
 
 
