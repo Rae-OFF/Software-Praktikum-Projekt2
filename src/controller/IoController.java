@@ -29,7 +29,7 @@ public class IoController {
 	 * 		Bekommt den Ort an dem sich das Kartendeck befindet übergeben.
 	 */
 	public CardStack loadCardDeck(String path) {
-
+		return null;
 	}
 
 }
