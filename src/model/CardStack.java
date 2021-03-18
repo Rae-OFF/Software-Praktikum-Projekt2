@@ -101,7 +101,7 @@ public class CardStack {
 
 	/**
 	 *
-	 * @return
+	 * @return Gibt die Größe des Kartenstapels zurück.
 	 */
 
 	public int getSize(){
