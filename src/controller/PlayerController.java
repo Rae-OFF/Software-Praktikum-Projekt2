@@ -1,10 +1,8 @@
 package controller;
 
-import model.Action;
-import model.Move;
-import model.Player;
-import model.PlayerState;
+import model.*;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,13 +12,19 @@ public class PlayerController {
 
 	private MainController mainController;
 
+	public PlayerController(MainController mainController) {
+		this.mainController = mainController;
+	}
+
 	/**
 	 * Führt eine Aktion aus.
 	 * @param action
 	 * 		Bekommt eine Aktion.
 	 */
 	public void executeAction(Action action) {
-
+		Move currentMove = mainController.getGameController().currentMove();
+		Move newMove= mainController.getGameController().generateMove(currentMove, action);
+		mainController.getGameSystem().getCurrentGame().setLastMove(newMove);
 	}
 
 	/**
@@ -31,7 +35,12 @@ public class PlayerController {
 	 * 		Bekommt übergeben ob die Reihenfolge zufällig sein soll(true) oder nicht(false).
 	 */
 	public void setPlayerOrder(List<Player> playerList, boolean random) {
-
+		if(!random){
+			mainController.getGameSystem().getCurrentGame().setPlayers(playerList);
+		}else{
+			Collections.shuffle(playerList);
+			mainController.getGameSystem().getCurrentGame().setPlayers(playerList);
+		}
 	}
 
 	/**
@@ -53,7 +62,19 @@ public class PlayerController {
 	 * @return Gibt die Anzahl der Siegpunkte zurück.
 	 */
 	public int getVictoryPoints(PlayerState player, Move move) {
-		return 0;
+		int points=0;
+		for(PlayerState playerState : move.getPlayers()){
+			if(playerState==player){
+			   	for(Card card : playerState.getCards().getCards()){
+					if(card.getClass()==Expedition.class) {
+						points+=((Expedition) card).getVictoryPoints();
+					}if(card.getClass()==Person.class){
+						points += ((Person) card).getVictoryPoints();
+					}
+				}
+			}
+		}
+		return points;
 	}
 
 	/**
@@ -65,6 +86,11 @@ public class PlayerController {
 	 * @return Gibt die Anzahl der Münzen zurück.
 	 */
 	public int getCoins(PlayerState player, Move move) {
+		for(PlayerState playerState : move.getPlayers()){
+			if(playerState==player){
+				return playerState.getCoins().getSize();
+			}
+        }
 		return 0;
 	}
 
@@ -77,7 +103,25 @@ public class PlayerController {
 	 * @return Gibt die Anzahl der Expeditionen zurück.
 	 */
 	public int countExpeditions(PlayerState player, Move move) {
-		return 0;
+		int expeditions=0;
+		for(PlayerState playerState : move.getPlayers()){
+			if(playerState==player){
+				for(Card card : playerState.getCards().getCards()){
+					if(card.getClass()==Expedition.class) {
+						expeditions+=1;
+					}
+				}
+			}
+		}
+		return expeditions;
 	}
+
+	/**
+	 *
+	 * @return
+	public PlayerState getActor(){
+		return mainController.getGameSystem().getCurrentGame().
+	}
+	 */
 
 }
