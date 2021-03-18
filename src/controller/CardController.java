@@ -2,10 +2,7 @@ package controller;
 
 import model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-//import java.util.Map;
+import java.util.*;
 
 import static model.ActionType.*;
 import static model.PersonType.*;
@@ -30,7 +27,6 @@ public class CardController extends MainController {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
 		PlayerState player = move.getActivePlayer();
-		// TODO: updaten after card stack updated
 
 		if(harbourCards.size()>=5){
 
@@ -329,16 +325,45 @@ public class CardController extends MainController {
 		 */
 
 
-		public void startExpedition (Move move, Action action){  // not finished
+		public void startExpedition (Move move, Action action){
 
-			//PlayerState player = move.getActivePlayer();
+			if(action.getActionType().equals(START_EXPEDITION)){
 
-			List<Card> ExpedPoints = move.getExpeditionPile().getCards();
+				PlayerState player = move.getActivePlayer();
 
-			ExpedPoints.remove(action.getAffectedCard());
-			//	move.getDiscardPile().getCards().add(player.getCards().equals((Exception) ));
+				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange
+
+				Map<PersonType, Integer> require= ((Expedition) exped).getRequirements(); //get requirements of this Expedition
+
+				int coins = ((Expedition) exped).getCoins();
 
 
+				Map<PersonType, Integer> requirePlayer = new HashMap<>();  // a new map to record the cards on player's hand
+
+				int i=1;
+				for(Card card: action.getMaterials()){     /* check each card and put the value/key into the new map, if it already contains
+					                                          same key, add value one by one  */
+					if(card instanceof Person){
+
+						if( requirePlayer.containsKey(((Person) card).getPersonType())) {
+
+							requirePlayer.put(((Person) card).getPersonType(), ++i);
+
+						}else {
+							requirePlayer.put(((Person) card).getPersonType(), i);
+						}
+					}
+				}
+
+				if(require.equals(requirePlayer)){         // if requirements fullfilled, remove Expedition to player's hand and put exchanged cards in discard
+
+					move.getExpeditionPile().getCards().remove(exped);
+					player.getCards().getCards().add(exped);
+					move.getDiscardPile().getCards().addAll(action.getMaterials());
+					// add "int coins" coins  to player's hand
+					player.getCoins().getCards().addAll(move.getCardPile().popList(coins));
+				}
+			}
 		}
 
 
@@ -372,13 +397,12 @@ public class CardController extends MainController {
 		 * 		Bekommt die Aktion übergeben.
 		 */
 
-		//TODO: beachten, was hier genau gemischt werden soll.
+
 		public void shuffle (Move move, Action action){
 
 			if (action.getActionType() == SHUFFLE) {
-				CardFactory newList = new CardFactory();
 
-				Collections.shuffle(newList.newCardsWithSpecial().getCards());
+				Collections.shuffle(CardFactory.newCards().getCards());
 			}
 
 		}
