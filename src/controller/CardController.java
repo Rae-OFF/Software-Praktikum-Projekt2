@@ -384,14 +384,14 @@ public class CardController {
 			}
 		}
 
-		/**
+	/*	/**
 		 * Führt das mischen der Karten aus.
 		 * @param move
 		 * 		Bekommt den Zug übergeben.
 		 * @param action
 		 * 		Bekommt die Aktion übergeben.
-		 */
-/*
+
+
 		public void shuffle (Move move, Action action){
 
 			if (action.getActionType() == SHUFFLE) {
@@ -399,6 +399,22 @@ public class CardController {
 			}
 
 		}
- */
+ 	*/
 
+	/**
+	 * Zählmethode für die Anzahl der Karten eines Spielers.
+	 * @param persons
+	 * 		Bekommt den gesuchten Personentyp übergeben.
+	 * @param player
+	 * 		Bekommt den Spieler übersucht.
+	 * @return Gibt die Anzahl der Karten zurück.
+	 */
+	public int getAmountOf(PersonType persons, PlayerState player){
+		return (int) player.getCards().getCards().stream()
+				.filter(item ->
+						item instanceof Person && ((Person) item).getPersonType().equals(persons)
+				)
+				.count();
 	}
+
+}
