@@ -39,9 +39,8 @@ public class CardController {
 		if(harbourCards.size()>=5){
 
 			CardStack stack = player.getCoins(); // get player's coin stack
-			List<Card> coins = stack.getCards(); // get a list of these coins
-			coins.add(pop(move.getCardPile())); // add one coin (taken from top card of the card pile) to player's stack
-			coins.add(pop(move.getCardPile())); // add one more coin
+
+			stack.pushList(gameController.popCardPile(move, 2)); // add one coin (taken from top card of the card pile) to player's stack
 		}
 	}
 
@@ -65,17 +64,15 @@ public class CardController {
 						for(Card jester: playercards ){
 							if(jester instanceof Person && ((Person) jester).getPersonType().equals(JESTER)){        // if JESTER is at player's hand, all these players get 1 coin
 							CardStack stack =player.getCoins();
-							List<Card> coins = stack.getCards();
-							coins.add(pop(move.getCardPile()));  // coin card popped from card pile and removed from pile
-							player.setCoins(stack);
+
+							stack.pushList(gameController.popCardPile(move, 1));
 							}
 						}
 				}
 			}else {   // if in phase 2, only active player get 1 coin
 
 					CardStack stack = player.getCoins();
-					List<Card> coins = stack.getCards();
-					coins.add(pop(move.getCardPile()));
+					stack.pushList(gameController.popCardPile(move, 1));
 			}
 		}
 
@@ -102,8 +99,7 @@ public class CardController {
 				if (trader instanceof Person && ((Person) trader).getPersonType().equals(TRADER) && ((Person) trader).getColour().equals(((Ship) card).getColour())) {
 
 					CardStack stack = player.getCoins();  // add one 1 to player's coin stack
-					List<Card> coins = stack.getCards();
-					coins.add(pop(move.getCardPile()));
+					stack.pushList(gameController.popCardPile(move, 1));
 
 				}
 			}
@@ -121,7 +117,7 @@ public class CardController {
 
 		CardStack stack = move.getCardPile();
 
-		Card card = pop(stack);   // pop 1 card from the card pile
+		Card card = gameController.popCardPile(move, 1).get(0);// pop 1 card from the card pile
 
 		action.setAffectedCard(card);   // set this popped card as affected card
 
@@ -144,19 +140,6 @@ public class CardController {
 		}
 	}
 
-	/**
-	 * get a card from a pile, and remove this card from this pile
-	 * @param stack a CardStack object
-	 * @return a card
-	 */
-	public Card pop(CardStack stack){
-
-		Card card = stack.getCards().get(0);
-
-		stack.getCards().remove(card);
-
-		return card;
-	}
 
 	/**
 	 * method of execute a taxIncrease card
@@ -242,15 +225,15 @@ public class CardController {
 		if(player.equals(actor)) {  // if active place wants to take the ship
 
 			for(int i=0; i< ((Ship) action.getAffectedCard()).getCoins(); i++ ) {
-				player.getCoins().getCards().add(pop(move.getCardPile()));
+				CardStack stack = player.getCoins();
+				stack.pushList(gameController.popCardPile(move, 1));
 			}
 		}else{   // if other players want to take the ship
 
-			player.getCoins().getCards().add(pop(move.getCardPile()));
-			for(int i=0; i< ((Ship) action.getAffectedCard()).getCoins()-1; i++ ) {
+			player.getCoins().pushList(gameController.popCardPile(move, 1));
 
-				actor.getCoins().getCards().add(pop(move.getCardPile()));
-			}
+			actor.getCoins().pushList(gameController.popCardPile(move,((Ship) action.getAffectedCard()).getCoins()));
+
 		}
 	}
 
@@ -268,23 +251,24 @@ public class CardController {
 		PlayerState actor = move.getActor();
 
 		int money = mainController.getPlayerController().getCoins(actor,move);  // get total amount of coins from actor
-		int personPrice = ((Person)action.getAffectedCard()).getPrice();  // get price of this Person card
+		int personPrice = ((Person)action.getAffectedCard()).getPrice();  // get pric
+
+		Card card = (Person)action.getAffectedCard();
 
 		if(money >= personPrice ){
 
 				if(!player.equals(actor)) {   // if other players want to buy
 
-					player.getCoins().getCards().add(pop (actor.getCoins()));  // pay active player one coin
+					player.getCoins().push((actor.getCoins().pop()));  // pay active player one coin
 
 				}
- // else, this actor(active player) will pay for this card
+
 			CardStack stack = actor.getCoins();
-			List<Card> disCard = move.getDiscardPile().getCards();
 
-			for(int i=0; i< personPrice; i++) {
+			move.getDiscardPile().pushList(stack.popList(personPrice));
 
-				disCard.add(pop(stack));
-			}
+			stack.push(move.getHarbour().getCard(card));
+
 		}
 	}
 
@@ -303,7 +287,7 @@ public class CardController {
 			int numSwords = 0;
 
 			if (shipCard.getForce() == 100) {
-				move.getHarbour().getCards().add(shipCard);
+				move.getHarbour().push(shipCard);
 
 			} else {
 				for (Card card : cardsInHand) {
@@ -314,11 +298,14 @@ public class CardController {
 					}
 				}
 				if (numSwords >= shipCard.getForce()) {
-					for(int i= 0; i < shipCard.getForce() ; i++) {
-						move.getActivePlayer().getCoins().getCards().add(pop(move.getCardPile()));
-					}
+
+					move.getDiscardPile().push(shipCard);
+
 				}
-				move.getDiscardPile().getCards().add(shipCard);
+				else{
+					move.getHarbour().push(shipCard);
+				}
+
 			}
 		}
 	}

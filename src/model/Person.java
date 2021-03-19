@@ -160,4 +160,9 @@ public class Person implements Card {
         }
 
     }
+
+    @Override
+    public String toString(){
+        return "Person: " + personType.toString() + " " + "VPoints: " + victoryPoints + " " + "Price: " + price;
+    }
 }

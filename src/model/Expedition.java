@@ -85,4 +85,9 @@ public class Expedition implements Card {
             return false;
         }
     }
+
+    @Override
+    public String toString(){
+        return "Expedition: " + "VPoints: " + "Coins: " + coins;
+    }
 }

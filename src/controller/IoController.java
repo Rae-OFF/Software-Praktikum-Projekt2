@@ -1,15 +1,9 @@
 package controller;
 
-import model.Card;
-import model.CardStack;
-import model.Expedition;
-import model.Move;
+import model.*;
 
 import javax.xml.transform.Result;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -19,9 +13,27 @@ public class IoController {
 
 	private MainController mainController;
 
+	private PrintWriter writer;
+
 
 	public IoController(MainController mainController) {
+
 		this.mainController = mainController;
+
+		String currentPath = System.getProperty("user.dir");
+		String logFile = currentPath+"\\game.log";
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new FileOutputStream(logFile, false));
+		}catch(IOException e){
+			System.out.println(e.getMessage());
+			return;
+		}
+
+
+		writer.close();
+
+
 	}
 
 	/**
@@ -41,12 +53,12 @@ public class IoController {
 	/**
 	 *
  	 */
-	public void log(Move move){
+	public void log(Move move, int count){
 		String currentPath = System.getProperty("user.dir");
 		String logFile = currentPath+"\\game.log";
 		PrintWriter writer;
 		try {
-			writer = new PrintWriter(logFile);
+			writer = new PrintWriter(new FileOutputStream(logFile, true));
 		}catch(IOException e){
 			System.out.println(e.getMessage());
 			return;
@@ -54,12 +66,26 @@ public class IoController {
 
 		String currentActor = move.getActor().getPlayer().getName();
 		String actorHarbour = move.getHarbour().getCards().toString();
+		int harbourSize = move.getHarbour().getSize();
 		int discardPileSize = move.getDiscardPile().getSize();
 		int cardPileSize = move.getCardPile().getSize();
+
+		PlayerState activePlayer = move.getActivePlayer();
+		PlayerState actor = move.getActor();
+
+		//List<PlayerState>
+
+		Action action = move.getAction();
+
 		String zonked;
 
-		String message = "";
-		writer.write(message);
+		String player1 = "Name: " ;
+
+		String actionMessage = "[Action] " + "ActivePlayer:" + "Type: " + action.getActionType().toString() + action.getAffectedCard().toString();
+		String stateMessage = "[State] " +  "Count: " + count + " CardPileSize: " +cardPileSize + " HarbourSize: " + harbourSize + " DiscardPileSize: " + discardPileSize;
+
+		writer.println(stateMessage);
+		//writer.write(message);
 
 		writer.close();
 	}

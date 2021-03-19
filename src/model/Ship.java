@@ -91,4 +91,9 @@ public class Ship implements Card {
 			return false;
 		}
 	}
+
+	@Override
+	public String toString(){
+		return "Ship" + "Colour: " + colour + " Coins: " + coins + " Force: " + force;
+	}
 }

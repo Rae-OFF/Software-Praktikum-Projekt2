@@ -63,10 +63,34 @@ public class CardStack {
 	 */
 	public List<Card> popList(int numberOf){
 		List<Card> cards = new ArrayList<>();
-		for(int i = 0; i <= numberOf; i++){
+		for(int i = 0; i < numberOf; i++){
 			cards.add(this.getCards().remove(0));
 		}
 		return cards;
+	}
+
+	public Card getCard(Card card){
+		List<Card> cards = this.getCards();
+
+		int index = -1;
+
+		for(int i = 0; i < cards.size(); i++){
+			if(cards.get(i).equals(card)){
+				index = i;
+			}
+		}
+		if(index != -1){
+			Card retCard = cards.get(index);
+			cards.remove(index);
+			return retCard;
+		}
+		else{
+			return null;
+		}
+
+
+
+
 	}
 
 	/**
