@@ -126,16 +126,17 @@ public class CardController {
 			taxIncrease(move);
 		}else if(card instanceof Expedition){
 
-			move.getExpeditionPile().getCards().add(card);  //if is Expedition, put it in expedition's pile
+			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
 
 		}else if(card instanceof Ship){
 
 			// getGameController().getPossibleActions(move);   alternatively can use this method
-			move.getHarbour().getCards().add(card);
+			move.setShipToDefend(card);
+			//move.getHarbour().push(card);
 
 		}else{      // in case of a Person
 
-			move.getHarbour().getCards().add(card);
+			move.getHarbour().push(card);
 
 		}
 	}
@@ -224,15 +225,18 @@ public class CardController {
 
 		if(player.equals(actor)) {  // if active place wants to take the ship
 
-			for(int i=0; i< ((Ship) action.getAffectedCard()).getCoins(); i++ ) {
-				CardStack stack = player.getCoins();
-				stack.pushList(gameController.popCardPile(move, 1));
-			}
+			CardStack stack = player.getCoins();
+			stack.pushList(gameController.popCardPile(move,((Ship) action.getAffectedCard()).getCoins()));
+
+			move.getDiscardPile().push(move.getHarbour().getCard(action.getAffectedCard()));
+
 		}else{   // if other players want to take the ship
 
 			player.getCoins().pushList(gameController.popCardPile(move, 1));
 
 			actor.getCoins().pushList(gameController.popCardPile(move,((Ship) action.getAffectedCard()).getCoins()));
+
+			move.getDiscardPile().push(move.getHarbour().getCard(action.getAffectedCard()));
 
 		}
 	}
@@ -288,6 +292,7 @@ public class CardController {
 
 			if (shipCard.getForce() == 100) {
 				move.getHarbour().push(shipCard);
+				move.setShipToDefend(null);
 
 			} else {
 				for (Card card : cardsInHand) {
@@ -300,10 +305,12 @@ public class CardController {
 				if (numSwords >= shipCard.getForce()) {
 
 					move.getDiscardPile().push(shipCard);
+					move.setShipToDefend(null);
 
 				}
 				else{
 					move.getHarbour().push(shipCard);
+					move.setShipToDefend(null);
 				}
 
 			}
@@ -371,7 +378,7 @@ public class CardController {
 		 */
 		public void skip (Move move, Action action){
 
-			PlayerState player = move.getActivePlayer();
+/*			PlayerState player = move.getActivePlayer();
 
 			if (action.getActionType().equals(SKIP)) {
 				if (player != move.getActor()) {
@@ -381,7 +388,7 @@ public class CardController {
 					gameController.changeActivePlayer(move);
 				}
 
-			}
+			}*/
 		}
 
 	/*	/**

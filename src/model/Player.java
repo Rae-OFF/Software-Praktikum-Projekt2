@@ -26,6 +26,10 @@ public class Player {
 		this.playerType = playerType;
 	}
 
+	public boolean equals(Player other){
+		return this.name == other.name && this.playerType == other.playerType;
+	}
+
 	/**
 	 *
 	 * @return Gibt den Namen zurück.

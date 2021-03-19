@@ -42,6 +42,35 @@ public class GameController {
 		return popCardPile;
 	}
 
+/*	public void finishRound(Move move) {
+		Action lastAction = move.getAction();
+		if(lastAction != null) {
+			CardStack harbour = move.getHarbour();
+			List<Card> harbourCards = harbour.getCards();
+			if (move.isPhase1()) {
+				//ab diesem Punkt darf man nicht weiter ziehen
+				if (lastAction.getActionType().equals(SKIP) || isZonked(move)) {
+					if (harbourCards.size() == 0) {
+						mainController.getCardController().execJester(move, lastAction);
+						changeActivePlayer(move);
+					} else if(!lastAction.getActionType().equals(DRAW_CARD)){
+						changeActor(move);
+						move.setPhase1(false);
+					}
+				}
+			} else {//Exception caught in drawCard (TaxIncrease/Expedition cards only)
+				if (!lastAction.getActionType().equals(DRAW_CARD) && move.getActivePlayer().equals(move.getActor()) || harbourCards.size() == 0) {
+					changeActivePlayer(move);
+					move.setPhase1(true);
+					move.getDiscardPile().getCards().addAll(harbourCards);
+					move.getHarbour().getCards().clear();
+				} else if (lastAction.getActionType().equals(SKIP)) {
+					changeActor(move);
+				}
+			}
+		}
+	}*/
+
 	/**
 	 * Wechselt den aktuellen Spieler zum nächsten Spieler in Phase 2.
 	 * @param move
@@ -52,6 +81,21 @@ public class GameController {
 		PlayerState actor = move.getActor();
 		int index = (playerList.indexOf(actor)+1) % playerList.size();
 		move.setActor(playerList.get(index));
+		move.setBuyLimit(1);
+	}
+
+	/**
+	 * Wechselt den aktiven Spieler.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 */
+	public void changeActivePlayer (Move move){
+		List<PlayerState> playerList = move.getPlayers();
+		PlayerState activePlayer = move.getActivePlayer();
+		int index = (playerList.indexOf(activePlayer)+1) % playerList.size();
+		move.setActivePlayer(playerList.get(index));
+		move.setActor(playerList.get(index));
+		move.setPhase1(true);
 	}
 
 	/**
@@ -60,32 +104,47 @@ public class GameController {
 	 * 		Bekommt einen Zug übergeben.
 	 */
 	public void finishRound(Move move) {
-		Action lastAction = mainController.getGameController().currentMove().getAction();
-		if(lastAction != null) {
-			CardStack harbour = move.getHarbour();
-			List<Card> harbourCards = harbour.getCards();
-			if (move.isPhase1()) {
-				//ab diesem Punkt darf man nicht weiter ziehen
-				if (lastAction.getActionType().equals(SKIP) || isZonked(move)) {
-					if (harbourCards.size() == 0) {
-						mainController.getCardController().execJester(move, lastAction);
-						changeActivePlayer(move);
-					} else {
-						changeActor(move);
-						move.setPhase1(false);
-					}
-				}
-			} else {//Exception caught in drawCard (TaxIncrease/Expedition cards only)
-				if (move.getActivePlayer().equals(move.getActor()) || harbourCards.size() == 0) {
+		Action lastAction = move.getAction();
+
+			if(lastAction.getActionType().equals(DRAW_CARD)){
+				if(isZonked(move)){
 					changeActivePlayer(move);
-					move.setPhase1(true);
-					move.getDiscardPile().getCards().addAll(harbourCards);
-					move.getHarbour().getCards().clear();
-				} else if (lastAction.getActionType().equals(SKIP)) {
-					changeActor(move);
+					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
 				}
 			}
-		}
+
+			if(lastAction.getActionType().equals(DEFEND)){
+
+			}
+
+			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
+
+			}
+
+			if(lastAction.getActionType().equals(TAKE_SHIP)){
+				move.setPhase1(false);
+			}
+
+			if(lastAction.getActionType().equals(BUY_PERSON)){
+				move.setPhase1(false);
+
+			}
+
+			if(lastAction.getActionType().equals(START_EXPEDITION)){
+				move.setPhase1(false);
+			}
+
+			if(lastAction.getActionType().equals(SKIP)){
+				changeActor(move);
+				if(move.getActor().equals(move.getActivePlayer())){
+					changeActivePlayer(move);
+				}
+			}
+
+			if(lastAction.getActionType().equals(SHUFFLE)){
+
+			}
+
 	}
 
 
@@ -110,7 +169,7 @@ public class GameController {
 			}
 
 		}else{
-			cardPile = mainController.getIoController().loadCardDeck(cardPilePath);
+			cardPile = mainController.getIoController().loadCardDeck(cardPilePath, players.size());
 		}
 		List<Player> playersOrdered = playerController.setPlayerOrder(players, randomPlayerOrder);
 
@@ -127,8 +186,6 @@ public class GameController {
 		game.setPlayerStates(states);
 
 
-		game.setPlayerStates(states);
-
 		mainController.getGameSystem().setCurrentGame(game);
 
 		Move move = new Move(null, true, null, null);
@@ -138,6 +195,9 @@ public class GameController {
 		move.setPlayers(game.getPlayerStates());
 		move.setActor(states.get(0));
 		move.setActivePlayer(states.get(0));
+
+		Action action = new Action(SHUFFLE, null);
+		move.setAction(action);
 
 		game.setLastMove(move);
 
@@ -174,9 +234,11 @@ public class GameController {
 				break;
 			case TAKE_SHIP:
 				mainController.getCardController().takeShip(nextMove, action);
+				nextMove.setBuyLimit(nextMove.getBuyLimit() - 1);
 				break;
 			case BUY_PERSON:
 				mainController.getCardController().buyPerson(nextMove, action);
+				nextMove.setBuyLimit(nextMove.getBuyLimit() - 1);
 				break;
 			case DEFEND:
 				mainController.getCardController().defend(nextMove, action);
@@ -191,6 +253,8 @@ public class GameController {
 			//TODO: ACCEPT_SHIP entfernen?
 			case ACCEPT_SHIP:
 				//mainController.getCardController().(nextMove, action);
+				move.getHarbour().push(move.getShipToDefend());
+				move.setShipToDefend(null);
 				break;
 /*			case SHUFFLE:
 				mainController.getCardController().shuffle(nextMove, action);
@@ -220,24 +284,31 @@ public class GameController {
 		//count Governors and set buyLimit
 
 		//DRAW_CARD;
-		if( actor == activePlayer && !isZonked(move)) {
+		if(move.getShipToDefend() != null)  {
+			//DEFEND
+			results.add(new Action(DEFEND, move.getShipToDefend()));
+
+			//ACCEPT_SHIP
+			results.add(new Action(ACCEPT_SHIP, move.getShipToDefend()));
+
+			return results;
+		}
+
+		if( actor == activePlayer && !isZonked(move) && move.isPhase1()) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
-		if(move.getShipToDefend() == null) {
-			//TAKE_SHIP;
-			for (Card card : harbourCards) {
-				if(card instanceof Ship){
-					results.add(new Action(TAKE_SHIP, card));
+
+
+			if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
+				//TAKE_SHIP;
+				for (Card card : harbourCards) {
+					if (card instanceof Ship) {
+						results.add(new Action(TAKE_SHIP, card));
+					}
 				}
 			}
-		}else{
-			//DEFEND
-			results.add(new Action(DEFEND,move.getCardPile().peek()));
 
-			//ACCEPT_SHIP
-			results.add(new Action(ACCEPT_SHIP,move.getCardPile().peek()));
-		}
 
 		//BUY_PERSON;
 		for (Card card : harbourCards) {
@@ -359,19 +430,6 @@ public class GameController {
 				}
 			}
 			return false;
-		}
-
-
-		/**
-		 * Wechselt den aktiven Spieler.
-		 * @param move
-		 * 		Bekommt einen Zug übergeben.
-		 */
-		public void changeActivePlayer (Move move){
-			List<PlayerState> playerList = move.getPlayers();
-			PlayerState activePlayer = move.getActivePlayer();
-			int index = playerList.indexOf(activePlayer)+1 % playerList.size();
-			move.setActivePlayer(playerList.get(index));
 		}
 
 

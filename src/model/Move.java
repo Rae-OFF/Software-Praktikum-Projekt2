@@ -67,9 +67,9 @@ public class Move {
 	 */
 	public Move(Move skeleton) {
 
-		this.actor = skeleton.getActor();
+		this.actor = null;
 		this.phase1 = skeleton.isPhase1();
-		this.activePlayer = skeleton.getActivePlayer();
+		this.activePlayer = null;
 		this.harbour = new CardStack(skeleton.getHarbour());
 		this.cardPile = new CardStack(skeleton.getCardPile());
 		this.discardPile = new CardStack(skeleton.getDiscardPile());
@@ -82,6 +82,15 @@ public class Move {
 		for(PlayerState playerState: skeleton.getPlayers()){
 
 			this.players.add(new PlayerState(playerState));
+		}
+
+		for(PlayerState tplayer : this.players){
+			if(tplayer.getPlayer().equals(skeleton.getActivePlayer().getPlayer())){
+				this.activePlayer = tplayer;
+			}
+			if(tplayer.getPlayer().equals(skeleton.getActor().getPlayer())){
+				this.actor = tplayer;
+			}
 		}
 	}
 

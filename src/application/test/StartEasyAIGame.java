@@ -23,8 +23,8 @@ public class StartEasyAIGame extends Application {
 
             this.mainController = mainController;
 
-            Player player1 = new Player("Eazy E1", PlayerType.EASYAI);
-            Player player2 = new Player("Eazy E2", PlayerType.EASYAI);
+            Player player1 = new Player("OneOne", PlayerType.EASYAI);
+            Player player2 = new Player("TwoTwo", PlayerType.EASYAI);
 
             List<Player> players = new ArrayList<>();
             players.add(player1);
@@ -34,7 +34,8 @@ public class StartEasyAIGame extends Application {
             gameSystem.setPlayers(players);
             mainController.setGameSystem(gameSystem);
             GameController gameController = mainController.getGameController();
-            gameController.init(null, players, false, false, false);
+            String cardPilePath = "C:\\Users\\Aaron\\Desktop\\Uni\\5_Semester\\SoPra\\Projekt2\\projekt2\\shuffled.csv";
+            gameController.init(cardPilePath, players, false, false, false);
 
             gameLoop();
 

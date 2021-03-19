@@ -74,21 +74,79 @@ public class IoController {
 		PlayerState activePlayer = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
-		//List<PlayerState>
+		List<PlayerState> players = move.getPlayers();
+
+		PlayerState playerState1 = players.get(0);
+
+		PlayerState playerState2 = players.get(1);
+
+		Player player1 = playerState1.getPlayer();
+		Player player2 = playerState2.getPlayer();
 
 		Action action = move.getAction();
 
 		String zonked;
 
-		String player1 = "Name: " ;
+		String player1Message = "|" + player1.getName() + "|" + " Coins: " + playerState1.getCoins().getSize() + " Cards: " + playerState1.getCards().getSize();
+		String player2Message = "|" + player2.getName() + "|"  + " Coins: " + playerState2.getCoins().getSize()+ " Cards: " + playerState2.getCards().getSize();
 
-		String actionMessage = "[Action] " + "ActivePlayer:" + "Type: " + action.getActionType().toString() + action.getAffectedCard().toString();
-		String stateMessage = "[State] " +  "Count: " + count + " CardPileSize: " +cardPileSize + " HarbourSize: " + harbourSize + " DiscardPileSize: " + discardPileSize;
+		if(activePlayer.equals(playerState1)){
+			player1Message = player1Message + " #ActivePlayer#";
+		}
+		else{
+			player2Message = player2Message + " #ActivePlayer#";
+		}
+
+		if(actor.equals(playerState1)){
+			player1Message = player1Message + " #Actor#";
+		}
+
+		else{
+			player2Message = player2Message + " #Actor#";
+		}
+
+		writer.println(player1Message);
+		writer.println(player2Message);
+
+		if(action != null){
+			String actionMessage = "";
+
+			actionMessage = "[Action] " + "Type: " + action.getActionType().toString();
+
+			if(action.getAffectedCard() != null)
+			{
+				actionMessage = actionMessage + " " + action.getAffectedCard().toString();
+			}
+
+			writer.println(actionMessage);
+		}
+
+
+		String stateMessage = "[State "  + count  + "]" + " CardPileSize: " +cardPileSize + " HarbourSize: " + harbourSize + " DiscardPileSize: " + discardPileSize;
 
 		writer.println(stateMessage);
 		//writer.write(message);
+		writer.println();
 
 		writer.close();
+	}
+
+	public void log(String message){
+
+		String currentPath = System.getProperty("user.dir");
+		String logFile = currentPath+"\\game.log";
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(new FileOutputStream(logFile, true));
+		}catch(IOException e){
+			System.out.println(e.getMessage());
+			return;
+		}
+
+		writer.println(message);
+
+		writer.close();
+
 	}
 
 
@@ -98,7 +156,7 @@ public class IoController {
 	 * 		Bekommt den Ort an dem sich das Kartendeck befindet übergeben.
 	 */
 
-	public CardStack loadCardDeck(String path) {
+	public CardStack loadCardDeck(String path, int playerNumber) {
 		CardStack cards = new CardStack();
 		List<Card> deck = cards.getCards();
 		BufferedReader reader;
@@ -122,7 +180,7 @@ public class IoController {
 			String variant = cardSpecs[1];
 			int coins = Integer.parseInt(cardSpecs[2]);
 
-			Card newCard = genCard(type,variant, coins);
+			Card newCard = genCard(type,variant, coins, playerNumber);
 			if(newCard!=null) {
 				deck.add(newCard);
 			}
@@ -137,14 +195,14 @@ public class IoController {
 	}
 
 
-	private Expedition genExpedition(String variant, int coins){
+	private Expedition genExpedition(String variant, int coins, int playerNumber){
 		Expedition result;
 		Map<PersonType, Integer> requirements= new HashMap<PersonType, Integer>();
 		int victoryPoints=0;
 
 		switch (variant){
 			case "3 Different (5P only)":
-				if(mainController.getGameSystem().getCurrentGame().getPlayers().size()>4) {
+				if(playerNumber>4) {
 				    requirements.put(PersonType.SETTLER, 0);
 					requirements.put(PersonType.CAPTAIN, 1);
 					requirements.put(PersonType.PRIEST, 2);
@@ -306,11 +364,11 @@ public class IoController {
 		return res;
 	}
 
-	private Card genCard(String name, String variant, int coins){
+	private Card genCard(String name, String variant, int coins, int playerNumber){
 	    Card result=null;
 		switch (name){
 			case "Expedition":
-				result = genExpedition(variant, coins);
+				result = genExpedition(variant, coins, playerNumber);
 				break;
 			case "Tax Increase":
 			    result = genTaxIncrease(variant);

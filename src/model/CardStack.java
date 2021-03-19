@@ -113,7 +113,7 @@ public class CardStack {
 	 * @return Gibt die oberste Karte zurück ohne diese zu entfernen.
 	 */
 	public Card peek(){
-		if(this.getCards().get(0) != null){
+		if(this.getCards().size() > 0){
 			return this.getCards().get(0);
 		}
 
