@@ -165,19 +165,23 @@ public class CardFactory {
         Person person = new Person();
         person.setMetaData(ADMIRAL.name(),null, ADMIRAL);
 
+
    // 1pc with 5 coins
-        person.setValues(5,1,0);
-        cards.add(person);
+        Person person1 = new Person();
+        person1.setValues(5,1,0);
+        cards.add(person1);
  // 3pc with 7 coins
-        person.setValues(7,2,0);
+        Person person2 = new Person();
+        person2.setValues(7,2,0);
         for (int i = 0; i < 3; i++) {
-            cards.add(person); cards.add(person); cards.add(person);
+            cards.add(person2);
         }
-
-
 // 2pc with 9 coins
-        person.setValues(9,3,0);
-        cards.add(person); cards.add(person);
+
+        Person person3 = new Person();
+        person3.setValues(9,3,0);
+        cards.add(person3);
+        cards.add(person3);
 
         return cards;
 
@@ -204,22 +208,24 @@ public class CardFactory {
             cards.add(trader);
 
             trader.setMetaData(TRADER.name(),RED,TRADER); //2pcs red, 3 coins
-            cards.add(trader); cards.add(trader);
-
+            cards.add(trader);
         }
+        Person trader1 = new Person();
+        trader1.setMetaData(TRADER.name(),BLUE,TRADER); //1pc blue, 3 coins
+        cards.add(trader1);
 
-        trader.setMetaData(TRADER.name(),BLUE,TRADER); //1pc blue, 3 coins
-        cards.add(trader);
+        Person trader2 = new Person();
+        trader2.setMetaData(TRADER.name(), YELLOW,TRADER); //1pc yellow, 3 coins
+        cards.add(trader2);
 
-        trader.setMetaData(TRADER.name(), YELLOW,TRADER); //1pc yellow, 3 coins
-        cards.add(trader);
+        Person trader3 = new Person();
+        trader3.setValues(5,2,0); // generate trader3 with 5 coins, 2 victory points
+        trader3.setMetaData(TRADER.name(), YELLOW,TRADER);  //1pcs blue, 5 coins
+        cards.add(trader3);
 
-        trader.setValues(5,2,0); // generate trader with 5 coins, 2 victory points
-        trader.setMetaData(TRADER.name(), YELLOW,TRADER);  //1pcs blue, 5 coins
-        cards.add(trader);
-
-        trader.setMetaData(TRADER.name(),BLUE,TRADER); //1pcs blue, 5 coins
-        cards.add(trader);
+        Person trader4 = new Person();
+        trader4.setMetaData(TRADER.name(),BLUE,TRADER); //1pcs blue, 5 coins
+        cards.add(trader4);
 
         return cards;
 
@@ -247,8 +253,8 @@ public class CardFactory {
 
  // add both with 5 cards
         for(int i=0; i<5; i++){
-            cards.add(captain);
             cards.add(settler);
+            cards.add(captain);
         }
 
         return cards;
@@ -290,9 +296,10 @@ public class CardFactory {
 // add JackOfAllTrader  - 3 cards
         jack.setValues(6,1,0);
         jack.setMetaData(PersonType.JACK_OF_ALL_TRADES.name(), null,PersonType.JACK_OF_ALL_TRADES);
-        cards.add(jack);
-        cards.add(jack);
-        cards.add(jack);
+
+        for(int i=0; i<3; i++){
+            cards.add(jack);
+        }
 
         return cards;
 
@@ -312,13 +319,13 @@ public class CardFactory {
 
         pirate.setMetaData(PIRATE.name(), null, PIRATE);
 
-
         pirate.setValues(7,2,2);
         cards.add(pirate);
         cards.add(pirate);
 
-        pirate.setValues(9,3,2);
-        cards.add(pirate);
+        Person pirate2 = new Person();
+        pirate2.setValues(9,3,2);
+        cards.add(pirate2);
 
         return cards;
     }
@@ -338,13 +345,15 @@ public class CardFactory {
         jester.setValues(5,1,0);
         cards.add(jester);
 
-        jester.setValues(7,2,0);
-        cards.add(jester);
-        cards.add(jester);
-        cards.add(jester);
+        Person jester1 = new Person();
+        jester1.setValues(7,2,0);
+        cards.add(jester1);
+        cards.add(jester1);
+        cards.add(jester1);
 
-        jester.setValues(9,3,0);
-        cards.add(jester);
+        Person jester2 = new Person();
+        jester2.setValues(9,3,0);
+        cards.add(jester2);
 
 
         return cards;
@@ -358,24 +367,27 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-// add Sailor - 10 cards (1 LOST)
+// add Sailor - 10 cards
         Person sailor = new Person();
 
  // 7pcs - 3 coins, 1 victoryPoint
         sailor.setMetaData(SAILOR.name(), null, SAILOR);
         sailor.setValues(3,1,1);
         for(int i=0; i<7; i++){
-
             cards.add(sailor);
         }
-
 // 2pcs - 5 coins, 2 victoryPoint
-        sailor.setValues(5,2,1);
-        cards.add(sailor);cards.add(sailor);
+
+        Person sailor2 = new Person();
+        sailor2.setValues(5,2,1);
+        cards.add(sailor2);
+        cards.add(sailor2);
 
  // 1pc - 7 coins, 3 victoryPoint
-        sailor.setValues(7,3,1);
-        cards.add(sailor);
+
+        Person sailor3 = new Person();
+        sailor3.setValues(7,3,1);
+        cards.add(sailor3);
 
 
         return cards;
@@ -390,15 +402,17 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-        Person mademoiselles = new Person();
 // add	Mademoiselles - 4 cards
+        Person mademoiselles = new Person();
         mademoiselles.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
         mademoiselles.setValues(7,2,0);
         cards.add(mademoiselles);
         cards.add(mademoiselles);
-        mademoiselles.setValues(9,3,0);
-        cards.add(mademoiselles);
-        cards.add(mademoiselles);
+
+        Person mademoiselles2 = new Person();
+        mademoiselles2.setValues(9,3,0);
+        cards.add(mademoiselles2);
+        cards.add(mademoiselles2);
 
         return cards;
     }
@@ -435,13 +449,11 @@ public class CardFactory {
 
 //add taxIncrease - 4 cards
 
-        TaxIncrease taxIncrease = new TaxIncrease(false);
-        cards.add(taxIncrease);
-        cards.add(taxIncrease);
+        cards.add(new TaxIncrease(false));
+        cards.add(new TaxIncrease(false));
 
-        taxIncrease.setTypeSwords(true);
-        cards.add(taxIncrease);
-        cards.add(taxIncrease);
+        cards.add(new TaxIncrease(true));
+        cards.add(new TaxIncrease(true));
 
         return cards;
     }
@@ -472,36 +484,30 @@ public class CardFactory {
         Expedition cross = new Expedition(requirements,2,4);
         cards.add(cross);
 
-// add expedition with 2 crosses + 1 hous
+// add expedition with 2 crosses + 1 house
         requirements.put(PRIEST, 2);
         requirements.put(SETTLER, 1);
         Expedition crossHouse = new Expedition(requirements,3,6);
         cards.add(crossHouse);
 
-// add expedition with 2 anchors + 1 hous
+// add expedition with 2 anchors + 1 house
         requirements.put(CAPTAIN, 2);
         requirements.put(SETTLER, 1);
         Expedition anchorHouse = new Expedition(requirements,3,6);
         cards.add(anchorHouse);
 
-// add expedition with 2 anchors + 1 hous
-        requirements.put(CAPTAIN, 1);
-        requirements.put(SETTLER, 1);
-        requirements.put(PRIEST, 1);
-        Expedition special = new Expedition(requirements,3,5);
+// add expedition with 2 anchors + 1 house
+
         if(withSpecial){
+            requirements.put(CAPTAIN, 1);
+            requirements.put(SETTLER, 1);
+            requirements.put(PRIEST, 1);
+            Expedition special = new Expedition(requirements,3,5);
             cards.add(special);
         }
 
-
         return cards;
     }
-
-    /**
-     *
-     * @return get the 6th special Expedition card
-     */
-
 
     /**
      *
@@ -523,6 +529,7 @@ public class CardFactory {
 
             cards.addAll(newList.generateAdmiral());
             cards.addAll(newList.generateGovernor());
+            cards.addAll(newList.generateTrader());
             cards.addAll(newList.generateJackOfAllTrader());
             cards.addAll(newList.generateJester());
             cards.addAll(newList.generateMademoiselles());
@@ -553,6 +560,7 @@ public class CardFactory {
 
         cards.addAll(newList.generateAdmiral());
         cards.addAll(newList.generateGovernor());
+        cards.addAll(newList.generateTrader());
         cards.addAll(newList.generateJackOfAllTrader());
         cards.addAll(newList.generateJester());
         cards.addAll(newList.generateMademoiselles());
@@ -563,11 +571,8 @@ public class CardFactory {
         cards.addAll(newList.generateTaxIncrease());
         cards.addAll(newList.generateExpedition(true));
 
-
         return stack;
 
     }
-
-
 
 }
