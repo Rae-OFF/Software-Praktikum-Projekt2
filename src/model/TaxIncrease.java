@@ -43,4 +43,10 @@ public class TaxIncrease implements Card {
 			return false;
 		}
 	}
+
+	@Override
+	public String toString(){
+		return "TaxIncrease: " + "typeSwords: " + typeSwords;
+
+	}
 }

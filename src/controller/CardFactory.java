@@ -12,7 +12,6 @@ import static model.PersonType.*;
 
 public class CardFactory {
 
-    private List<Card> cards = new ArrayList<>();
 
     /**
      *
@@ -22,6 +21,7 @@ public class CardFactory {
 
     public List<Card> generateBlueShips () {
 
+        List<Card> cards = new ArrayList<>();
 
         //blue, 1 coin, 1 force. 3pcs
         for (int i = 0; i < 3; i++) {
@@ -50,6 +50,8 @@ public class CardFactory {
 
     public List<Card> generateRedShips () {
 
+        List<Card> cards = new ArrayList<>();
+
 
         //red ships with force 1, 1 coin, 3pcs
         //red ships with force 3, 2 coin, 3pcs
@@ -75,6 +77,8 @@ public class CardFactory {
 
     public List<Card> generateBlackShips () {
 
+        List<Card> cards = new ArrayList<>();
+
 
 //black ships with force 2,coin 1, 3pcs
  //black ships with force 4,coin 2, 3pcs
@@ -98,6 +102,8 @@ public class CardFactory {
      */
 
     public List<Card> generateYellowShips (){
+
+        List<Card> cards = new ArrayList<>();
 
 // 1 force, 1 coin, 3pcs
         for (int i = 0; i < 3; i++) {
@@ -126,6 +132,8 @@ public class CardFactory {
 
     public List<Card> generateGreenShips(){
 
+        List<Card> cards = new ArrayList<>();
+
 // 1 force, 1 coin, 3pcs
         for (int i = 0; i < 3; i++) {
             cards.add(new Ship(GREEN, 1, 1));
@@ -152,8 +160,7 @@ public class CardFactory {
      */
     public List<Card> generateAdmiral(){
 
-        CardStack stack = new CardStack();
-        List<Card> cards = stack.getCards();
+        List<Card> cards = new ArrayList<>();
 
         Person person = new Person();
         person.setMetaData(ADMIRAL.name(),null, ADMIRAL);
@@ -181,6 +188,8 @@ public class CardFactory {
      */
 
     public List<Card> generateTrader(){
+
+        List<Card> cards = new ArrayList<>();
 
         Person trader = new Person();
 
@@ -222,6 +231,8 @@ public class CardFactory {
 
     public List<Card> generateSettlerCaptain() {
 
+        List<Card> cards = new ArrayList<>();
+
 // add SETTLERS
         Person settler = new Person();
 
@@ -250,6 +261,8 @@ public class CardFactory {
 
     public List<Card> generatePriest() {
 
+        List<Card> cards = new ArrayList<>();
+
  // add Priest - 5pcs
         Person priest = new Person();
 
@@ -270,6 +283,8 @@ public class CardFactory {
      */
     public List<Card> generateJackOfAllTrader() {
 
+        List<Card> cards = new ArrayList<>();
+
         Person jack = new Person();
 
 // add JackOfAllTrader  - 3 cards
@@ -289,6 +304,8 @@ public class CardFactory {
      * @return  CardStack obj
      */
     public List<Card> generatePirate() {
+
+        List<Card> cards = new ArrayList<>();
 
 // add Pirates - 3 cards
         Person pirate = new Person();
@@ -313,6 +330,8 @@ public class CardFactory {
      */
     public List<Card> generateJester() {
 
+        List<Card> cards = new ArrayList<>();
+
         Person jester = new Person();
 // add Jester - 5 cards
         jester.setMetaData(JESTER.name(), null,JESTER);
@@ -336,6 +355,8 @@ public class CardFactory {
      * @return  CardStack obj
      */
     public List<Card> generateSailor() {
+
+        List<Card> cards = new ArrayList<>();
 
 // add Sailor - 10 cards (1 LOST)
         Person sailor = new Person();
@@ -367,6 +388,8 @@ public class CardFactory {
      */
     public List<Card> generateMademoiselles() {
 
+        List<Card> cards = new ArrayList<>();
+
         Person mademoiselles = new Person();
 // add	Mademoiselles - 4 cards
         mademoiselles.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
@@ -387,6 +410,8 @@ public class CardFactory {
      */
     public List<Card> generateGovernor() {
 
+        List<Card> cards = new ArrayList<>();
+
         // add Governors 4 cards
         Person governor = new Person();
 
@@ -405,6 +430,8 @@ public class CardFactory {
      * @return  CardStack obj
      */
     public List<Card> generateTaxIncrease() {
+
+        List<Card> cards = new ArrayList<>();
 
 //add taxIncrease - 4 cards
 
@@ -425,6 +452,8 @@ public class CardFactory {
          * @return  CardStack obj
          */
     public List<Card> generateExpedition(boolean withSpecial) {
+
+        List<Card> cards = new ArrayList<>();
 
         Map<PersonType, Integer> requirements = new HashMap<>();
 

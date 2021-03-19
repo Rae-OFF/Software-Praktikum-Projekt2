@@ -52,6 +52,8 @@ public class StartEasyAIGame extends Application {
 
         CardController cardController = mainController.getCardController();
 
+        IoController ioController = mainController.getIoController();
+
 
         int i = 0;
         while(gameController.currentGameIsRunning()){
@@ -59,7 +61,7 @@ public class StartEasyAIGame extends Application {
             PlayerState actor = gameController.getActor();
 
             Move lastMove = gameController.currentMove();
-
+            ioController.log(lastMove,i);
             Action action = null;
 
             Player player = actor.getPlayer();
@@ -72,6 +74,8 @@ public class StartEasyAIGame extends Application {
 
             System.out.println("Round: " + i);
             i++;
+
+
 
 /*            try{
                 sleep(5000);
