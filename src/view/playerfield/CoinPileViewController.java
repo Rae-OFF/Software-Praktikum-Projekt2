@@ -14,7 +14,8 @@ public class CoinPileViewController extends StackPane {
     public CoinPileViewController(MainController controller, PlayerState player){
         int coinAmount = player.getCoins().getSize();
         pileLabel = new PileLabelViewController(""+coinAmount);
-        pileImage = new CardPileImageViewController();
+        if(coinAmount>0)
+            pileImage = new CardPileImageViewController();
 
     }
 
