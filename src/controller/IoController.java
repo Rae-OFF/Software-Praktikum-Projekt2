@@ -110,26 +110,27 @@ public class IoController {
 		}
 		String line;
 		try {
-			line = reader.readLine();//erste Zeile skippen
+			reader.readLine();//erste Zeile skippen
 			line = reader.readLine();//erste Zeile skippen
 		}catch(IOException e){
 			System.out.println(e.getMessage());
 			return null;
 		}
 		while(line!=null){
-		    System.out.println(line);
 		    String[] cardSpecs = line.split(",");
 		    String type = cardSpecs[0];
 			String variant = cardSpecs[1];
 			int coins = Integer.parseInt(cardSpecs[2]);
 
-			deck.add(genCard(type, variant ,coins));
+			Card newCard = genCard(type,variant, coins);
+			if(newCard!=null) {
+				deck.add(newCard);
+			}
 			try {
 				line = reader.readLine();//erste Zeile skippen
 			}catch(IOException e){
 				System.out.println(e.getMessage());
 			}
-			//System.out.println(deck.get(0).toString());
 		}
 
 		return cards;
@@ -162,7 +163,7 @@ public class IoController {
 				requirements.put(PersonType.PRIEST, 1);
 				victoryPoints=4;
 				break;
-			case "Anker Pair":
+			case "Anchor Pair":
 				requirements.put(PersonType.CAPTAIN, 0);
 				requirements.put(PersonType.CAPTAIN, 1);
 				victoryPoints=4;
@@ -173,7 +174,7 @@ public class IoController {
 				requirements.put(PersonType.SETTLER, 1);
 				victoryPoints=6;
 				break;
-			case "Anker Pair + House":
+			case "Anchor Pair + House":
 				requirements.put(PersonType.CAPTAIN, 0);
 				requirements.put(PersonType.CAPTAIN, 1);
 				requirements.put(PersonType.SETTLER, 1);
@@ -194,6 +195,7 @@ public class IoController {
 				break;
 			case "Flute":
 				colour=Colour.BLUE;
+				break;
 			case"Skiff":
 				colour=Colour.GREEN;
 				break;
@@ -201,13 +203,13 @@ public class IoController {
 				colour=Colour.RED;
 				break;
 			case"Galleon":
-				colour=Colour.YELLOW;
+				colour=Colour.BLACK;
 				break;
 		}
 		if(force.equals("Pirate")){
 			swords=212;
 		}else{
-			swords=(int)force.charAt(0);
+			swords=Character.getNumericValue(force.charAt(0));
 		}
 		newShip =new Ship();
 		newShip.setColour(colour);
@@ -219,7 +221,7 @@ public class IoController {
 	private Person genPerson(String type, String variant, int coins){
 		int victoryPoints=0;
 		int swords=0;
-		Person result=null;
+		Person result;
 		PersonType personType = null;
 		Colour colour = null;
 		String name;
@@ -228,10 +230,13 @@ public class IoController {
 			case "Admiral":
 				personType=PersonType.ADMIRAL;
 				break;
+			case "Captain":
+				personType=PersonType.CAPTAIN;
+				break;
 			case "Governor":
 			    personType=PersonType.GOVERNOR;
 			    break;
-			case "Jack of all Trades":
+			case "Jack of All Trades":
 				personType=PersonType.JACK_OF_ALL_TRADES;
 				break;
 			case "Jester":
@@ -256,14 +261,14 @@ public class IoController {
 				personType=PersonType.TRADER;
 				break;
 		}
-		result=new Person();
 		if(personType!=PersonType.TRADER){
-		    victoryPoints=variant.charAt(0);
+		    victoryPoints=Character.getNumericValue(variant.charAt(0));
+
 		}else{
-			String[] traderAttributes=variant.split(" + ");
+			String[] traderAttributes=variant.split(" \\+ ");
 			String traderColor=traderAttributes[0];
-			String traderVp=traderAttributes[0];
-			victoryPoints=traderVp.charAt(0);
+			String traderVp=traderAttributes[1];
+			victoryPoints=Character.getNumericValue(traderVp.charAt(0));
 			switch(traderColor){
 				case"Green":
 					colour = Colour.GREEN;
@@ -282,6 +287,7 @@ public class IoController {
 					break;
 			}
 		}
+		result=new Person();
 		result.setValues(coins, victoryPoints, swords);
 		result.setMetaData("", colour, personType);
 		return result;
@@ -300,7 +306,6 @@ public class IoController {
 		return res;
 	}
 
-
 	private Card genCard(String name, String variant, int coins){
 	    Card result=null;
 		switch (name){
@@ -312,7 +317,8 @@ public class IoController {
 				break;
 			case "Admiral":
 			case "Governor":
-			case "Jack of all Trades":
+			case "Captain":
+			case "Jack of All Trades":
 			case "Jester":
 			case "Mademoiselle":
 			case "Pirate":
