@@ -1,163 +1,131 @@
 
-import controller.CardController;
 import controller.CardFactory;
 import model.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
-import static model.ActionType.SKIP;
-import static model.PlayerType.HUMAN;
-import static org.junit.Assert.*;
+import static model.ActionType.*;
+import static model.PlayerType.*;
 
 import controller.MainController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestFactory {
     private MainController mainController;
-    private CardController cardController;
-    private List<PlayerState> playerStateList;
-    private GameSystem gameSystem;
 
-    private List<Player> playerList;
-    private Move move;
-    private Action action;
 
-    private Player player0;
-    private Player player1;
-    private Player player2;
-    private Player player3;
-    private Player player4;
+    public static List<Player> getPlayers() {
 
-    private PlayerState playerState0;
-    private PlayerState playerState1;
-    private PlayerState playerState2;
-    private PlayerState playerState3;
-    private PlayerState playerState4;
 
-    private CardStack cardStack;
-    private List<Card> personCard;
-    private Card admiral;
-    private Card jester;
-    private Card trader;
+        List<Player> players = new ArrayList<>(5);
 
-    public TestFactory() {
+        Player player0 = new Player("player0",HUMAN);
+        Player player1 = new Player("player1",HUMAN);
+        Player player2 = new Player("player2",HUMAN);
+        Player player3 = new Player("player3",HUMAN);
+        Player player4 = new Player("AI",EASYAI);
+
+        players.add(player0);
+        players.add(player1);
+        players.add(player2);
+        players.add(player3);
+        players.add(player4);
+
+        return players;
     }
 
-    public void initGame(){
+    public static List<PlayerState> getPlayerState() {
 
-        mainController = new MainController();
-        cardController = new CardController(mainController);
-        CardStack cardPile = CardFactory.newCardsWithSpecial();
-        //int i = 1;
-        //System.out.println(cardPile.getCards().size());;
+        List<PlayerState> players = new ArrayList<>();
 
+        CardFactory cardFactory = new CardFactory();
+//get all players' name and type, add them into players list
+        for (int i = 0; i < 5; i++) {
 
-        personCard = new ArrayList<>();
-        cardStack = new CardStack();
-        playerList = new ArrayList<>();
-        playerStateList = new ArrayList<>();
-        ;
-        player0 = new Player("player0",HUMAN);
-        player1 = new Player("player1",HUMAN);
-        player2 = new Player("player2",HUMAN);
-        player3 = new Player("player3",HUMAN);
-        player4 = new Player("player4",HUMAN);
-
-        playerState0 = new PlayerState(player0);
-        playerState1 = new PlayerState(player1);
-        playerState2 = new PlayerState(player2);
-        playerState3 = new PlayerState(player3);
-        playerState4 = new PlayerState(player4);
-
-        playerStateList.add(0,playerState0);
-        playerStateList.add(1,playerState1);
-        playerStateList.add(2,playerState2);
-        playerStateList.add(3,playerState3);
-        playerStateList.add(4,playerState4);
-
-        playerList.add(0,player0);
-        playerList.add(1,player1);
-        playerList.add(2,player2);
-        playerList.add(3,player3);
-        playerList.add(4,player4);
-
-
-        //Cards von player0
-
-        CardStack cardsOfPlayer0 = new CardStack();
-        cardsOfPlayer0.getCards().add(cardPile.getCards().get(0));
-        cardsOfPlayer0.getCards().add(cardPile.getCards().get(1));
-        cardsOfPlayer0.getCards().add(cardPile.getCards().get(2));
-
-        //Cards von player1
-        CardStack cardsOfPlayer1 = new CardStack();
-        //cardsOfPlayer1.getCards().add(cardPile.getCards().get(3));
-        //cardsOfPlayer1.getCards().add(cardPile.getCards().get(4));
-        //cardsOfPlayer1.getCards().add(cardPile.getCards().get(5));
-        //cardsOfPlayer1.getCards().add(cardPile.getCards().get(50));
-
-
-        /*
-        for(Card card : cardPile.getCards()){
-            if (card instanceof Person && ((Person) card).getPersonType().equals(PersonType.TRADER) && ((Person) card).getColour().equals(Colour.BLUE)) {
-
-                cardsOfPlayer1.getCards().add(cardPile.getCards().get(cardPile.getCards().indexOf(card)));
-                System.out.println(i+ "" +((Person) card).getPersonType() + " " + ((Person) card).getColour());
-                i++;
-            }
+            PlayerState player = new PlayerState(getPlayers().get(i));
+            players.add(player);
         }
 
-         */
+  //generate cards for player 0;
+        CardStack p0 = players.get(0).getCards();
+        List<Card> cards0 = p0.getCards();
 
+        cards0.add(cardFactory.generateAdmiral().get(0));  //victoryPoint: 1
+        cards0.add(cardFactory.generateTrader().get(0));  //green, 3 coins
+        cards0.add(cardFactory.generateJester().get(0));  //victoryPoint: 1
+        cards0.add(cardFactory.generateMademoiselles().get(3)); //victoryPoint: 3
 
+//generate cards for player 1;
+        CardStack p1 = players.get(0).getCards();
+        List<Card> cards1 = p1.getCards();
 
+        cards1.add(cardFactory.generateSailor().get(0));  //victoryPoint: 1, sword:1
+        cards1.add(cardFactory.generateGovernor().get(0));  //victoryPoint: 0
+        cards1.add(cardFactory.generateJester().get(0));  //victoryPoint: 2
 
-        playerState0.setCards(cardsOfPlayer0);
-        playerState1.setCards(cardsOfPlayer1);
+//generate cards for player 2;
+        CardStack p2 = players.get(0).getCards();
+        List<Card> cards2 = p2.getCards();
 
+        cards2.add(cardFactory.generateTrader().get(5));  //red, 3 coins
+        cards2.add(cardFactory.generatePirate().get(1));  //victoryPoint: 2, sword 2
+        cards2.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
 
-        gameSystem = new GameSystem();
-        Game currentGame = new Game(true,playerState0,true,playerList,cardPile);
-        mainController.setGameSystem(gameSystem);
-        mainController.getGameSystem().setCurrentGame(currentGame);
-        mainController.getGameSystem().getCurrentGame().setJesterEnabled(true);
+//generate cards for player 3;
+        CardStack p3 = players.get(0).getCards();
+        List<Card> cards3 = p3.getCards();
 
-        //blueShip in hand
-        action = new Action(SKIP,cardPile.getCards().get(1));
-        /*
-        for( Card ship : cardPile.getCards()){
-            if(ship instanceof Ship){
-                action.setAffectedCard(cardPile.getCards().get(cardPile.getCards().indexOf(ship)));
-                break;
-            }
-        }
+        cards3.add(cardFactory.generateTrader().get(5));  //red, 3 coins
+        cards3.add(cardFactory.generateSettlerCaptain().get(1));  //victoryPoint: 1, Settler
+        cards3.add(cardFactory.generateJackOfAllTrader().get(0));  //victoryPoint: 1
 
-         */
+//generate cards for player 4;
+        CardStack p4 = players.get(0).getCards();
+        List<Card> cards4 = p4.getCards();
 
-        move = new Move(playerState1,true, playerState1, action);
-        move.setPlayers(playerStateList);
-        //this.players = new ArrayList<>();
-        move.setHarbour(null);
-        move.setCardPile(cardPile);
-        move.setDiscardPile(null);
-        move.setExpeditionPile(null);
+        cards4.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
+        cards4.add(cardFactory.generateSettlerCaptain().get(7));  //victoryPoint: 1, Capitain
+        cards4.add(cardFactory.generateAdmiral().get(0));  //victoryPoint: 1
 
-
-
-        //playerState1.setCards(cardStack);
-        //playerState1.setPlayer(player1);
-        //move.setActivePlayer(playerState1);
-
-        move.getActivePlayer().getCoins().getCards().add(admiral);
-        //move.getActivePlayer().getCoins().getCards().add(admiral);
-
+        return players;
     }
 
+    public static List<Move> movs(){
+
+        List<Move> moves = new ArrayList<>();
+
+        Move move = new Move(getPlayerState().get(0), true, getPlayerState().get(0), actions().get(0));
+        Move currentMove = new Move(getPlayerState().get(1), false, getPlayerState().get(1), actions().get(1));
+
+        moves.add(move);
+        moves.add(currentMove);
+
+        return moves;
+    }
+
+
+    public static List<Action> actions(){
+
+        List<Action> actions = new ArrayList<>();
+        CardFactory cardFactory = new CardFactory();
+
+        Ship ship = new Ship(Colour.YELLOW, 1, 1);
+        Card admiral = cardFactory.generateAdmiral().get(0); //5 coins, victoryPoint 1
+
+
+        Action drawCard = new Action(DRAW_CARD, ship);
+        Action takeShip = new Action(TAKE_SHIP, ship);
+        Action buyPerson = new Action(BUY_PERSON, admiral);
+
+        actions.add(drawCard);
+        actions.add(takeShip);
+        actions.add(buyPerson);
+
+      return actions;
+    }
 
 }
+
+
+
