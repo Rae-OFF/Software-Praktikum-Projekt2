@@ -1,5 +1,6 @@
 package view.game;
 
+import controller.MainController;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -13,9 +14,15 @@ public class GameViewController extends StackPane {
 
     private ImageView backgroundImage;
 
-    private Button menu;
+    private ImageView menu;
+
+    public GameViewController(MainController mainController){
+        backgroundImage =  new ImageView("view.resources.backgroundImage.png");
+        menu =  new ImageView("view.resources.menuButton.png");
+        gameField = new GameFieldViewController(mainController, mainController.getGameController().currentMove());
+    }
 
     public void refresh(Move move){
-
+        gameField.refresh(move);
     }
 }
