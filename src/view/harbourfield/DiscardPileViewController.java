@@ -11,7 +11,7 @@ public class DiscardPileViewController extends StackPane {
     private CardImageViewController pileImage;
 
     public DiscardPileViewController(MainController controller, Move move){
-        if(move.getCardPile().getSize() > 0)
+        if(move.getDiscardPile().getSize() > 0)
             pileImage = new CardImageViewController(move.getDiscardPile().getCards().get(0));
     }
 
