@@ -10,7 +10,10 @@ public class HighscoreController {
 
 	private MainController mainController;
 
-	public HighscoreController(MainController mainController) {
+	public HighscoreController(MainController mainController) throws NullPointerException{
+		if(mainController == null){
+			throw new NullPointerException();
+		}
 		this.mainController = mainController;
 	}
 
@@ -28,7 +31,10 @@ public class HighscoreController {
 	 * @param player
 	 * 		Bekommt einen Spieler übergeben.
 	 */
-	public void addPlayerScore(Player player) {
+	public void addPlayerScore(Player player) throws NullPointerException{
+		if(player == null) {
+			throw new NullPointerException();
+		}
 		List<Player> players = mainController.getGameSystem().getHighscoreList();
 		players.add(player);
 		mainController.getGameSystem().setHighscoreList(players);
