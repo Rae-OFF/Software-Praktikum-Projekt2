@@ -16,18 +16,19 @@ public class GameSystem {
 
 	private List<Player> highscoreList;
 
-	/**
-	 * Konstruktor.
-	 *
-	 */
+
 /*	public GameSystem(List<Player> players) {
 		this.players = players;
 	}*/
 
+	/**
+	 * Konstruktor.
+	 *
+	 */
 	public GameSystem(){
 		this.players = new ArrayList<>();
 		this.games = new ArrayList<>();
-		this.getHighscoreList();
+		this.getHighscoreList(); //TODO Konstruktor anpassen
 		this.currentGame = null;
 	}
 
