@@ -69,6 +69,12 @@ public class CardStack {
 		return cards;
 	}
 
+	/**
+	 * Zum Auswählen einer Karte aus der Hafenauslage.
+	 * @param card
+	 * 		Bekommt eine Karte übergeben.
+	 * @return Gibt die Karte aus dem Hafen zurück.
+	 */
 	public Card getCard(Card card){
 		List<Card> cards = this.getCards();
 
@@ -87,10 +93,6 @@ public class CardStack {
 		else{
 			return null;
 		}
-
-
-
-
 	}
 
 	/**
@@ -127,7 +129,6 @@ public class CardStack {
 	 *
 	 * @return Gibt die Größe des Kartenstapels zurück.
 	 */
-
 	public int getSize(){
 		return this.cards.size();
 	}
