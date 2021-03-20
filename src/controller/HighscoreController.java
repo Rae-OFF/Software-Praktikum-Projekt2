@@ -10,6 +10,13 @@ public class HighscoreController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 * @throws NullPointerException
+	 * 		Wird geworfen wenn der Parameter <em>null</em> ist.
+	 */
 	public HighscoreController(MainController mainController) throws NullPointerException{
 		if(mainController == null){
 			throw new NullPointerException();
