@@ -26,8 +26,14 @@ public class Player {
 		this.playerType = playerType;
 	}
 
+	/**
+	 * Implementiert die Vergleichsmethode des Interfaces.
+	 * @param other
+	 * 		Bekommt einen Spieler übergeben.
+	 * @return Gibt (true) zurück wenn der Spieler identisch mit dem aufrufenden ist, ansonsten (false).
+	 */
 	public boolean equals(Player other){
-		return this.name == other.name && this.playerType == other.playerType;
+		return this.name == other.name && this.playerType == other.playerType; //TODO == durch equals ersetzen
 	}
 
 	/**
