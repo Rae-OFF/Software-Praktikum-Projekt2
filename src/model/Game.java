@@ -88,10 +88,20 @@ public class Game {
 		return null;
 	}
 
+	/**
+	 *
+	 * @return Gibt zurück ob das Spiel mit 12 Siegpunkten (true) oder 12 Siegpunkten + 1 Expedition (false)
+	 * 		gewonnen werden kann.
+	 */
 	public boolean isDefaultVariant() {
 		return defaultVariant;
 	}
 
+	/**
+	 * Setzt ob das Spiel mit 12 Siegpunkten (true) oder 12 Siegpunkten + 1 Expedition (false) gewonnen werden kann.
+	 * @param defaultVariant
+	 * 		Bekommt true oder false übergeben.
+	 */
 	public void setDefaultVariant(boolean defaultVariant) {
 		this.defaultVariant = defaultVariant;
 	}
@@ -240,6 +250,10 @@ public class Game {
 		return moves;
 	}
 
+	/**
+	 *
+	 * @return Gibt den letzten Zug zurück.
+	 */
 	public Move getLastMove() {
 		return lastMove;
 	}
@@ -254,7 +268,7 @@ public class Game {
 		int index = moves.indexOf(lastMove);
 		if(index != moves.size() -1){
 			for(int i = index + 1; i < moves.size(); i++){
-				moves.remove(i);
+				moves.remove(i); //TODO remove Methode sollte Parameter 0 haben!
 			}
 		}
 		this.lastMove = move;
