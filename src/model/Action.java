@@ -13,10 +13,19 @@ public class Action {
 
 	private List<Card> materials;
 
+	/**
+	 *
+	 * @return Gibt die Karte zurück die von der Aktion betroffen ist.
+	 */
 	public Card getAffectedCard() {
 		return affectedCard;
 	}
 
+	/**
+	 * Setzt die Karte die von der Aktion betroffen ist.
+	 * @param affectedCard
+	 * 		Bekommt eine Karte übergeben.
+	 */
 	public void setAffectedCard(Card affectedCard) {
 		this.affectedCard = affectedCard;
 	}
