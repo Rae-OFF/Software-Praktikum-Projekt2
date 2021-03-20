@@ -10,6 +10,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Test für den HighscoreController.
+ */
 public class HighscoreControllerTest {
 
     private List<Player> players = new ArrayList<>();
