@@ -27,6 +27,13 @@ public class Ship implements Card {
 	}
 
 	/**
+	 * Leerer Konstruktor.
+	 */
+	public Ship(){ //TODO leeren Konstruktor entfernen oder vervollständigen
+
+	}
+
+	/**
 	 *
 	 * @return Gibt die Farbe zurück.
 	 */
@@ -77,10 +84,12 @@ public class Ship implements Card {
 		this.force = force;
 	}
 
-	public Ship(){
-
-	}
-
+	/**
+	 * Implementiert die Vergleichsmethode des Interfaces.
+	 * @param card
+	 *      Bekommt eine Karte übergeben.
+	 * @return Gibt zurück ob die übergebene Karte die gleiche ist wie die aufgerufene.
+	 */
 	@Override
 	public boolean equals(Card card) {
 		if(card instanceof Ship){
@@ -92,6 +101,10 @@ public class Ship implements Card {
 		}
 	}
 
+	/**
+	 *
+	 * @return Gibt die Werte der Schiffskarte als String zurück.
+	 */
 	@Override
 	public String toString(){
 		return "Ship" + " Colour: " + colour + " Coins: " + coins + " Force: " + force;
