@@ -112,7 +112,7 @@ public class GameController {
 					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
 				}
 			}
-
+		/*
 			if(lastAction.getActionType().equals(DEFEND)){
 
 			}
@@ -120,7 +120,9 @@ public class GameController {
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
 
 			}
+			if(lastAction.getActionType().equals(SHUFFLE)){
 
+			} */
 			if(lastAction.getActionType().equals(TAKE_SHIP)){
 				move.setPhase1(false);
 			}
@@ -135,15 +137,14 @@ public class GameController {
 			}
 
 			if(lastAction.getActionType().equals(SKIP)){
-				changeActor(move);
+
 				if(move.getActor().equals(move.getActivePlayer())){
 					changeActivePlayer(move);
 				}
+				changeActor(move);
 			}
 
-			if(lastAction.getActionType().equals(SHUFFLE)){
 
-			}
 
 	}
 
@@ -157,8 +158,6 @@ public class GameController {
 
 		PlayerController playerController = mainController.getPlayerController();
 
-		CardStack discardPile = new CardStack();
-		CardStack harbourPile = new CardStack();
 		CardStack cardPile;
 		if(cardPilePath == null){
 			if(players.size() < 5){
@@ -256,9 +255,7 @@ public class GameController {
 				move.getHarbour().push(move.getShipToDefend());
 				move.setShipToDefend(null);
 				break;
-/*			case SHUFFLE:
-				mainController.getCardController().shuffle(nextMove, action);
-				break;*/
+
 		}
 		nextMove.setAction(action);
 		finishRound(nextMove);
@@ -276,7 +273,7 @@ public class GameController {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
 		List<Card> expeditionCards = move.getExpeditionPile().getCards();
-		List<Card> playerCards = move.getActivePlayer().getCards().getCards();
+		//List<Card> playerCards = move.getActivePlayer().getCards().getCards();
 		PlayerState activePlayer = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
@@ -298,8 +295,6 @@ public class GameController {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
-
-
 			if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
 				//TAKE_SHIP;
 				for (Card card : harbourCards) {
@@ -309,7 +304,6 @@ public class GameController {
 				}
 			}
 
-
 		//BUY_PERSON;
 		for (Card card : harbourCards) {
 			if(card instanceof Person){
@@ -317,7 +311,6 @@ public class GameController {
 				results.add(new Action(BUY_PERSON, card));
 			}
 		}
-
 
 		//START_EXPEDITION;
 		for(Card expedition : expeditionCards){
@@ -336,24 +329,25 @@ public class GameController {
 
 	/**
 	 * Setzt einen Zug zurück.
-	 * @param move
+	// * @param move
 	 * 		Bekommt einen Zug.
 	 */
-	public void undo(Move move) {
+	public void undo() {    // parameter deleted while not in use
 		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
-		if(moveList.lastIndexOf(currentMove()) > 0 ) {
-			// zu letzte move zuruekgehen und das undoMove in moveList hinzufuegen
+
+		if(moveList.indexOf(currentMove()) > 0 ) {   //when this last move isn't the first one on list
+			// get the new move from index of parameter's move minus 1
 			Move undoMove = moveList.get(moveList.indexOf(currentMove()) - 1);
-			mainController.getGameSystem().getCurrentGame().setLastMove(undoMove);
+			mainController.getGameSystem().getCurrentGame().setLastMove(undoMove); // set this index-1 move als last move
 		}
 	}
 
 	/**
 	 * Stellt einen Zug wieder her.
-	 * @param move
+	// * @param move
 	 * 		Bekommt einen Zug.
 	 */
-	public void redo(Move move) {
+	public void redo() {    // parameter deleted while not in use
 		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
 		if(moveList.lastIndexOf(currentMove()) < moveList.size()-1) {
 			// zu naechste move zuruekgehen und redoMove in moveList hinzufuegen.
@@ -399,10 +393,12 @@ public class GameController {
 
 			PlayerState startPlayer = mainController.getGameSystem().getCurrentGame().getStartPlayer();
 			List<PlayerState> playerList = move.getPlayers();
+
 			//Der Spieler rechts neben dem Startspieler ist der letzte aktive Spieler dieser Partie
-			int index = playerList.indexOf(startPlayer)+1 % playerList.size();
+			int index = (playerList.indexOf(startPlayer)+1) % playerList.size();
 			mainController.getGameSystem().getCurrentGame().setStartPlayer(playerList.get(index));
 			//Siegpunkte in HighscoreList hinzufuegen
+
 			for (PlayerState playerState : playerList) {
 				playerState.getPlayer().setScore(playerState.getPlayer().getWins());
 				mainController.getHighscoreController().addPlayerScore(playerState.getPlayer());
@@ -420,6 +416,7 @@ public class GameController {
 			// neue Karte aufdecken
 			Card currentCard = move.getHarbour().peek();
 			List<Card> harbour = move.getHarbour().getCards();
+			harbour.remove(currentCard);
 			if (currentCard instanceof Ship) {
 				for (Card card : harbour) {
 					if (!card.equals(currentCard) && card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
