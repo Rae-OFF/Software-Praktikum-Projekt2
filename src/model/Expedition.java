@@ -88,6 +88,6 @@ public class Expedition implements Card {
 
     @Override
     public String toString(){
-        return "Expedition: " + "VPoints: " +this.victoryPoints+ "    Coins: " + coins;
+        return "Expedition: " + "VPoints: " + this.victoryPoints+ ", Coins: " + coins;
     }
 }

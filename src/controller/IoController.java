@@ -87,8 +87,21 @@ public class IoController {
 
 		String zonked;
 
-		String player1Message = "|" + player1.getName() + "|" + " Coins: " + playerState1.getCoins().getSize() + " Cards: " + playerState1.getCards().getSize();
-		String player2Message = "|" + player2.getName() + "|"  + " Coins: " + playerState2.getCoins().getSize()+ " Cards: " + playerState2.getCards().getSize();
+		if(action != null){
+			String actionMessage = "";
+
+			actionMessage = "[Action] " + "Type: " + action.getActionType().toString();
+
+			if(action.getAffectedCard() != null)
+			{
+				actionMessage = actionMessage + " " + action.getAffectedCard().toString();
+			}
+
+			writer.println(actionMessage);
+		}
+
+		String player1Message = "|" + player1.getName() + "|" + " VPoints: " + playerState1.getVitoryPoints() + ", Coins: " + playerState1.getCoins().getSize() + ", Cards: " + playerState1.getCards().getSize();
+		String player2Message = "|" + player2.getName() + "|" + " VPoints: " + playerState2.getVitoryPoints() + ", Coins: " + playerState2.getCoins().getSize()+ ", Cards: " + playerState2.getCards().getSize();
 
 		if(activePlayer.equals(playerState1)){
 			player1Message = player1Message + " #ActivePlayer#";
@@ -105,21 +118,10 @@ public class IoController {
 			player2Message = player2Message + " #Actor#";
 		}
 
+
+
 		writer.println(player1Message);
 		writer.println(player2Message);
-
-		if(action != null){
-			String actionMessage = "";
-
-			actionMessage = "[Action] " + "Type: " + action.getActionType().toString();
-
-			if(action.getAffectedCard() != null)
-			{
-				actionMessage = actionMessage + " " + action.getAffectedCard().toString();
-			}
-
-			writer.println(actionMessage);
-		}
 
 
 		String stateMessage = "[State "  + count  + "]" + " CardPileSize: " +cardPileSize + " HarbourSize: " + harbourSize + " DiscardPileSize: " + discardPileSize;
@@ -144,6 +146,8 @@ public class IoController {
 		}
 
 		writer.println(message);
+
+		writer.println();
 
 		writer.close();
 
@@ -212,30 +216,33 @@ public class IoController {
 				}
 				break;
 			case "House Pair":
-				requirements.put(PersonType.SETTLER, 0);
-				requirements.put(PersonType.SETTLER, 1);
+				requirements.put(PersonType.SETTLER, 2);
+				requirements.put(PersonType.PRIEST, 0);
+				requirements.put(PersonType.CAPTAIN, 0);
 				victoryPoints=4;
 				break;
 			case "Cross Pair":
-				requirements.put(PersonType.PRIEST, 0);
-				requirements.put(PersonType.PRIEST, 1);
+				requirements.put(PersonType.SETTLER, 0);
+				requirements.put(PersonType.PRIEST, 2);
+				requirements.put(PersonType.CAPTAIN, 0);
 				victoryPoints=4;
 				break;
 			case "Anchor Pair":
-				requirements.put(PersonType.CAPTAIN, 0);
-				requirements.put(PersonType.CAPTAIN, 1);
+				requirements.put(PersonType.SETTLER, 0);
+				requirements.put(PersonType.PRIEST, 0);
+				requirements.put(PersonType.CAPTAIN, 2);
 				victoryPoints=4;
 				break;
 			case "Cross Pair + House":
-				requirements.put(PersonType.PRIEST, 0);
-				requirements.put(PersonType.PRIEST, 1);
 				requirements.put(PersonType.SETTLER, 1);
+				requirements.put(PersonType.PRIEST, 2);
+				requirements.put(PersonType.CAPTAIN, 0);
 				victoryPoints=6;
 				break;
 			case "Anchor Pair + House":
-				requirements.put(PersonType.CAPTAIN, 0);
-				requirements.put(PersonType.CAPTAIN, 1);
 				requirements.put(PersonType.SETTLER, 1);
+				requirements.put(PersonType.PRIEST, 0);
+				requirements.put(PersonType.CAPTAIN, 2);
 				victoryPoints=6;
 				break;
 		}
