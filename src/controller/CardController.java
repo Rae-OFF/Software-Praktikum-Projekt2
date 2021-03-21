@@ -32,15 +32,16 @@ public class CardController {
 	 */
 
 	public void execAdmiral(Move move, Action action) {
+		if(action.getAffectedCard() instanceof Person && ((Person) action.getAffectedCard()).getPersonType().equals(ADMIRAL)) {
+			List<Card> harbourCards = move.getHarbour().getCards();
+			PlayerState player = move.getActivePlayer();
 
-		List<Card> harbourCards = move.getHarbour().getCards();
-		PlayerState player = move.getActivePlayer();
+			if (harbourCards.size() >= 5) {
 
-		if(harbourCards.size()>=5){
+				CardStack stack = player.getCoins(); // get player's coin stack
 
-			CardStack stack = player.getCoins(); // get player's coin stack
-
-			stack.pushList(gameController.popCardPile(move, 2)); // add one coin (taken from top card of the card pile) to player's stack
+				stack.pushList(gameController.popCardPile(move, 2)); // add one coin (taken from top card of the card pile) to player's stack
+			}
 		}
 	}
 
@@ -63,9 +64,8 @@ public class CardController {
 					List<Card> playercards = playerState.getCards().getCards(); // access all player's hand
 						for(Card jester: playercards ){
 							if(jester instanceof Person && ((Person) jester).getPersonType().equals(JESTER)){        // if JESTER is at player's hand, all these players get 1 coin
-							CardStack stack =player.getCoins();
-
-							stack.pushList(gameController.popCardPile(move, 1));
+								CardStack stack =playerState.getCoins();
+								stack.pushList(gameController.popCardPile(move, 1));
 							}
 						}
 				}
@@ -121,9 +121,13 @@ public class CardController {
 
 		action.setAffectedCard(card);   // set this popped card as affected card
 
-		if(card instanceof TaxIncrease){
-
-			taxIncrease(move);
+		if(card instanceof TaxIncrease ){
+			coinsMoreThan12(move);
+			if(((TaxIncrease) card).isTypeSwords()){
+				taxIncreaseOfMaxSwords(move, action);
+			}else{
+				taxIncreaseOfMinShields(move, action);
+			}
 		}else if(card instanceof Expedition){
 
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
@@ -131,8 +135,9 @@ public class CardController {
 		}else if(card instanceof Ship){
 
 			// getGameController().getPossibleActions(move);   alternatively can use this method
-			move.setShipToDefend(card);
-			//move.getHarbour().push(card);
+			action.setAffectedCard(card);
+			takeShip(move,action);
+			defend(move,action);
 
 		}else{      // in case of a Person
 
@@ -147,67 +152,79 @@ public class CardController {
 	 *
 	 * @param move get the value of move back
 	 */
-	public void taxIncrease(Move move) {
-
-		Card currentCard = move.getCardPile().peek();
+	public void coinsMoreThan12 ( Move move ){
 		List<PlayerState> players = move.getPlayers();
 
-		int maxSwords=0;
-		int minShield =0;
+		for (PlayerState playerState : players) {  // check if anyone has more than 12 coins, if yes, take 1/2 coins
+			int numOfCoins = playerState.getCoins().getCards().size();
+			if (numOfCoins >= 12) {
+				move.getDiscardPile().getCards().addAll(playerState.getCoins().popList(numOfCoins/2));
+			}
+		}
+	}
 
-		int playerSwords =0;
 
-		if(currentCard instanceof TaxIncrease) {
+	public void taxIncreaseOfMaxSwords(Move move, Action action) {
+
+		Card currentCard = action.getAffectedCard();
+		List<PlayerState> players = move.getPlayers();
+
+		int maxSwords = -1;
+		int playerSwords = 0;
 
 			move.getDiscardPile().getCards().add(currentCard);
-
-			for (PlayerState playerState : players) {  // check if anyone has more than 12 coins, if yes, take 1/2 coins
-				int numOfCoins = playerState.getCoins().getCards().size();
-				if (numOfCoins >= 12) {
-					playerState.getCards().popList(numOfCoins/2);
-					move.getDiscardPile().getCards().addAll(playerState.getCards().popList(numOfCoins/2));
-
-				}
-			}
-		// if no one has more than 12 coins:
+			// if no one has more than 12 coins:
 			List<Integer> swordlist = new ArrayList<>();
-			for (PlayerState playerState : players) {
-				List<Card> playerHand = playerState.getCards().getCards();
-
-
-				for(Card card: playerHand ){
-
-
-					if( card instanceof Person &&( ((Person) card).getPersonType().equals(SAILOR)|| ((Person) card).getPersonType().equals(PIRATE) )){
-						playerSwords += ((Person) card).getSwords();
+			if (action.getAffectedCard() instanceof TaxIncrease && ((TaxIncrease) action.getAffectedCard()).isTypeSwords()) {
+				for (PlayerState playerState : players) {
+					List<Card> playerHand = playerState.getCards().getCards();
+					for (Card card : playerHand) {
+						if (card instanceof Person && (((Person) card).getPersonType().equals(SAILOR) || ((Person) card).getPersonType().equals(PIRATE))) {
+							playerSwords += ((Person) card).getSwords();
+						}
 					}
-				}  swordlist.add(playerSwords);  // create a list number of swords of all each player
+					swordlist.add(playerSwords);  // create a list number of swords of all each player
 
-				if(maxSwords< playerSwords){     //get the maximum number
-					maxSwords = playerSwords;
+					if (maxSwords < playerSwords) {     //get the maximum number
+						maxSwords = playerSwords;
+					}
+					playerSwords=0;
+				}
+				for (int i = 0; i < players.size(); i++) {         // check again in players list, get the one that has minShield or maxSwords
+					if (swordlist.get(i) == maxSwords) {
+
+						players.get(i).getCoins().getCards().add(move.getCardPile().pop());
+					}
 				}
 			}
-			List<Integer> shildList = new ArrayList<>();   // create a list number of shilds of all each player
-			for (PlayerState playerState : players) {
+		}
 
-				int playerShield = mainController.getPlayerController().getVictoryPoints(playerState,move);
 
-				if(minShield > playerShield){              //get the minimum number
-					minShield = playerShield;
-				}
-				shildList.add(playerShield);
+	public void taxIncreaseOfMinShields(Move move, Action action) {
+		Card currentCard = action.getAffectedCard();
+		List<PlayerState> players = move.getPlayers();
+		int minShield = 99;
+
+		List<Integer> shildList = new ArrayList<>();   // create a list number of shilds of all each player
+		for (PlayerState playerState : players) {
+
+			int playerShield = mainController.getPlayerController().getVictoryPoints(playerState, move);
+
+			if (minShield >= playerShield) {              //get the minimum number
+				minShield = playerShield;
 			}
+			shildList.add(playerShield);
+		}
 
-			for( int i=0; i< players.size(); i++){         // check again in players list, get the one that has minShield or maxSwords
-				if(swordlist.get(i) == maxSwords  || shildList.get(i)== minShield){
+		for (int i = 0; i < players.size(); i++) {         // check again in players list, get the one that has minShield or maxSwords
+			if (shildList.get(i) == minShield) {
 
-					players.get(i).getCoins().getCards().add(move.getCardPile().pop());
-				}
+				players.get(i).getCoins().getCards().add(move.getCardPile().pop());
 			}
-
-
-			}
+		}
 	}
+
+
 
 
 	/**
@@ -232,7 +249,7 @@ public class CardController {
 
 		}else{   // if other players want to take the ship
 
-			player.getCoins().pushList(gameController.popCardPile(move, 1));
+			player.getCoins().pushList(actor.getCoins().popList(1));
 
 			actor.getCoins().pushList(gameController.popCardPile(move,((Ship) action.getAffectedCard()).getCoins()));
 
@@ -294,7 +311,7 @@ public class CardController {
 	public void defend(Move move, Action action) {
 
 		if (action.getActionType().equals(ActionType.DEFEND)) {
-			Ship shipCard = (Ship) move.getShipToDefend();
+			Ship shipCard = (Ship) action.getAffectedCard();
 			List<Card> cardsInHand = move.getActivePlayer().getCards().getCards();
 			int numSwords = 0;
 
@@ -310,19 +327,19 @@ public class CardController {
 						}
 					}
 				}
+				if (numSwords >= shipCard.getForce()) {
 
-					if (numSwords >= shipCard.getForce()) {
-
-						move.getDiscardPile().push(shipCard);
-						move.setShipToDefend(null);
-
-					} else {
-						move.getHarbour().push(shipCard);
-						move.setShipToDefend(null);
-					}
+					move.getDiscardPile().getCards().add(shipCard);
+					move.getHarbour().getCards().remove(shipCard);
+					move.setShipToDefend(null);
 
 				}
+				else{
+					move.getHarbour().push(shipCard);
+					move.setShipToDefend(null);
+				}
 
+			}
 		}
 	}
 
