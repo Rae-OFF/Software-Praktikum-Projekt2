@@ -89,6 +89,9 @@ public class StartEasyAIGame extends Application {
 
 
         }
+
+        Move lastMove = gameController.currentMove();
+        ioController.log(lastMove,999);
     }
 
     public static void main(String[] args) {

@@ -254,26 +254,34 @@ public class CardController {
 		PlayerState player = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
-		int money = mainController.getPlayerController().getCoins(actor,move);  // get total amount of coins from actor
+		//int money = mainController.getPlayerController().getCoins(actor,move);  // get total amount of coins from actor
 		int personPrice = ((Person)action.getAffectedCard()).getPrice();  // get pric
 
 		Card card = (Person)action.getAffectedCard();
 
-		if(money >= personPrice ){
-
-				if(!player.equals(actor)) {   // if other players want to buy
-
-					player.getCoins().push((actor.getCoins().pop()));  // pay active player one coin
-
-				}
+		if(player.equals(actor)){
 
 			CardStack stack = actor.getCoins();
 
 			move.getDiscardPile().pushList(stack.popList(personPrice));
 
-			stack.push(move.getHarbour().getCard(card));
-
+			actor.getCards().push(move.getHarbour().getCard(card));
+			int vPoints = ((Person) card).getVictoryPoints();
+			//actor.setVitoryPoints(actor.getVitoryPoints() + vPoints);
 		}
+
+		else if(!player.equals(actor))
+		{
+			player.getCoins().push((actor.getCoins().pop()));
+			CardStack stack = actor.getCoins();
+
+			move.getDiscardPile().pushList(stack.popList(personPrice));
+
+			actor.getCards().push(move.getHarbour().getCard(card));
+			int vPoints = ((Person) card).getVictoryPoints();
+			//actor.setVitoryPoints(actor.getVitoryPoints() + vPoints);
+		}
+
 	}
 
 	/**
@@ -302,18 +310,19 @@ public class CardController {
 						}
 					}
 				}
-				if (numSwords >= shipCard.getForce()) {
 
-					move.getDiscardPile().push(shipCard);
-					move.setShipToDefend(null);
+					if (numSwords >= shipCard.getForce()) {
+
+						move.getDiscardPile().push(shipCard);
+						move.setShipToDefend(null);
+
+					} else {
+						move.getHarbour().push(shipCard);
+						move.setShipToDefend(null);
+					}
 
 				}
-				else{
-					move.getHarbour().push(shipCard);
-					move.setShipToDefend(null);
-				}
 
-			}
 		}
 	}
 
@@ -339,32 +348,66 @@ public class CardController {
 
 				int coins = ((Expedition) exped).getCoins();
 
+				int victoryPoints = ((Expedition) exped).getVictoryPoints();
 
-				Map<PersonType, Integer> requirePlayer = new HashMap<>();  // a new map to record the cards on player's hand
+				int captains = require.get(CAPTAIN);
+				int priests = require.get(PRIEST);
+				int settlers = require.get(SETTLER);
 
-				int i=1;
-				for(Card card: action.getMaterials()){     /* check each card and put the value/key into the new map, if it already contains
-					                                          same key, add value one by one  */
+				List<Card> materials = new ArrayList<>();
+
+				List<Card> cards = player.getCards().getCards();
+
+				for(Card card : cards){
 					if(card instanceof Person){
-
-						if( requirePlayer.containsKey(((Person) card).getPersonType())) {
-
-							requirePlayer.put(((Person) card).getPersonType(), ++i);
-
-						}else {
-							requirePlayer.put(((Person) card).getPersonType(), i);
+						Person person = (Person) card;
+						if(person.getPersonType().equals(CAPTAIN) && captains > 0){
+							materials.add(person);
+							captains--;
+						}
+						if(person.getPersonType().equals(PRIEST) && priests > 0){
+							materials.add(person);
+							priests--;
+						}
+						if(person.getPersonType().equals(SETTLER) && settlers > 0){
+							materials.add(person);
+							settlers--;
 						}
 					}
 				}
 
-				if(require.equals(requirePlayer)){         // if requirements fullfilled, remove Expedition to player's hand and put exchanged cards in discard
+				cards.removeAll(materials);
 
-					move.getExpeditionPile().getCards().remove(exped);
-					player.getCards().getCards().add(exped);
-					move.getDiscardPile().getCards().addAll(action.getMaterials());
-					// add "int coins" coins  to player's hand
-					player.getCoins().getCards().addAll(move.getCardPile().popList(coins));
+				List<Card> jacks = new ArrayList<>();
+
+				int jacksNeeded = captains + priests + settlers;
+
+				if(jacksNeeded> 0){
+					for(Card card : cards){
+						if(card instanceof Person){
+							Person person = (Person) card;
+							if(person.getPersonType().equals(JACK_OF_ALL_TRADES) && jacksNeeded > 0){
+								jacksNeeded--;
+							}
+						}
+					}
+					cards.removeAll(jacks);
 				}
+
+				move.getDiscardPile().pushList(materials);
+				move.getDiscardPile().pushList(jacks);
+
+				move.getExpeditionPile().getCards().remove(exped);
+
+				player.getCards().push(exped);
+
+				player.getCoins().pushList(gameController.popCardPile(move,((Expedition) exped).getCoins()));
+				//player.setVitoryPoints(player.getVitoryPoints() + ((Expedition) exped).getVictoryPoints());
+
+
+
+
+					// add "int coins" coins  to player's hand
 			}
 		}
 

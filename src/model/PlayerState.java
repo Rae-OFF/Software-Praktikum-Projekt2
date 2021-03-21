@@ -1,5 +1,8 @@
 package model;
 
+import static model.PersonType.PIRATE;
+import static model.PersonType.SAILOR;
+
 /**
  * Klasse der Spielerzustände.
  */
@@ -10,6 +13,25 @@ public class PlayerState {
 	private CardStack coins;
 
 	private Player player;
+
+	public int getVitoryPoints() {
+		int vPoints = 0;
+
+		for(Card card : this.cards.getCards()){
+			if(card instanceof Person){
+				vPoints += ((Person) card).getVictoryPoints();
+			}
+			if(card instanceof Expedition){
+				vPoints += ((Expedition) card).getVictoryPoints();
+			}
+		}
+
+		return vPoints;
+	}
+
+/*	public void setVitoryPoints(int vitoryPoints) {
+		this.vitoryPoints = vitoryPoints;
+	}*/
 
 	/**
 	 * Copy Konstruktor.

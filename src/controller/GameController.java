@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import static model.ActionType.*;
+import static model.PersonType.*;
 
 /**
  * Verwaltet das Spiel.
@@ -112,17 +113,21 @@ public class GameController {
 					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
 				}
 			}
-		/*
-			if(lastAction.getActionType().equals(DEFEND)){
 
+			if(lastAction.getActionType().equals(DEFEND)){
+				if(isZonked(move)){
+					changeActivePlayer(move);
+					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+				}
 			}
 
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
-
+				if(isZonked(move)){
+					changeActivePlayer(move);
+					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+				}
 			}
-			if(lastAction.getActionType().equals(SHUFFLE)){
 
-			} */
 			if(lastAction.getActionType().equals(TAKE_SHIP)){
 				move.setPhase1(false);
 			}
@@ -137,15 +142,44 @@ public class GameController {
 			}
 
 			if(lastAction.getActionType().equals(SKIP)){
-
+				changeActor(move);
 				if(move.getActor().equals(move.getActivePlayer())){
 					changeActivePlayer(move);
 				}
-				changeActor(move);
 			}
 
+			if(lastAction.getActionType().equals(SHUFFLE)){
+
+			}
+
+			for(PlayerState player : move.getPlayers()){
+
+				if(player.getVitoryPoints() >= 12 && move.getActor().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
+					mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
+					mainController.getGameSystem().getCurrentGame().setOngoing(false);
+				}
+
+			}
+
+	}
 
 
+	/**
+	 * Beendet das Spiel wenn ein Spieler die Gewinnbedingung erreicht hat.
+	 * @param move
+	 * 		Bekommt einen Zug.
+	 */
+	public void finishGame (Move move){
+
+		List<PlayerState> playerList = move.getPlayers();
+		//Siegpunkte in HighscoreList hinzufuegen
+		for (PlayerState playerState : playerList) {
+			playerState.getPlayer().setScore(playerState.getVitoryPoints());
+			if(playerState.getVitoryPoints() >= 12){
+				playerState.getPlayer().setWins(playerState.getPlayer().getWins() + 1);
+			}
+			mainController.getHighscoreController().addPlayerScore(playerState.getPlayer());
+		}
 	}
 
 
@@ -158,6 +192,8 @@ public class GameController {
 
 		PlayerController playerController = mainController.getPlayerController();
 
+		CardStack discardPile = new CardStack();
+		CardStack harbourPile = new CardStack();
 		CardStack cardPile;
 		if(cardPilePath == null){
 			if(players.size() < 5){
@@ -255,7 +291,9 @@ public class GameController {
 				move.getHarbour().push(move.getShipToDefend());
 				move.setShipToDefend(null);
 				break;
-
+/*			case SHUFFLE:
+				mainController.getCardController().shuffle(nextMove, action);
+				break;*/
 		}
 		nextMove.setAction(action);
 		finishRound(nextMove);
@@ -273,7 +311,7 @@ public class GameController {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
 		List<Card> expeditionCards = move.getExpeditionPile().getCards();
-		//List<Card> playerCards = move.getActivePlayer().getCards().getCards();
+		List<Card> playerCards = move.getActivePlayer().getCards().getCards();
 		PlayerState activePlayer = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
@@ -291,9 +329,11 @@ public class GameController {
 			return results;
 		}
 
-		if( actor == activePlayer && !isZonked(move) && move.isPhase1()) {
+		if( actor == activePlayer && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() > 0) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
+
+
 
 			if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
 				//TAKE_SHIP;
@@ -304,19 +344,96 @@ public class GameController {
 				}
 			}
 
+
 		//BUY_PERSON;
 		for (Card card : harbourCards) {
 			if(card instanceof Person){
-				if(move.getBuyLimit() >0 && ((Person) card).getPrice() <= actor.getCoins().getCards().size())
-				results.add(new Action(BUY_PERSON, card));
+
+				if(actor.equals(activePlayer)){
+					if(move.getBuyLimit() >0 && ((Person) card).getPrice() <= actor.getCoins().getSize()){
+						results.add(new Action(BUY_PERSON, card));
+					}
+				}
+
+				else {
+					if(move.getBuyLimit() >0 && ((Person) card).getPrice() + 1 <= actor.getCoins().getSize()){
+						results.add(new Action(BUY_PERSON, card));
+					}
+				}
 			}
 		}
+
 
 		//START_EXPEDITION;
 		for(Card expedition : expeditionCards){
 			if(expedition instanceof Expedition){
 				// Test if current expedition card is claimable
-				results.add(new Action(START_EXPEDITION, expedition));
+				int captains = 0;
+				int priests = 0;
+				int settlers = 0;
+				int jacks = 0;
+
+				Map<PersonType, Integer> require= ((Expedition) expedition).getRequirements();
+
+				List<Card> cards = actor.getCards().getCards();
+
+				for(Card card : cards){
+					if(card instanceof Person){
+						if(require.containsKey(((Person) card).getPersonType())){
+							if(((Person) card).getPersonType().equals(CAPTAIN)){
+								captains++;
+							}
+
+							if(((Person) card).getPersonType().equals(PRIEST)){
+								priests++;
+							}
+
+							if(((Person) card).getPersonType().equals(SETTLER)){
+								settlers++;
+							}
+
+							if(((Person) card).getPersonType().equals(JACK_OF_ALL_TRADES)){
+								jacks++;
+							}
+						}
+					}
+				}
+
+				int captainDistance = (require.get(CAPTAIN) - captains);
+				int priestDistance = (require.get(PRIEST) - priests);
+				int settlerDistance = (require.get(SETTLER) - settlers);
+
+				if(captainDistance < 0){
+					captainDistance = 0;
+				}
+
+				if(priestDistance < 0){
+					priestDistance = 0;
+				}
+
+				if(settlerDistance < 0){
+					settlerDistance = 0;
+				}
+
+				boolean fulfilled = false;
+
+				if((captainDistance + priestDistance + settlerDistance) <= jacks){
+					fulfilled = true;
+				}
+				if(fulfilled == true){
+					results.add(new Action(START_EXPEDITION, expedition));
+					mainController.getIoController().log("Expedition possible");
+				}
+				else{
+					/*int distance = captainDistance + priestDistance + settlerDistance;
+					mainController.getIoController().log("Actor: " +  actor.getPlayer().getName());
+					mainController.getIoController().log("Captains: " + captains);
+					mainController.getIoController().log("Settlers: " + settlers);
+					mainController.getIoController().log("Priests: " + priests);
+					mainController.getIoController().log("Whole distance: " + distance);*/
+
+				}
+
 			}
 
 		}
@@ -329,25 +446,24 @@ public class GameController {
 
 	/**
 	 * Setzt einen Zug zurück.
-	// * @param move
+	 * @param move
 	 * 		Bekommt einen Zug.
 	 */
-	public void undo() {    // parameter deleted while not in use
+	public void undo(Move move) {
 		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
-
-		if(moveList.indexOf(currentMove()) > 0 ) {   //when this last move isn't the first one on list
-			// get the new move from index of parameter's move minus 1
+		if(moveList.lastIndexOf(currentMove()) > 0 ) {
+			// zu letzte move zuruekgehen und das undoMove in moveList hinzufuegen
 			Move undoMove = moveList.get(moveList.indexOf(currentMove()) - 1);
-			mainController.getGameSystem().getCurrentGame().setLastMove(undoMove); // set this index-1 move als last move
+			mainController.getGameSystem().getCurrentGame().setLastMove(undoMove);
 		}
 	}
 
 	/**
 	 * Stellt einen Zug wieder her.
-	// * @param move
+	 * @param move
 	 * 		Bekommt einen Zug.
 	 */
-	public void redo() {    // parameter deleted while not in use
+	public void redo(Move move) {
 		List<Move> moveList = mainController.getGameSystem().getCurrentGame().getMoves();
 		if(moveList.lastIndexOf(currentMove()) < moveList.size()-1) {
 			// zu naechste move zuruekgehen und redoMove in moveList hinzufuegen.
@@ -383,28 +499,6 @@ public class GameController {
 		}
 	}
 
-
-		/**
-		 * Beendet das Spiel wenn ein Spieler die Gewinnbedingung erreicht hat.
-		 * @param move
-		 * 		Bekommt einen Zug.
-		 */
-		public void finishGame (Move move){
-
-			PlayerState startPlayer = mainController.getGameSystem().getCurrentGame().getStartPlayer();
-			List<PlayerState> playerList = move.getPlayers();
-
-			//Der Spieler rechts neben dem Startspieler ist der letzte aktive Spieler dieser Partie
-			int index = (playerList.indexOf(startPlayer)+1) % playerList.size();
-			mainController.getGameSystem().getCurrentGame().setStartPlayer(playerList.get(index));
-			//Siegpunkte in HighscoreList hinzufuegen
-
-			for (PlayerState playerState : playerList) {
-				playerState.getPlayer().setScore(playerState.getPlayer().getWins());
-				mainController.getHighscoreController().addPlayerScore(playerState.getPlayer());
-			}
-		}
-
 		/**
 		 * Gibt zurück ob ein Spieler Phase 1 durch zwei gleichfarbige Schiffe in der Hafenauslage beendet hat.
 		 * @param move
@@ -416,7 +510,6 @@ public class GameController {
 			// neue Karte aufdecken
 			Card currentCard = move.getHarbour().peek();
 			List<Card> harbour = move.getHarbour().getCards();
-			harbour.remove(currentCard);
 			if (currentCard instanceof Ship) {
 				for (Card card : harbour) {
 					if (!card.equals(currentCard) && card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
