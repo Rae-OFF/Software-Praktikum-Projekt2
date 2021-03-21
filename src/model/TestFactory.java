@@ -91,12 +91,13 @@ public class TestFactory {
 
         CardStack cardPile = CardFactory.newCardsWithoutSpecial();
 
-        Move move = new Move(getPlayerState().get(0), true, getPlayerState().get(0), actions().get(0));
+        Move move = new Move(getPlayerState.get(0), true, getPlayerState.get(0), actions().get(0));
         Move lastMove = new Move(getPlayerState.get(4), true, getPlayerState.get(4), actions().get(2));
         Move currentMove = new Move(getPlayerState.get(1), true, getPlayerState.get(2), actions().get(1));
         currentMove.setCardPile(cardPile);
-        currentMove.setPlayers(getPlayerState);
-        currentMove.setCardPile(cardPile);
+        currentMove.setActivePlayer(getPlayerState().get(2));
+        currentMove.setDiscardPile(cardPile);
+        currentMove.setHarbour(cardPile);
 
         moves.add(currentMove);
         moves.add(move);
