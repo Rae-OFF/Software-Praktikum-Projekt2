@@ -19,7 +19,11 @@ public abstract class AiController {
 	 */
 	public abstract Action getAction(Move move);
 
-
+	/**
+	 * Setzt eine AI als Spieler der am Zug ist.
+	 * @param ai
+	 * 		Bekommt einen Spielerzustand übergeben.
+	 */
 	public void setAsActor(PlayerState ai){
 
 	}
