@@ -1,5 +1,7 @@
 package controller;
 
+import model.AINode;
+import model.AITree;
 import model.Action;
 import model.Move;
 
@@ -16,7 +18,13 @@ public class MediumAi extends AiController {
 
 	@Override
 	public Action getAction(Move move){
-		return null;
+
+		AINode root = AITree.generateTree(move,mainController,2);
+
+		Action action = AITree.getBestAction(root, move.getActor());
+
+		return action;
+
 	}
 
 }

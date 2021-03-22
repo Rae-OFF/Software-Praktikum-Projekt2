@@ -23,8 +23,8 @@ public class StartEasyAIGame extends Application {
 
             this.mainController = mainController;
 
-            Player player1 = new Player("OneOne", PlayerType.EASYAI);
-            Player player2 = new Player("TwoTwo", PlayerType.EASYAI);
+            Player player1 = new Player("EASY", PlayerType.EASYAI);
+            Player player2 = new Player("MEDIUM", PlayerType.MEDIUMAI);
 
             List<Player> players = new ArrayList<>();
             players.add(player1);
@@ -34,7 +34,6 @@ public class StartEasyAIGame extends Application {
             gameSystem.setPlayers(players);
             mainController.setGameSystem(gameSystem);
             GameController gameController = mainController.getGameController();
-            //String cardPilePath = "C:\\Users\\Aaron\\Desktop\\Uni\\5_Semester\\SoPra\\Projekt2\\projekt2\\shuffled.csv";
             String cardPilePath = "src/ressources/shuffled.csv";
             gameController.init(cardPilePath, players, false, false, false);
 
@@ -52,6 +51,8 @@ public class StartEasyAIGame extends Application {
 
         EasyAi easyAi = mainController.getEasyAi();
 
+        MediumAi mediumAI = mainController.getMediumAi();
+
         CardController cardController = mainController.getCardController();
 
         IoController ioController = mainController.getIoController();
@@ -68,8 +69,11 @@ public class StartEasyAIGame extends Application {
 
             Player player = actor.getPlayer();
             PlayerType type = player.getPlayerType();
-            if(type == PlayerType.EASYAI){
+            if(type.equals(PlayerType.EASYAI)){
                 action = easyAi.getAction(lastMove);
+            }
+            else if(type.equals(PlayerType.MEDIUMAI)){
+                action = mediumAI.getAction(lastMove);
             }
 
             playerController.executeAction(action);
