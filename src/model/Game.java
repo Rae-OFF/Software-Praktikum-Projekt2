@@ -264,13 +264,19 @@ public class Game {
 	 * 		Bekommt den Zug übergeben.
 	 */
 	public void setLastMove(Move move) {
+		this.lastMove = move;
+	}
+
+	public void setLastMoveAndCut(Move move) {
 
 		int index = moves.indexOf(move);
 
 		if(index != moves.size()-1){
-			for(int i = index + 1; i < moves.size(); i++){
-				moves.remove(i); //TODO remove Methode sollte Parameter 0 haben!
+
+			while(moves.size() > index + 1){
+				moves.remove(moves.size()-1);
 			}
+
 		}
 		this.lastMove = move;
 	}

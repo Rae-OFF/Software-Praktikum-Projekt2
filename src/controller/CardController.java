@@ -16,6 +16,8 @@ public class CardController {
 
    private GameController gameController;
 
+   public static int UNDEFENDABLE_SHIP = 100;
+
 	public CardController(MainController mainController) {
 		this.mainController = mainController;
 		GameController gameController = mainController.getGameController();
@@ -426,29 +428,6 @@ public class CardController {
 
 					// add "int coins" coins  to player's hand
 			}
-		}
-
-
-		/**
-		 * Führt das überspringen eines Zuges aus.
-		 * @param move
-		 * 		Bekommt den Zug übergeben.
-		 * @param action
-		 * 		Bekommt die Aktion übergeben.
-		 */
-		public void skip (Move move, Action action){
-
-/*			PlayerState player = move.getActivePlayer();
-
-			if (action.getActionType().equals(SKIP)) {
-				if (player != move.getActor()) {
-					gameController.changeActor(move);
-
-				} else {
-					gameController.changeActivePlayer(move);
-				}
-
-			}*/
 		}
 
 	/*	/**

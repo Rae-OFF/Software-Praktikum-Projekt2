@@ -508,7 +508,7 @@ public class GameControllerTest {
 
         //suppose the pile has one card, otherwise leads to nullPointer using method
         CardStack pile = new CardStack();
-        pile.getCards().add(new Ship());
+        //pile.getCards().add(new Ship());
         move.setCardPile(pile);
 //setup initial cards with different order of discard pile
         initCards.add(disCard.getCards().get(3));
@@ -554,7 +554,7 @@ public class GameControllerTest {
         for(int j=0; j<players.size();j++){
 
             states.get(j).setPlayer(players.get(j));
-            assertTrue(states.get(j).getVitoryPoints()<12);
+            assertTrue(states.get(j).getVictoryPoints()<12);
 
         }
 
@@ -565,7 +565,7 @@ public class GameControllerTest {
 //scores are the same as original victory point
 
         for(int i=0; i< scores.size();i++){
-          assertEquals(states.get(i).getVitoryPoints(), scores.get(i).getScore());
+          assertEquals(states.get(i).getVictoryPoints(), scores.get(i).getScore());
         }
     }
 

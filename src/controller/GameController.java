@@ -43,35 +43,6 @@ public class GameController {
 		return popCardPile;
 	}
 
-/*	public void finishRound(Move move) {
-		Action lastAction = move.getAction();
-		if(lastAction != null) {
-			CardStack harbour = move.getHarbour();
-			List<Card> harbourCards = harbour.getCards();
-			if (move.isPhase1()) {
-				//ab diesem Punkt darf man nicht weiter ziehen
-				if (lastAction.getActionType().equals(SKIP) || isZonked(move)) {
-					if (harbourCards.size() == 0) {
-						mainController.getCardController().execJester(move, lastAction);
-						changeActivePlayer(move);
-					} else if(!lastAction.getActionType().equals(DRAW_CARD)){
-						changeActor(move);
-						move.setPhase1(false);
-					}
-				}
-			} else {//Exception caught in drawCard (TaxIncrease/Expedition cards only)
-				if (!lastAction.getActionType().equals(DRAW_CARD) && move.getActivePlayer().equals(move.getActor()) || harbourCards.size() == 0) {
-					changeActivePlayer(move);
-					move.setPhase1(true);
-					move.getDiscardPile().getCards().addAll(harbourCards);
-					move.getHarbour().getCards().clear();
-				} else if (lastAction.getActionType().equals(SKIP)) {
-					changeActor(move);
-				}
-			}
-		}
-	}*/
-
 	/**
 	 * Wechselt den aktuellen Spieler zum nächsten Spieler in Phase 2.
 	 * @param move
@@ -154,7 +125,7 @@ public class GameController {
 
 			for(PlayerState player : move.getPlayers()){
 
-				if(player.getVitoryPoints() >= 12 && move.getActor().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
+				if(player.getVictoryPoints() >= 12 && move.getActor().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
 					mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
 					mainController.getGameSystem().getCurrentGame().setOngoing(false);
 				}
@@ -174,8 +145,8 @@ public class GameController {
 		List<PlayerState> playerList = move.getPlayers();
 		//Siegpunkte in HighscoreList hinzufuegen
 		for (PlayerState playerState : playerList) {
-			playerState.getPlayer().setScore(playerState.getVitoryPoints());
-			if(playerState.getVitoryPoints() >= 12){
+			playerState.getPlayer().setScore(playerState.getVictoryPoints());
+			if(playerState.getVictoryPoints() >= 12){
 				playerState.getPlayer().setWins(playerState.getPlayer().getWins() + 1);
 			}
 			mainController.getHighscoreController().addPlayerScore(playerState.getPlayer());
@@ -282,7 +253,7 @@ public class GameController {
 				mainController.getCardController().startExpedition(nextMove, action);
 				break;
 			case SKIP:
-				mainController.getCardController().skip(nextMove, action);
+				//mainController.getCardController().skip(nextMove, action);
 				break;
 			//Es gibt keine Methode acceptShip() in CardController;
 			//TODO: ACCEPT_SHIP entfernen?
@@ -468,7 +439,7 @@ public class GameController {
 		if(moveList.lastIndexOf(currentMove()) < moveList.size()-1) {
 			// zu naechste move zuruekgehen und redoMove in moveList hinzufuegen.
 			Move redoMove = moveList.get(moveList.indexOf(currentMove()) + 1);
-			mainController.getGameSystem().getCurrentGame().setLastMove(redoMove);
+			mainController.getGameSystem().getCurrentGame().setLastMoveAndCut(redoMove);
 		}
 	}
 

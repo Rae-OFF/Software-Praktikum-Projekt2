@@ -100,8 +100,8 @@ public class IoController {
 			writer.println(actionMessage);
 		}
 
-		String player1Message = "|" + player1.getName() + "|" + " VPoints: " + playerState1.getVitoryPoints() + ", Coins: " + playerState1.getCoins().getSize() + ", Cards: " + playerState1.getCards().getSize();
-		String player2Message = "|" + player2.getName() + "|" + " VPoints: " + playerState2.getVitoryPoints() + ", Coins: " + playerState2.getCoins().getSize()+ ", Cards: " + playerState2.getCards().getSize();
+		String player1Message = "|" + player1.getName() + "|" + " VPoints: " + playerState1.getVictoryPoints() + ", Coins: " + playerState1.getCoins().getSize() + ", Cards: " + playerState1.getCards().getSize();
+		String player2Message = "|" + player2.getName() + "|" + " VPoints: " + playerState2.getVictoryPoints() + ", Coins: " + playerState2.getCoins().getSize()+ ", Cards: " + playerState2.getCards().getSize();
 
 		if(activePlayer.equals(playerState1)){
 			player1Message = player1Message + " #ActivePlayer#";
