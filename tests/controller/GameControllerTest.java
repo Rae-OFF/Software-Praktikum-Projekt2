@@ -13,6 +13,9 @@ import static model.Colour.*;
 import static model.PersonType.*;
 import static org.junit.Assert.*;
 
+/**
+ * Test für den GameController.
+ */
 public class GameControllerTest {
 
     private MainController mainController;
@@ -27,7 +30,9 @@ public class GameControllerTest {
     private List<Action> actions;
     private CardFactory cardFactory;
 
-
+    /**
+     * Erstellt Testumgebung.
+     */
     @Before
     public void setUp() {
 
@@ -572,6 +577,9 @@ public class GameControllerTest {
 
     }
 
+    /**
+     * Testet ob redo erfolgreich durchgeführt wird.
+     */
     @Test //not clear, after undo, the rest moves after last move will be deleted, can not redo.....
     public void redo() {
         game.setMoves(moves);
