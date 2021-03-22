@@ -26,7 +26,6 @@ public class AITree {
 
                 generateNodes(node.getChild(action), mainController, depth-1);
             }
-
         }
     }
 
@@ -34,7 +33,7 @@ public class AITree {
 
         List<AINode> children = root.getChildren();
 
-        int maxValue = 0;
+        int maxValue = -1;
         AINode maxNode = null;
 
         for(AINode node : children){
