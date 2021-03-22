@@ -133,11 +133,11 @@ public class CardController {
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
 
 		}else if(card instanceof Ship){
-
 			// getGameController().getPossibleActions(move);   alternatively can use this method
 			action.setAffectedCard(card);
-			takeShip(move,action);
-			defend(move,action);
+			if(!gameController.isZonked(move)){
+				move.getHarbour().getCards().add(card);
+			}
 
 		}else{      // in case of a Person
 
@@ -359,7 +359,7 @@ public class CardController {
 
 				PlayerState player = move.getActivePlayer();
 
-				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange
+				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange.
 
 				Map<PersonType, Integer> require= ((Expedition) exped).getRequirements(); //get requirements of this Expedition
 
