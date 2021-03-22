@@ -57,6 +57,7 @@ public class GameFieldViewController extends StackPane {
         undo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                mainController.getGameController().undo(move); //TODO undo testen
                 System.out.println("UNDO!");
             }
         });
@@ -64,6 +65,7 @@ public class GameFieldViewController extends StackPane {
         redo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                mainController.getGameController().redo(move); //TODO redo testen
                 System.out.println("REDO!");
             }
         });
@@ -71,6 +73,7 @@ public class GameFieldViewController extends StackPane {
         hint.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                mainController.getPlayerController().getHint(move); //TODO hint testen
                 System.out.println("HINT!");
             }
         });

@@ -7,9 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import model.Card;
-import model.Move;
-import model.PlayerState;
+import model.*;
 import view.assets.CardImageViewController;
 import view.assets.CardPileImageViewController;
 
@@ -42,6 +40,8 @@ public class HarbourFieldViewController extends StackPane {
         skip.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                Action skip = new Action(ActionType.SKIP, null);
+                mainController.getPlayerController().executeAction(skip); //TODO Skip Testen
                 System.out.println("SKIP!");
             }
         });
@@ -54,6 +54,8 @@ public class HarbourFieldViewController extends StackPane {
         cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
+                mainController.getPlayerController().executeAction(drawCard); //TODO drawCard testen
                 System.out.println("Draw card!");
             }
         });
