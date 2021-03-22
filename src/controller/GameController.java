@@ -256,7 +256,6 @@ public class GameController {
 				//mainController.getCardController().skip(nextMove, action);
 				break;
 			//Es gibt keine Methode acceptShip() in CardController;
-			//TODO: ACCEPT_SHIP entfernen?
 			case ACCEPT_SHIP:
 				//mainController.getCardController().(nextMove, action);
 				move.getHarbour().push(move.getShipToDefend());
