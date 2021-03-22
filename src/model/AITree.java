@@ -4,10 +4,20 @@ import controller.MainController;
 
 import java.util.List;
 
+/**
+ * Baumstruktur für die AI.
+ */
 public class AITree {
 
     MainController mainController;
 
+    /**
+     * Erstellt einen Baum.
+     * @param move Bekommt einen Zug übergeben.
+     * @param mainController Bekommt den MainController übergeben.
+     * @param depth Bekommt die Tiefe zurück gegeben.
+     * @return Gibt die Wurzel zurück.
+     */
     public static AINode generateTree(Move move, MainController mainController, int depth){
         Move rootMove = new Move(move);
         AINode root = new AINode(rootMove);
@@ -16,6 +26,12 @@ public class AITree {
         return root;
     }
 
+    /**
+     * Erstellt einen Knoten des Baumes.
+     * @param node Bekommt einen Knoten übergeben.
+     * @param mainController Bekommt den MainController übergeben.
+     * @param depth Bekommt die Tiefe übergeben.
+     */
     public static void generateNodes(AINode node, MainController mainController, int depth){
 
         List<Action> actions = mainController.getGameController().getPossibleActions(node.getCurrentMove());
@@ -30,6 +46,12 @@ public class AITree {
         }
     }
 
+    /**
+     * Sucht die beste Aktion heraus.
+     * @param root Bekommt den Wurzelknoten übergeben.
+     * @param player Bekommt einen Spielerzustand übergeben.
+     * @return Gibt den besten möglichen Zug zurück.
+     */
     public static Action getBestAction(AINode root, PlayerState player){
 
         List<AINode> children = root.getChildren();
@@ -62,6 +84,13 @@ public class AITree {
         return maxNode.getCurrentMove().getAction();
     }
 
+    /**
+     * Berechnet den Wert eines Knoten.
+     * @param root Bekommt die Wurzel übergeben.
+     * @param player Bekommt einen Spielerzustand übergeben.
+     * @param depth Bekommt die Tiefe übergeben.
+     * @return Gibt den Wert zurück.
+     */
     public static int getValue(AINode root, PlayerState player, int depth){
         List<AINode> children = root.getChildren();
 

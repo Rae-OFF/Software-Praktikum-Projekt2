@@ -69,6 +69,10 @@ public class CardStack {
 		return cards;
 	}
 
+	/**
+	 *
+	 * @return Gibt die letzte Karte zurück. //TODO entfernen, da peek Methode bereits das gleiche macht
+	 */
 	public Card showLastCard(){
 		return cards.get(cards.size() -1);
 	}
