@@ -12,6 +12,11 @@ public class HardAi extends AiController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public HardAi(MainController mainController) {
 		this.mainController = mainController;
 	}
