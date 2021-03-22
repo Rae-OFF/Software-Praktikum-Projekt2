@@ -508,7 +508,7 @@ public class GameControllerTest {
 
         //suppose the pile has one card, otherwise leads to nullPointer using method
         CardStack pile = new CardStack();
-        pile.getCards().add(new Ship());
+        pile.getCards().add(new Ship(BLUE, 2,2));
         move.setCardPile(pile);
 //setup initial cards with different order of discard pile
         initCards.add(disCard.getCards().get(3));
