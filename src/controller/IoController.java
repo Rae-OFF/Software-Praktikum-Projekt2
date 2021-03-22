@@ -276,10 +276,7 @@ public class IoController {
 		}else{
 			swords=Character.getNumericValue(force.charAt(0));
 		}
-		newShip =new Ship();
-		newShip.setColour(colour);
-		newShip.setForce(swords);
-		newShip.setCoins(coins);
+		newShip =new Ship(colour, swords, coins);
 		return newShip;
 	}
 
