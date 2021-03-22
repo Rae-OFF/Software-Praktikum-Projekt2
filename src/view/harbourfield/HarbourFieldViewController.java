@@ -56,6 +56,8 @@ public class HarbourFieldViewController extends StackPane {
             public void handle(MouseEvent event) {
                 Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
                 mainController.getPlayerController().executeAction(drawCard); //TODO drawCard testen
+                //HarbourViewController harbourCard = new HarbourViewController(mainController, drawCard.getAffectedCard());
+                //harbour.add(harbourCard);
                 System.out.println("Draw card!");
             }
         });
