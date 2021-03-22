@@ -18,11 +18,15 @@ import static model.PlayerType.HUMAN;
 
 
 public class Main extends Application {
+
+	private Stage firstStage;
+
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			//Zum Testen
 			MainController mainController = new MainController();
+			firstStage = primaryStage;
 			//GameSystem system = mainController.getGameSystem();
 			List<Player> players = getPlayers();
 			//List<PlayerState> playerStates = getPlayerState();
@@ -162,5 +166,13 @@ public class Main extends Application {
 		actions.add(buyPerson);
 
 		return actions;
+	}
+
+	public Stage getFirstStage() {
+		return firstStage;
+	}
+
+	public void setFirstStage(Stage firstStage) {
+		this.firstStage = firstStage;
 	}
 }

@@ -26,7 +26,7 @@ public class GameViewController extends StackPane {
 
     public GameViewController(MainController mainController){
 
-        //TODO Fabian fragen: auslagern in initialize auslagern oder nicht?
+        GameViewController gameView = this;
         backgroundImage =  new ImageView("view/resources/backgroundImage.png");
         getChildren().add(backgroundImage);
 
@@ -53,7 +53,7 @@ public class GameViewController extends StackPane {
                 window.setWidth(1280);
                 window.setHeight(720);
 
-                InGameMenuViewController menu = new InGameMenuViewController(mainController);
+                InGameMenuViewController menu = new InGameMenuViewController(mainController, gameView);
                 Scene scene = new Scene(menu, 1280, 720);
                 window.setScene(scene);
                 window.showAndWait();
