@@ -32,7 +32,7 @@ public class HarbourFieldViewController extends StackPane {
         getChildren().add(harbourImage);
         harbourImage.setFitWidth(860);
         harbourImage.setFitHeight(470);
-        skip =  new ImageView("view/resources/SkipButton.png");
+        skip =  new ImageView("view/resources/skipButton.png");
         getChildren().add(skip);
         skip.setFitWidth(160);
         skip.setFitHeight(160);
@@ -65,12 +65,12 @@ public class HarbourFieldViewController extends StackPane {
         List<Card> expeditionCards = move.getExpeditionPile().getCards();
         List<Card> harbourCards = move.getHarbour().getCards();
         // openExpeditions wird aktualisiert
-        openExpeditions = null;
+        openExpeditions = null; //TODO vllt NullPointerException
         for(Card card : expeditionCards){
             openExpeditions.add(new ExpeditionsViewController(mainController,card));
         }
         //harbour wird aktualisiert
-        harbour = null;
+        harbour = null; //TODO ggf NullPointerException
         for(Card card : harbourCards){
             harbour.add(new HarbourViewController(mainController,card));
         }
