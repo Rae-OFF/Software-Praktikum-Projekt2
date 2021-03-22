@@ -83,8 +83,6 @@ public class ChoosePlayerMenuViewController extends BorderPane {
         boxPlayer5.setButtonCell(playerFactory.call(null));
         boxPlayer5.setCellFactory(playerFactory);
 
-
-
     }
 
     @FXML
@@ -102,7 +100,7 @@ public class ChoosePlayerMenuViewController extends BorderPane {
         HomePageViewController goBack = new HomePageViewController(mainController);
         Scene scene = new Scene(goBack, 1280, 720);
 
-        Stage primaryStage = (Stage) goBack.getScene().getWindow(); //TODO auf Hauptmenü zurückführen
+        Stage primaryStage = (Stage) this.getScene().getWindow();
         primaryStage.setScene(scene);
     }
 

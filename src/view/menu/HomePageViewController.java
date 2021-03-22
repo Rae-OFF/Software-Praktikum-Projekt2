@@ -32,16 +32,25 @@ public class HomePageViewController extends BorderPane {
 
     @FXML
     void onClickBeenden(ActionEvent event) {
-
+        ((Stage) this.getScene().getWindow()).close();
     }
 
     @FXML
     void onClickHighscore(ActionEvent event) {
+        HighscoreTableViewController highscore = new HighscoreTableViewController(mainController, homePage);
+        Scene scene = new Scene(highscore, 1280, 720);
 
+        Stage primaryStage = (Stage) homePage.getScene().getWindow();
+        primaryStage.setScene(scene);
     }
 
     @FXML
     void onClickLade(ActionEvent event) {
+        GamesListViewController games = new GamesListViewController(mainController, homePage);
+        Scene scene = new Scene(games, 1280, 720);
+
+        Stage primaryStage = (Stage) homePage.getScene().getWindow();
+        primaryStage.setScene(scene);
 
     }
 
