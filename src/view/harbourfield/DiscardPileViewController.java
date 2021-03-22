@@ -8,14 +8,17 @@ import view.assets.CardPileImageViewController;
 
 public class DiscardPileViewController extends StackPane {
 
-    private CardImageViewController pileImage;
+    private CardImageViewController pileImage = new CardImageViewController(null);
 
     public DiscardPileViewController(MainController controller, Move move){
         if(move.getDiscardPile().getSize() > 0)
             pileImage = new CardImageViewController(move.getDiscardPile().getCards().get(0));
+
+            getChildren().add(pileImage);
     }
 
     public void setPileImage(CardImageViewController pileImage) {
-        this.pileImage = pileImage;
+        if(pileImage!=null)
+            this.pileImage = pileImage;
     }
 }

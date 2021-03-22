@@ -32,8 +32,8 @@ public class HarbourFieldViewController extends StackPane {
         getChildren().add(harbourImage);
         harbourImage.setFitWidth(860);
         harbourImage.setFitHeight(470);
-        skip =  new ImageView("view/resources/skipButton.png");
-        getChildren().add(skip);
+
+        skip =  new ImageView("view/resources/SkipButton.png");
         skip.setFitWidth(160);
         skip.setFitHeight(160);
         skip.setTranslateX(310);
@@ -44,17 +44,31 @@ public class HarbourFieldViewController extends StackPane {
                 System.out.println("SKIP!");
             }
         });
+
         cardPile = new CardPileViewController(mainController, move);
+        cardPile.setTranslateX(-250);
+        cardPile.setTranslateY(5);
+
+        cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.out.println("draw card!");
+            }
+        });
+
+        discardPile = new DiscardPileViewController(mainController, move);
+        discardPile.setTranslateX(-350);
+        discardPile.setTranslateY(5);
+
+        getChildren().add(skip);
+        getChildren().add(cardPile);
+        getChildren().add(discardPile);
     }
 
     public void refresh(Move move) {
 
         // CardPile wird aktualisiert
-        if(move.getCardPile().getSize()== 0) {
-            cardPile.setPileImage(null);
-        }else {
-            cardPile.setPileImage(new CardPileImageViewController());
-        }
+
 
         //DiscardPile wird aktualisiert
         discardPile = new DiscardPileViewController(mainController, move);
@@ -65,12 +79,12 @@ public class HarbourFieldViewController extends StackPane {
         List<Card> expeditionCards = move.getExpeditionPile().getCards();
         List<Card> harbourCards = move.getHarbour().getCards();
         // openExpeditions wird aktualisiert
-        openExpeditions = null; //TODO vllt NullPointerException
+        openExpeditions.clear();
         for(Card card : expeditionCards){
             openExpeditions.add(new ExpeditionsViewController(mainController,card));
         }
         //harbour wird aktualisiert
-        harbour = null; //TODO ggf NullPointerException
+        harbour.clear();
         for(Card card : harbourCards){
             harbour.add(new HarbourViewController(mainController,card));
         }
