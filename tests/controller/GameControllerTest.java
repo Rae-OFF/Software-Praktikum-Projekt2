@@ -10,6 +10,7 @@ import java.util.List;
 
 import static model.ActionType.*;
 import static model.Colour.*;
+import static model.PersonType.*;
 import static org.junit.Assert.*;
 
 public class GameControllerTest {
@@ -24,6 +25,7 @@ public class GameControllerTest {
     private List<PlayerState> states;
     private CardStack stack;
     private List<Action> actions;
+    private CardFactory cardFactory;
 
 
     @Before
@@ -34,7 +36,7 @@ public class GameControllerTest {
       stack = CardFactory.newCardsWithoutSpecial();
       gameSystem = new GameSystem();
       mainController.setGameSystem(gameSystem);
-
+      cardFactory = new CardFactory();
         players = TestFactory.getPlayers();
         states = TestFactory.getPlayerState();
         moves = TestFactory.moves();
@@ -51,7 +53,7 @@ public class GameControllerTest {
      * constructortest - null.
      */
 
-// TODO: kein null pointer
+// ?: kein null pointer
     @Test//(expected = NullPointerException.class)
     public void testConstructorNull() {
 
@@ -98,7 +100,9 @@ public class GameControllerTest {
     @Test
     public void testPopCardPile() {
 
-       assertEquals(controller.popCardPile(moves.get(0), 2).size(), 2);
+        CardStack cardStack = moves.get(0).getCardPile();
+        assertNotNull(cardStack.peek());
+        assertEquals(controller.popCardPile(moves.get(0), 2).size(), 2);
 
 
     }
@@ -117,13 +121,16 @@ public class GameControllerTest {
      * method popCardPile with empty Pile, check if the discard pile shuffles automatically.
      *
      */
-    @Test   // test failed to call inner method shuffleDiscardPile in order to get new draw card pile to pop
+    @Test
     public void testPopCardPileEmpty() {
 
-        moves.get(0).getCardPile().getCards().clear();
+        CardStack cardStack = moves.get(0).getCardPile();
+        cardStack.getCards().clear();
+        assertNull(cardStack.peek());
         moves.get(0).setDiscardPile(stack);
-         controller.shuffleDiscardPile(moves.get(0));   // manually called method
-        assertEquals(controller.popCardPile(moves.get(0), 2).size(), 2);
+        controller.popCardPile(moves.get(0), 12);
+        assertTrue(cardStack.getSize()!=0);
+        assertEquals(controller.popCardPile(moves.get(0), 10).size(), 10);
     }
 
     /**
@@ -142,7 +149,7 @@ public class GameControllerTest {
 
         controller.changeActor(move);
         assertEquals(states.indexOf (controller.getActor()),0);
-
+        assertEquals(move.getBuyLimit(),1);
     }
 
     /**
@@ -165,11 +172,10 @@ public class GameControllerTest {
         move.setPlayers(states);
         move.setActivePlayer(states.get(3));
         game.setLastMove(move);
-
         controller.changeActivePlayer(move);
 
         assertEquals(states.indexOf (controller.currentMove().getActivePlayer()),4);
-
+        assertTrue(move.isPhase1());
     }
     /**
      * testet parameter move als null
@@ -222,6 +228,51 @@ public class GameControllerTest {
         move.getAction().setActionType(ACCEPT_SHIP);
         controller.finishRound(move);
         assertEquals(states.indexOf(move.getActor()), m);
+
+        move.getAction().setActionType(SHUFFLE);
+        controller.finishRound(move);
+
+        for(PlayerState player : states){
+
+            if(player.getVictoryPoints()>=12 && game.getStartPlayer().equals(move.getActor())){
+
+                assertFalse(game.isOngoing());
+            }
+        }
+
+
+    }
+
+
+    /**
+     *
+     * tests if end of the game players' score are in hightscore list
+     */
+    @Test  //need to revise the mothod, which add doubled players into list without filter
+    public void finishGame() {
+
+
+        moves.get(0).setPlayers(states);
+
+        List<Object> wins = new ArrayList<>();
+//no player has victory point more than 12
+        for(int j=0; j<players.size();j++){
+
+            states.get(j).setPlayer(players.get(j));
+            assertTrue(states.get(j).getVictoryPoints()<12);
+            wins.add(players.get(j).getWins());
+        }
+
+        gameSystem.setHighscoreList(new ArrayList<>());
+        controller.finishGame(moves.get(0));
+        List<Player> scores = mainController.getHighscoreController().getHighscoreList();
+
+//scores are the same as original victory point
+
+        for(int i=0; i< scores.size();i++){
+            assertEquals(states.get(i).getVictoryPoints(), scores.get(i).getScore());
+            assertEquals(players.get(i).getWins(), wins.get(i));
+        }
     }
 
     /**
@@ -274,6 +325,10 @@ public class GameControllerTest {
      */
     @Test
     public void currentGameIsRunning(){
+
+        game.setOngoing(false);
+        assertFalse(game.isOngoing());
+        game.setOngoing(true);
         assertTrue(game.isOngoing());
 
     }
@@ -309,13 +364,12 @@ public class GameControllerTest {
         Move move = moves.get(0);
         move.setPlayers(states);
         move.setActor(move.getActor());
-
         move.getActor().setCoins(stack);
-
-      /* Move nextMove= controller.generateMove(move, actions.get(2)); //with ActionType BUY_PERSON, set buy limit to 4
+        ((Person)actions.get(2).getAffectedCard()).setPrice(1);
+        Move nextMove= controller.generateMove(move, actions.get(2)); //with ActionType BUY_PERSON, set buy limit to 4
         nextMove.setBuyLimit(4);
         nextMove = controller.generateMove(nextMove, actions.get(2));
-        assertEquals(nextMove.getBuyLimit(), 3);  */
+        assertEquals(nextMove.getBuyLimit(), 3);
 
     }
     /**
@@ -406,8 +460,9 @@ public class GameControllerTest {
 
         Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
         move.setActor(states.get(0));
-        move.setActivePlayer(states.get(0));
+        move.setActivePlayer(move.getActor());
         move.setPhase1(true);
+        move.setCardPile(stack);
         if(!controller.isZonked(move)) {
             assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
         }
@@ -415,10 +470,36 @@ public class GameControllerTest {
 
     /**
      *
+     * test action type buy person
+     */
+    @Test
+    public void getPossibleActionsBuyPerson() {
+
+        Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
+        move.setActor(states.get(0));
+        move.setActivePlayer(states.get(0));
+        move.getActor().setCoins(stack);
+        move.setPhase1(false);
+
+        move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
+
+        int price = ((Person)move.getHarbour().getCards().get(0)).getPrice();
+
+        move.setBuyLimit(2); System.out.println(price);
+        assertTrue((price < stack.getSize()));
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), BUY_PERSON);
+//here added in the list 2nd time Buy person since the coin size is bigger than price even when actor!=active player
+        move.setActivePlayer(states.get(3));
+        controller.getPossibleActions(move);
+        assertTrue((price+1 < stack.getSize()));
+        assertEquals(controller.getPossibleActions(move).get(1).getActionType(), BUY_PERSON);
+    }
+    /**
+     *
      * test action type buy person and take ship
      */
     @Test
-    public void getPossibleActionsBuyPersonTakeShip() {
+    public void getPossibleActionsTakeShip() {
 
         Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
         move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
@@ -427,8 +508,34 @@ public class GameControllerTest {
         move.setShipToDefend(null);
 
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
-        assertEquals(controller.getPossibleActions(move).get(1).getActionType(), BUY_PERSON);
     }
+    /**
+     *
+     * test action type start Expedition
+     */
+    @Test
+    public void getPossibleActionsExpedition() {
+
+        Move move = moves.get(0);   //under this move,  active player has one Priest, one Pirate.
+        //move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
+        move.setPlayers(states);
+        move.setActor(move.getActivePlayer());
+        PlayerState actor = move.getActor();
+        move.getActor().setCoins(stack);
+        List<Card> exped = new ArrayList<>();
+        exped.add(cardFactory.generateExpedition(false).get(2) ); // 2 PRIEST on card
+        move.getExpeditionPile().setCards(exped);
+        List<Card> cards = actor.getCards().getCards();
+    //when the requirements not fulfilled
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+     //when the requirements fulfilled
+        cards.add(cardFactory.generateJackOfAllTrader().get(0));
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+    }
+
+
     /**
      *
      * test with parameter null
@@ -467,15 +574,13 @@ public class GameControllerTest {
 
     @Test //not clear, after undo, the rest moves after last move will be deleted, can not redo.....
     public void redo() {
-
-        game.setLastMove(moves.get(2));
-        System.out.println(moves.indexOf(game.getLastMove()));
-        controller.undo(moves.get(0));
-        System.out.println(moves.indexOf(game.getLastMove()));
+        game.setMoves(moves);
+        game.setLastMove(moves.get(1));
+        int n = moves.lastIndexOf(controller.currentMove());
+        assertTrue(n < moves.size()-1);
 
         controller.redo(moves.get(0));
-
-        System.out.println(moves.indexOf(game.getLastMove()));
+        assertEquals(moves.indexOf(game.getLastMove()), n+1);
 
     }
 
@@ -487,10 +592,12 @@ public class GameControllerTest {
 
         game.setShuffleCards(true);
         Move move = moves.get(0);
+        move.getCardPile().getCards().clear();
         move.setDiscardPile(stack);
+        int n = stack.getSize();
         controller.shuffleDiscardPile(move);
 
-        assertEquals(stack, move.getCardPile());  //set the discard pile, return a card pile same as discard pile
+        assertEquals(n, move.getCardPile().getSize());  //set the discard pile, return a card pile same as discard pile
 
     }
     /**
@@ -539,35 +646,6 @@ public class GameControllerTest {
 
     }
 
-    /**
-     *
-     * tests if end of the game players' score are in hightscore list
-     */
-    @Test  //need to revise the mothod, which add doubled players into list without filter
-    public void finishGame() {
-
-
-        moves.get(0).setPlayers(states);
-
-
-//no player has victory point more than 12
-        for(int j=0; j<players.size();j++){
-
-            states.get(j).setPlayer(players.get(j));
-            assertTrue(states.get(j).getVictoryPoints()<12);
-
-        }
-
-        gameSystem.setHighscoreList(new ArrayList<>());
-        controller.finishGame(moves.get(0));
-        List<Player> scores = mainController.getHighscoreController().getHighscoreList();
-
-//scores are the same as original victory point
-
-        for(int i=0; i< scores.size();i++){
-          assertEquals(states.get(i).getVictoryPoints(), scores.get(i).getScore());
-        }
-    }
 
     /**
      * tests when harbour has same color ship;
@@ -577,19 +655,23 @@ public class GameControllerTest {
     public void isZonked() {
 
         CardStack harbour = moves.get(0).getHarbour();
+        harbour.getCards().clear();
         harbour.getCards().add(new Ship(YELLOW,1,1));
-        Card zonked = new Ship(YELLOW,2,2);
+        Ship zonked = new Ship(YELLOW,2,2);
         harbour.getCards().add(zonked);
 
+        assertNotEquals(harbour.getCards().get(0),harbour.getCards().get(1));
+        assertTrue(harbour.getCards().get(0) instanceof Ship);
+        assertEquals(((Ship) harbour.getCards().get(0)).getColour(), zonked.getColour());
    // in case of true
         assertTrue(controller.isZonked(moves.get(0)));
         assertEquals(harbour.getSize(),0);
 
-// in case of false - different ship color
+/*/ in case of false - different ship color
         Card zonked1= new Ship(GREEN,1,1);
         harbour.getCards().add(zonked1);
         assertFalse(controller.isZonked(moves.get(0)));
-
+*/
 
     }
 
