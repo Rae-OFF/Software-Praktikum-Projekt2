@@ -12,10 +12,21 @@ public class MediumAi extends AiController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public MediumAi(MainController mainController) {
 		this.mainController = mainController;
 	}
 
+	/**
+	 * Überschreibt die Methode getAction.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 * @return Gibt eine Aktion zurück.
+	 */
 	@Override
 	public Action getAction(Move move){
 
