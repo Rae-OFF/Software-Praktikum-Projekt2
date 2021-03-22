@@ -69,6 +69,10 @@ public class CardStack {
 		return cards;
 	}
 
+	public Card showLastCard(){
+		return cards.get(cards.size() -1);
+	}
+
 	/**
 	 * Zum Auswählen einer Karte aus der Hafenauslage.
 	 * @param card

@@ -130,16 +130,14 @@ public class CardController {
 			}else{
 				taxIncreaseOfMinShields(move, action);
 			}*/
+			move.getHarbour().push(card);
 		}else if(card instanceof Expedition){
 
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
 
 		}else if(card instanceof Ship){
 			// getGameController().getPossibleActions(move);   alternatively can use this method
-			action.setAffectedCard(card);
-			if(!gameController.isZonked(move)){
-				move.getHarbour().getCards().add(card);
-			}
+			move.setShipToDefend(card);
 
 		}else{      // in case of a Person
 
@@ -331,8 +329,7 @@ public class CardController {
 				}
 				if (numSwords >= shipCard.getForce()) {
 
-					move.getDiscardPile().getCards().add(shipCard);
-					move.getHarbour().getCards().remove(shipCard);
+					move.getDiscardPile().push(shipCard);
 					move.setShipToDefend(null);
 
 				}
@@ -395,7 +392,7 @@ public class CardController {
 					}
 				}
 
-				cards.removeAll(materials);
+
 
 				List<Card> jacks = new ArrayList<>();
 
@@ -407,12 +404,14 @@ public class CardController {
 							Person person = (Person) card;
 							if(person.getPersonType().equals(JACK_OF_ALL_TRADES) && jacksNeeded > 0){
 								jacksNeeded--;
+								jacks.add(card);
 							}
 						}
 					}
-					cards.removeAll(jacks);
 				}
-				if(materials.size()!=0 && jacksNeeded<=0) {
+					cards.removeAll(materials);
+					cards.removeAll(jacks);
+
 					move.getDiscardPile().pushList(materials);
 					move.getDiscardPile().pushList(jacks);
 
@@ -424,11 +423,6 @@ public class CardController {
 					player.getCoins().pushList(gameController.popCardPile(move, ((Expedition) exped).getCoins()));
 					//player.setVitoryPoints(player.getVitoryPoints() + ((Expedition) exped).getVictoryPoints());
 
-
-					// add "int coins" coins  to player's hand
-				}else{
-					cards.addAll(materials);
-				}
 			}
 		}
 

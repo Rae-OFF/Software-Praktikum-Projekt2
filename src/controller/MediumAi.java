@@ -19,7 +19,7 @@ public class MediumAi extends AiController {
 	@Override
 	public Action getAction(Move move){
 
-		AINode root = AITree.generateTree(move,mainController,2);
+		AINode root = AITree.generateTree(move,mainController,5);
 
 		Action action = AITree.getBestAction(root, move.getActor());
 

@@ -9,7 +9,8 @@ public class AITree {
     MainController mainController;
 
     public static AINode generateTree(Move move, MainController mainController, int depth){
-        AINode root = new AINode(move);
+        Move rootMove = new Move(move);
+        AINode root = new AINode(rootMove);
         generateNodes(root,mainController, depth);
 
         return root;
@@ -50,7 +51,7 @@ public class AITree {
         }
 
         for(AINode node : children){
-            int value = getValue(node, player);
+            int value = getValue(node, player, root.getDepth());
 
             if(value > maxValue){
                 maxValue = value;
@@ -61,7 +62,7 @@ public class AITree {
         return maxNode.getCurrentMove().getAction();
     }
 
-    public static int getValue(AINode root, PlayerState player){
+    public static int getValue(AINode root, PlayerState player, int depth){
         List<AINode> children = root.getChildren();
 
         if(root.isLeaf()){
@@ -81,11 +82,21 @@ public class AITree {
             int sum = 0;
 
             for (AINode node : children) {
-                int value = getValue(node, player);
+                int value = getValue(node, player, depth);
                 sum += value;
             }
+            int ownValue = 0;
 
-            return sum;
+           List<PlayerState> list = root.getCurrentMove().getPlayers();
+
+           int actDepth = root.getDepth();;
+
+            for(PlayerState tplayer : list){
+                if(player.getPlayer().equals(tplayer.getPlayer())){
+                    ownValue += (depth - actDepth) * 10 * tplayer.getVictoryPoints();
+                }
+            }
+            return ownValue + sum;
         }
     }
 }
