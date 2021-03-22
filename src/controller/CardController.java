@@ -133,11 +133,11 @@ public class CardController {
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
 
 		}else if(card instanceof Ship){
-
 			// getGameController().getPossibleActions(move);   alternatively can use this method
 			action.setAffectedCard(card);
-			takeShip(move,action);
-			defend(move,action);
+			if(!gameController.isZonked(move)){
+				move.getHarbour().getCards().add(card);
+			}
 
 		}else{      // in case of a Person
 
