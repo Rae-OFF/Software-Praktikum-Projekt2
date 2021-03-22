@@ -33,7 +33,7 @@ public class CardImageViewController extends ImageView {
         }
         //Schiffskarten
         else if(card instanceof Ship){
-            fileName = ""+((Ship) card).getCoins();
+            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
         }
         //Steuererhöhungskarten
         else if(card instanceof TaxIncrease){
@@ -45,7 +45,7 @@ public class CardImageViewController extends ImageView {
 
         }
         if(!fileName.equals("")){
-            cardImage = new Image("view.resources." +fileName + ".png");
+            cardImage = new Image("view/resources/" +fileName + ".png");
         }
         else
             this.setVisible(false);
