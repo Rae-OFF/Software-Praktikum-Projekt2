@@ -336,7 +336,7 @@ public class CardControllerTest {
 
     @Test(expected = NullPointerException.class)
     public void coinsMoreThan12Null() throws NullPointerException{
-        mainController.getCardController().coinsMoreThan12(null, null);
+        mainController.getCardController().coinsMoreThan12(null); //TODO coinsMoreThan12 anpassen (keine Action)
     }
 
     @Test
@@ -350,7 +350,7 @@ public class CardControllerTest {
             System.out.println("Vor: " + playerState.getCoins().getCards().size());
         }
         assertEquals(playerState0.getCoins().getSize(), 20);
-        mainController.getCardController().coinsMoreThan12(move, action);
+        mainController.getCardController().coinsMoreThan12(move); //coinsMoreThan12
         assertEquals(playerState0.getCoins().getSize(), 10);
         for (PlayerState playerState : playerStateList) {
             System.out.println("Nach: " + playerState.getCoins().getCards().size());

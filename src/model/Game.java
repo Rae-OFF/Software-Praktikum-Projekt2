@@ -265,8 +265,9 @@ public class Game {
 	 */
 	public void setLastMove(Move move) {
 
-		int index = moves.indexOf(lastMove);
-		if(index != moves.size() -1){
+		int index = moves.indexOf(move);
+
+		if(index != moves.size()-1){
 			for(int i = index + 1; i < moves.size(); i++){
 				moves.remove(i); //TODO remove Methode sollte Parameter 0 haben!
 			}

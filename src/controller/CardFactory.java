@@ -162,16 +162,14 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-        Person person = new Person();
-        person.setMetaData(ADMIRAL.name(),null, ADMIRAL);
-
-
    // 1pc with 5 coins
         Person person1 = new Person();
+        person1.setMetaData(ADMIRAL.name(),null, ADMIRAL);
         person1.setValues(5,1,0);
         cards.add(person1);
  // 3pc with 7 coins
         Person person2 = new Person();
+        person2.setMetaData(ADMIRAL.name(),null, ADMIRAL);
         person2.setValues(7,2,0);
         for (int i = 0; i < 3; i++) {
             cards.add(person2);
@@ -179,6 +177,7 @@ public class CardFactory {
 // 2pc with 9 coins
 
         Person person3 = new Person();
+        person3.setMetaData(ADMIRAL.name(),null, ADMIRAL);
         person3.setValues(9,3,0);
         cards.add(person3);
         cards.add(person3);
@@ -195,21 +194,21 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-        Person trader = new Person();
-
-        trader.setValues(3,1,0);
-
-        for (int i = 0; i < 2; i++) {
-
+            Person trader = new Person();
             trader.setMetaData(TRADER.name(),GREEN,TRADER);  //2pcs green, 3 coins
-            cards.add(trader);
+            trader.setValues(3,1,0);
+            cards.add(trader); cards.add(trader);
 
-            trader.setMetaData(TRADER.name(),BLACK,TRADER); //2pcs black, 3 coins
-            cards.add(trader);
+            Person black = new Person();
+            black.setMetaData(TRADER.name(),BLACK,TRADER); //2pcs black, 3 coins
+            black.setValues(3,1,0);
+            cards.add(black); cards.add(black);
 
-            trader.setMetaData(TRADER.name(),RED,TRADER); //2pcs red, 3 coins
-            cards.add(trader);
-        }
+            Person red = new Person();
+            red.setMetaData(TRADER.name(),RED,TRADER); //2pcs red, 3 coins
+            red.setValues(3,1,0);
+            cards.add(red); cards.add(red);
+
         Person trader1 = new Person();
         trader1.setMetaData(TRADER.name(),BLUE,TRADER); //1pc blue, 3 coins
         cards.add(trader1);
@@ -324,6 +323,7 @@ public class CardFactory {
         cards.add(pirate);
 
         Person pirate2 = new Person();
+        pirate2.setMetaData(PIRATE.name(), null, PIRATE);
         pirate2.setValues(9,3,2);
         cards.add(pirate2);
 
@@ -346,12 +346,14 @@ public class CardFactory {
         cards.add(jester);
 
         Person jester1 = new Person();
+        jester1.setMetaData(JESTER.name(), null,JESTER);
         jester1.setValues(7,2,0);
         cards.add(jester1);
         cards.add(jester1);
         cards.add(jester1);
 
         Person jester2 = new Person();
+        jester2.setMetaData(JESTER.name(), null,JESTER);
         jester2.setValues(9,3,0);
         cards.add(jester2);
 
@@ -379,6 +381,7 @@ public class CardFactory {
 // 2pcs - 5 coins, 2 victoryPoint
 
         Person sailor2 = new Person();
+        sailor2.setMetaData(SAILOR.name(), null, SAILOR);
         sailor2.setValues(5,2,1);
         cards.add(sailor2);
         cards.add(sailor2);
@@ -386,6 +389,7 @@ public class CardFactory {
  // 1pc - 7 coins, 3 victoryPoint
 
         Person sailor3 = new Person();
+        sailor3.setMetaData(SAILOR.name(), null, SAILOR);
         sailor3.setValues(7,3,1);
         cards.add(sailor3);
 
@@ -410,6 +414,7 @@ public class CardFactory {
         cards.add(mademoiselles);
 
         Person mademoiselles2 = new Person();
+        mademoiselles2.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
         mademoiselles2.setValues(9,3,0);
         cards.add(mademoiselles2);
         cards.add(mademoiselles2);
@@ -475,34 +480,39 @@ public class CardFactory {
         cards.add(anchor);
 
 // add expedition with 2 houses
-        requirements.put(SETTLER, 2);
-        Expedition house = new Expedition(requirements,2,4);
+        Map<PersonType, Integer> requirements1 = new HashMap<>();
+        requirements1.put(SETTLER, 2);
+        Expedition house = new Expedition(requirements1,2,4);
         cards.add(house);
 
  // add expedition with 2 houses
-        requirements.put(PRIEST, 2);
-        Expedition cross = new Expedition(requirements,2,4);
+        Map<PersonType, Integer> requirements2 = new HashMap<>();
+        requirements2.put(PRIEST, 2);
+        Expedition cross = new Expedition(requirements2,2,4);
         cards.add(cross);
 
 // add expedition with 2 crosses + 1 house
-        requirements.put(PRIEST, 2);
-        requirements.put(SETTLER, 1);
-        Expedition crossHouse = new Expedition(requirements,3,6);
+        Map<PersonType, Integer> requirements3 = new HashMap<>();
+        requirements3.put(PRIEST, 2);
+        requirements3.put(SETTLER, 1);
+        Expedition crossHouse = new Expedition(requirements3,3,6);
         cards.add(crossHouse);
 
 // add expedition with 2 anchors + 1 house
-        requirements.put(CAPTAIN, 2);
-        requirements.put(SETTLER, 1);
-        Expedition anchorHouse = new Expedition(requirements,3,6);
+        Map<PersonType, Integer> requirements4 = new HashMap<>();
+        requirements4.put(CAPTAIN, 2);
+        requirements4.put(SETTLER, 1);
+        Expedition anchorHouse = new Expedition(requirements4,3,6);
         cards.add(anchorHouse);
 
 // add expedition with 2 anchors + 1 house
 
         if(withSpecial){
-            requirements.put(CAPTAIN, 1);
-            requirements.put(SETTLER, 1);
-            requirements.put(PRIEST, 1);
-            Expedition special = new Expedition(requirements,3,5);
+            Map<PersonType, Integer> requirements5 = new HashMap<>();
+            requirements5.put(CAPTAIN, 1);
+            requirements5.put(SETTLER, 1);
+            requirements5.put(PRIEST, 1);
+            Expedition special = new Expedition(requirements5,3,5);
             cards.add(special);
         }
 
