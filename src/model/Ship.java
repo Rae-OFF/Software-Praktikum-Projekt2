@@ -27,13 +27,6 @@ public class Ship implements Card {
 	}
 
 	/**
-	 * Leerer Konstruktor.
-	 */
-	public Ship(){ //TODO leeren Konstruktor entfernen oder vervollständigen
-
-	}
-
-	/**
 	 *
 	 * @return Gibt die Farbe zurück.
 	 */

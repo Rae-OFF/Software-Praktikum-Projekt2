@@ -34,7 +34,8 @@ public class StartEasyAIGame extends Application {
             gameSystem.setPlayers(players);
             mainController.setGameSystem(gameSystem);
             GameController gameController = mainController.getGameController();
-            String cardPilePath = "C:\\Users\\Aaron\\Desktop\\Uni\\5_Semester\\SoPra\\Projekt2\\projekt2\\shuffled.csv";
+            //String cardPilePath = "C:\\Users\\Aaron\\Desktop\\Uni\\5_Semester\\SoPra\\Projekt2\\projekt2\\shuffled.csv";
+            String cardPilePath = "src/ressources/shuffled.csv";
             gameController.init(cardPilePath, players, false, false, false);
 
             gameLoop();
@@ -89,6 +90,8 @@ public class StartEasyAIGame extends Application {
 
 
         }
+
+        System.out.println("Game finished");
 
         Move lastMove = gameController.currentMove();
         ioController.log(lastMove,999);

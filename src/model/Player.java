@@ -33,7 +33,7 @@ public class Player {
 	 * @return Gibt (true) zurück wenn der Spieler identisch mit dem aufrufenden ist, ansonsten (false).
 	 */
 	public boolean equals(Player other){
-		return this.name == other.name && this.playerType == other.playerType; //TODO == durch equals ersetzen
+		return this.name.equals(other.name) && this.playerType.equals(other.playerType);
 	}
 
 	/**

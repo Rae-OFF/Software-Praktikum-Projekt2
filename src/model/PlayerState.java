@@ -14,7 +14,7 @@ public class PlayerState {
 
 	private Player player;
 
-	public int getVitoryPoints() {
+	public int getVictoryPoints() {
 		int vPoints = 0;
 
 		for(Card card : this.cards.getCards()){
