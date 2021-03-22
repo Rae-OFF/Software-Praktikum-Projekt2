@@ -1,11 +1,12 @@
 package view.playerfield;
 
 import controller.MainController;
+import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import model.PlayerState;
 import view.assets.CardPileImageViewController;
 
-public class CoinPileViewController extends StackPane {
+public class CoinPileViewController extends Group {
 
     private PileLabelViewController pileLabel;
 

@@ -34,7 +34,7 @@ public class PlayerFieldViewController extends StackPane {
         playerState = player;
 
         // ggf. Datei umbenennen
-        playerFieldImage = new Image("view.resources.Playerfield.png");
+        //playerFieldImage = new ImageView("view/resources/Playerfield.png");
 
         name = new Label(player.getPlayer().getName());
         victoryPoints = new Label("" + 0);

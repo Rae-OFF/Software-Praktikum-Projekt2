@@ -47,6 +47,9 @@ public class CardImageViewController extends ImageView {
         if(!fileName.equals("")){
             cardImage = new Image("view.resources." +fileName + ".png");
         }
+        else
+            this.setVisible(false);
+            System.out.println("No Card");
 
     }
 
