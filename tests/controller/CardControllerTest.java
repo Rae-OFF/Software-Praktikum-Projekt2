@@ -91,7 +91,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void execAdmiralNull() throws NullPointerException{
+    public void execAdmiralNull() {
         mainController.getCardController().execAdmiral(null, null);
     }
 
@@ -142,7 +142,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void execJesterNull() throws NullPointerException{
+    public void execJesterNull() {
         mainController.getCardController().execJester(null, null);
     }
 
@@ -204,7 +204,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void execTraderNull() throws NullPointerException{
+    public void execTraderNull(){
         mainController.getCardController().execTrader(null, null);
     }
 
@@ -245,7 +245,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void drawCardNull() throws NullPointerException{
+    public void drawCardNull(){
         mainController.getCardController().drawCard(null, null);
     }
 
@@ -353,7 +353,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void coinsMoreThan12Null() throws NullPointerException{
+    public void coinsMoreThan12Null(){
         mainController.getCardController().coinsMoreThan12(null);
     }
 
@@ -389,7 +389,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void taxIncreaseOfMinShieldsNull() throws NullPointerException{
+    public void taxIncreaseOfMinShieldsNull() {
         mainController.getCardController().taxIncreaseOfMinShields(null, null);
     }
 
@@ -424,7 +424,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void taxIncreaseOfMaxSwordsNull() throws NullPointerException{
+    public void taxIncreaseOfMaxSwordsNull() {
         mainController.getCardController().taxIncreaseOfMaxSwords(null, null);
     }
 
@@ -448,7 +448,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void takeShipNull() throws NullPointerException{
+    public void takeShipNull() {
         mainController.getCardController().takeShip(null, null);
     }
 
@@ -491,7 +491,7 @@ public class CardControllerTest {
      * @throws NullPointerException
      */
     @Test(expected = NullPointerException.class)
-    public void buyPersonNull() throws NullPointerException{
+    public void buyPersonNull() {
         mainController.getCardController().buyPerson(null, null);
     }
 
@@ -668,7 +668,7 @@ public class CardControllerTest {
      * Testet ob die Methode die Anzahl von personCard zurueckgeben kann, die ein Spieler besitzt.
      */
     @Test
-    public void getAmountOf(){
+    public void getAmountOf(){//
         assertEquals(mainController.getCardController().getAmountOf(JESTER,playerStateList.get(0)),1);
     }
 
