@@ -8,17 +8,13 @@ import model.Player;
 
 public class PlayersListViewController extends BorderPane {
 
+    @FXML
+    private ListView<Player> PlayersList; // Value injected by FXMLLoader
 
-    public class PleaseProvideControllerClassName {
-
-        @FXML
-        private ListView<Player> PlayersList; // Value injected by FXMLLoader
-
-        @FXML
-        void onClickReturn(ActionEvent event) {
-
-        }
+    @FXML
+    void onClickReturn(ActionEvent event) {
 
     }
+
 
 }
