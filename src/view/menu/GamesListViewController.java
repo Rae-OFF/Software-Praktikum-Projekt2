@@ -24,6 +24,7 @@ public class GamesListViewController extends BorderPane {
     public GamesListViewController(MainController mainController, HomePageViewController homePage){
         this.mainController = mainController;
         this.homePage = homePage;
+        //TODO Hintergrundbild einfügen
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/menu/GamesList.fxml"));
         loader.setRoot(this);
         loader.setController(this);
