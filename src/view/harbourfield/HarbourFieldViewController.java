@@ -47,6 +47,8 @@ public class HarbourFieldViewController extends StackPane {
         });
 
         cardPile = new CardPileImageViewController();
+        cardPile.setFitHeight(120);
+        cardPile.setFitWidth(80);
         cardPile.setTranslateX(-250);
         cardPile.setTranslateY(5);
         cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -57,7 +59,7 @@ public class HarbourFieldViewController extends StackPane {
         });
 
 
-        discardPile = new CardImageViewController(mainController.getGameSystem().getCurrentGame().getDiscardPile().peek());
+        discardPile = new CardImageViewController(move.getDiscardPile().peek());
         discardPile.setTranslateX(-350);
         discardPile.setTranslateY(5);
 
@@ -72,7 +74,7 @@ public class HarbourFieldViewController extends StackPane {
 
 
         //DiscardPile wird aktualisiert
-        discardPile = new CardImageViewController(mainController.getGameSystem().getCurrentGame().getDiscardPile().peek()); //entsprechende Karte übergeben
+        discardPile = new CardImageViewController(move.getDiscardPile().peek());
 
         // shipToDefend wird aktualisiert
         shipToDefend = new ShipToDefendFieldViewController(mainController,move);

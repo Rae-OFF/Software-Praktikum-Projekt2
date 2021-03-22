@@ -23,15 +23,18 @@ public class Main extends Application {
 		try {
 			//Zum Testen
 			MainController mainController = new MainController();
-			GameSystem system = mainController.getGameSystem();
+			//GameSystem system = mainController.getGameSystem();
 			List<Player> players = getPlayers();
-			List<PlayerState> playerStates = getPlayerState();
-			List<Move> moves = movs();
-			List<Action> actions = actions();
-			Move move = new Move(playerStates.get(0), true, playerStates.get(0), actions().get(0));
-			Game game = new Game(true,playerStates.get(0), true, players, playerStates.get(0).getCards());
-			system.setCurrentGame(game);
-			system.getCurrentGame().setLastMove(move);
+			//List<PlayerState> playerStates = getPlayerState();
+			//List<Move> moves = movs();
+			//List<Action> actions = actions();
+			//Move move = new Move(playerStates.get(0), true, playerStates.get(0), actions().get(0));
+			//Game game = new Game(true,playerStates.get(0), true, players, playerStates.get(0).getCards());
+			//system.setCurrentGame(game);
+			mainController.getGameController().init(null, players, true, true, false);
+			//system.getCurrentGame().setLastMove(move);
+
+
 
 			//Eigentlicher Code
 			GameViewController gameViewController = new GameViewController(mainController);

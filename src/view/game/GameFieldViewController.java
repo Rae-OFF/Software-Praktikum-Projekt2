@@ -10,11 +10,12 @@ import model.PlayerState;
 import view.harbourfield.HarbourFieldViewController;
 import view.playerfield.PlayerFieldViewController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameFieldViewController extends StackPane {
 
-    private List<PlayerFieldViewController> playerFields;
+    private List<PlayerFieldViewController> playerFields = new ArrayList<>();
 
     private HarbourFieldViewController harbourField;
 
