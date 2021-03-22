@@ -56,7 +56,8 @@ public class HomePageViewController extends BorderPane {
 
     @FXML
     void onClickNeuesSpiel(ActionEvent event) {
-        ChoosePlayerMenuViewController choosePlayer = new ChoosePlayerMenuViewController(mainController, homePage);
+        NewPlayerMenuViewController choosePlayer = new NewPlayerMenuViewController(mainController, homePage);
+        //ChoosePlayerMenuViewController choosePlayer = new ChoosePlayerMenuViewController(mainController, homePage);
         Scene scene = new Scene(choosePlayer, 1280, 720);
 
         Stage primaryStage = (Stage) homePage.getScene().getWindow();

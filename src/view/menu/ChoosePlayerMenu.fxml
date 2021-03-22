@@ -70,27 +70,27 @@
                   <ComboBox fx:id="boxPlayer3" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <ComboBox fx:id="boxPlayer4" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <ComboBox fx:id="boxPlayer5" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Button mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2">
+                  <Button fx:id="buttonP1" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                  <Button fx:id="buttonP5" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Button fx:id="buttonP4" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button fx:id="buttonP3" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Button fx:id="buttonP2" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
