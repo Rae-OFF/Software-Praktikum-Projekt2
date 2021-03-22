@@ -41,7 +41,7 @@ public class GameViewController extends StackPane {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println("HIER IST EIN MENU!");
-                event.consume();
+                //event.consume();
             }
         });
 

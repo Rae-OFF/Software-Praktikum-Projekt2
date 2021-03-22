@@ -28,6 +28,7 @@ public class GameFieldViewController extends StackPane {
         for(PlayerState player : move.getPlayers()){
             playerFields.add(new PlayerFieldViewController(mainController,player));
         }
+
         harbourField = new HarbourFieldViewController(mainController,move);
         getChildren().add(harbourField);
         undo =  new ImageView("view/resources/undoButton.png");
