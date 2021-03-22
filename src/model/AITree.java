@@ -36,6 +36,19 @@ public class AITree {
         int maxValue = -1;
         AINode maxNode = null;
 
+        if(children.size() > 1){
+            AINode removeNode = null;
+            for(AINode child : children){
+                if(child.getCurrentMove().getAction().getActionType().equals(ActionType.SKIP)){
+                    removeNode = child;
+                }
+            }
+
+            if(removeNode != null){
+                children.remove(removeNode);
+            }
+        }
+
         for(AINode node : children){
             int value = getValue(node, player);
 
