@@ -260,11 +260,12 @@ public class NewPlayerMenuViewController  extends BorderPane {
             Stage primaryStage = (Stage) this.getScene().getWindow();
             primaryStage.setScene(scene);
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Nicht genügend Spieler!");
             alert.setHeaderText(null);
             alert.setContentText("Es müssen mindestens 2 Spieler ausgewählt sein");
 
+            alert.showAndWait();
         }
     }
 }
