@@ -40,15 +40,15 @@ public class GameFieldViewController extends StackPane {
 
         undo.setFitHeight(50);
         undo.setFitWidth(50);
-        undo.setTranslateX(-360); //TODO undo an Parent orientieren
+        undo.setTranslateX(-360);
         undo.setTranslateY(-270);
         redo.setFitHeight(50);
         redo.setFitWidth(50);
-        redo.setTranslateX(-310); //TODO redo an Parent orientieren
+        redo.setTranslateX(-310);
         redo.setTranslateY(-270);
         hint.setFitHeight(50);
         hint.setFitWidth(50);
-        hint.setTranslateX(-240); //TODO hint an Parent orientieren
+        hint.setTranslateX(-240);
         hint.setTranslateY(-270);
         harbourField.setTranslateX(0);
         harbourField.setTranslateY(-120);

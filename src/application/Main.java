@@ -38,7 +38,9 @@ public class Main extends Application {
 			Scene scene = new Scene(gameViewController,1280,720);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
+			primaryStage.setResizable(false);
 			primaryStage.show();
+
 			System.out.println("Spiel läuft!");
 		} catch(Exception e) {
 			e.printStackTrace();

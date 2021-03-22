@@ -34,7 +34,7 @@ public class GameViewController extends StackPane {
 
         menu =  new ImageView("view/resources/menuButton.png");
         getChildren().add(menu);
-        menu.setTranslateX(-565); //TODO an Parent orientieren
+        menu.setTranslateX(-565);
         menu.setTranslateY(-310);
 
         menu.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
