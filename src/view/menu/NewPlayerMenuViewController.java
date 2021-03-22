@@ -237,11 +237,34 @@ public class NewPlayerMenuViewController  extends BorderPane {
             mainController.getGameSystem().getCurrentGame().setDefaultVariant(false);
         }
 
+        int count = 2;
+       /*  int count = 0;
+       if(!boxPlayer1.getSelectionModel().getSelectedItem().equals(null)&&!boxPlayer1.isDisabled()){
+            count++;
+        } else if(!boxPlayer2.getSelectionModel().getSelectedItem().equals(null)&&!boxPlayer2.isDisabled()){
+            count++;
+        } else if(!boxPlayer3.getSelectionModel().getSelectedItem().equals(null)&&!boxPlayer3.isDisabled()){
+            count++;
+        } else if(!boxPlayer4.getSelectionModel().getSelectedItem().equals(null)&&!boxPlayer3.isDisabled()){
+            count++;
+        } else if(!boxPlayer5.getSelectionModel().getSelectedItem().equals(null)&&!boxPlayer4.isDisabled()){
+            count++;
+        }*/
 
-        GameViewController games = new GameViewController(mainController);
-        Scene scene = new Scene(games, 1280, 720);
+        //TODO neue Spieler abfangen
 
-        Stage primaryStage = (Stage) this.getScene().getWindow();
-        primaryStage.setScene(scene);
+        if(count >= 2){
+            GameViewController games = new GameViewController(mainController);
+            Scene scene = new Scene(games, 1280, 720);
+
+            Stage primaryStage = (Stage) this.getScene().getWindow();
+            primaryStage.setScene(scene);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Nicht genügend Spieler!");
+            alert.setHeaderText(null);
+            alert.setContentText("Es müssen mindestens 2 Spieler ausgewählt sein");
+
+        }
     }
 }
