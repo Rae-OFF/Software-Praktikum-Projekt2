@@ -38,8 +38,8 @@ public class TestFactory {
         }
 
   //generate cards for player 0;
-        CardStack p0 = players.get(0).getCards();
-        List<Card> cards0 = p0.getCards();
+        CardStack stackPlayer0 = players.get(0).getCards();
+        List<Card> cards0 = stackPlayer0.getCards();
 
         cards0.add(cardFactory.generateAdmiral().get(0));  //victoryPoint: 1
         cards0.add(cardFactory.generateTrader().get(0));  //green, 3 coins
@@ -47,8 +47,8 @@ public class TestFactory {
         cards0.add(cardFactory.generateMademoiselles().get(3)); //victoryPoint: 3
 
 //generate cards for player 1;
-        CardStack p1 = players.get(1).getCards();
-        List<Card> cards1 = p1.getCards();
+        CardStack stackPlayer1 = players.get(1).getCards();
+        List<Card> cards1 = stackPlayer1.getCards();
 
         cards1.add(cardFactory.generateSailor().get(0));  //victoryPoint: 1, sword:1
         cards1.add(cardFactory.generateGovernor().get(0));  //victoryPoint: 0
@@ -58,24 +58,24 @@ public class TestFactory {
         coins.setCards(cards0);
 
 //generate cards for player 2;
-        CardStack p2 = players.get(2).getCards();
-        List<Card> cards2 = p2.getCards();
+        CardStack stackPlayer2 = players.get(2).getCards();
+        List<Card> cards2 = stackPlayer2.getCards();
 
         cards2.add(cardFactory.generateTrader().get(5));  //red, 3 coins
         cards2.add(cardFactory.generatePirate().get(1));  //victoryPoint: 2, sword 2
         cards2.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
 
 //generate cards for player 3;
-        CardStack p3 = players.get(3).getCards();
-        List<Card> cards3 = p3.getCards();
+        CardStack stackPlayer3 = players.get(3).getCards();
+        List<Card> cards3 = stackPlayer3.getCards();
 
         cards3.add(cardFactory.generateTrader().get(5));  //red, 3 coins
         cards3.add(cardFactory.generateSettlerCaptain().get(1));  //victoryPoint: 1, Settler
         cards3.add(cardFactory.generateJackOfAllTrader().get(0));  //victoryPoint: 1
 
 //generate cards for player 4;
-        CardStack p4 = players.get(4).getCards();
-        List<Card> cards4 = p4.getCards();
+        CardStack stackPlayer4 = players.get(4).getCards();
+        List<Card> cards4 = stackPlayer4.getCards();
 
         cards4.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
         cards4.add(cardFactory.generateSettlerCaptain().get(7));  //victoryPoint: 1, Captain
