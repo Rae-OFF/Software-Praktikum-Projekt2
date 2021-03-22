@@ -267,6 +267,11 @@ public class Game {
 		this.lastMove = move;
 	}
 
+	/**
+	 * Setzt den letzten Zug und entfernt alle danach liegenden Züge.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 */
 	public void setLastMoveAndCut(Move move) {
 
 		int index = moves.indexOf(move);
