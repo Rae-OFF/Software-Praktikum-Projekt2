@@ -476,18 +476,24 @@ public class CardFactory {
 
  // add expedition with 2 anchor
         requirements.put(CAPTAIN, 2);
+        requirements.put(PRIEST, 0);
+        requirements.put(SETTLER, 0);
         Expedition anchor = new Expedition(requirements,2,4);
         cards.add(anchor);
 
 // add expedition with 2 houses
         Map<PersonType, Integer> requirements1 = new HashMap<>();
         requirements1.put(SETTLER, 2);
+        requirements1.put(CAPTAIN, 0);
+        requirements1.put(PRIEST, 0);
         Expedition house = new Expedition(requirements1,2,4);
         cards.add(house);
 
  // add expedition with 2 houses
         Map<PersonType, Integer> requirements2 = new HashMap<>();
         requirements2.put(PRIEST, 2);
+        requirements2.put(SETTLER, 0);
+        requirements2.put(CAPTAIN, 0);
         Expedition cross = new Expedition(requirements2,2,4);
         cards.add(cross);
 
@@ -495,6 +501,7 @@ public class CardFactory {
         Map<PersonType, Integer> requirements3 = new HashMap<>();
         requirements3.put(PRIEST, 2);
         requirements3.put(SETTLER, 1);
+        requirements3.put(CAPTAIN, 0);
         Expedition crossHouse = new Expedition(requirements3,3,6);
         cards.add(crossHouse);
 
@@ -502,6 +509,7 @@ public class CardFactory {
         Map<PersonType, Integer> requirements4 = new HashMap<>();
         requirements4.put(CAPTAIN, 2);
         requirements4.put(SETTLER, 1);
+        requirements4.put(PRIEST, 0);
         Expedition anchorHouse = new Expedition(requirements4,3,6);
         cards.add(anchorHouse);
 
