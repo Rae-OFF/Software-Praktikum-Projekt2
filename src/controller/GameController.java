@@ -176,6 +176,7 @@ public class GameController {
 
 		}else{
 			cardPile = mainController.getIoController().loadCardDeck(cardPilePath, players.size());
+			Collections.shuffle(cardPile.getCards());
 		}
 		List<Player> playersOrdered = playerController.setPlayerOrder(players, randomPlayerOrder);
 
@@ -392,7 +393,7 @@ public class GameController {
 				}
 				if(fulfilled == true){
 					results.add(new Action(START_EXPEDITION, expedition));
-					mainController.getIoController().log("Expedition possible");
+					//mainController.getIoController().log("Expedition possible");
 				}
 				else{
 					/*int distance = captainDistance + priestDistance + settlerDistance;
@@ -451,7 +452,8 @@ public class GameController {
 
 		if (mainController.getGameSystem().getCurrentGame().isShuffleCards()) {
 			Collections.shuffle(move.getDiscardPile().getCards());
-			move.setCardPile(move.getDiscardPile());
+
+			move.getCardPile().pushList(move.getDiscardPile().popList(move.getDiscardPile().getSize()));
 		} else {
 			List<Card> discardPile = move.getDiscardPile().getCards();
 			List<Card> initCards = mainController.getGameSystem().getCurrentGame().getInitCardPile().getCards();

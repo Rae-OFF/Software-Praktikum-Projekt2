@@ -124,12 +124,12 @@ public class CardController {
 		action.setAffectedCard(card);   // set this popped card as affected card
 
 		if(card instanceof TaxIncrease ){
-			coinsMoreThan12(move);
+			/*coinsMoreThan12(move);
 			if(((TaxIncrease) card).isTypeSwords()){
 				taxIncreaseOfMaxSwords(move, action);
 			}else{
 				taxIncreaseOfMinShields(move, action);
-			}
+			}*/
 		}else if(card instanceof Expedition){
 
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
@@ -251,9 +251,9 @@ public class CardController {
 
 		}else{   // if other players want to take the ship
 
-			player.getCoins().pushList(actor.getCoins().popList(1));
-
 			actor.getCoins().pushList(gameController.popCardPile(move,((Ship) action.getAffectedCard()).getCoins()));
+
+			player.getCoins().pushList(actor.getCoins().popList(1));
 
 			move.getDiscardPile().push(move.getHarbour().getCard(action.getAffectedCard()));
 
@@ -317,7 +317,7 @@ public class CardController {
 			List<Card> cardsInHand = move.getActivePlayer().getCards().getCards();
 			int numSwords = 0;
 
-			if (shipCard.getForce() == 100) {
+			if (shipCard.getForce() >= 100) {
 				move.getHarbour().push(shipCard);
 				move.setShipToDefend(null);
 

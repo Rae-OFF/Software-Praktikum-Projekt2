@@ -35,7 +35,7 @@ public class StartEasyAIGame extends Application {
             mainController.setGameSystem(gameSystem);
             GameController gameController = mainController.getGameController();
             String cardPilePath = "src/ressources/shuffled.csv";
-            gameController.init(cardPilePath, players, false, false, false);
+            gameController.init(cardPilePath, players, false, true, false);
 
             gameLoop();
 
