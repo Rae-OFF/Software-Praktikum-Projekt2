@@ -14,6 +14,10 @@ public class PlayerState {
 
 	private Player player;
 
+	/**
+	 *
+	 * @return Gibt die Siegpunkte des Spielers zurück.
+	 */
 	public int getVictoryPoints() {
 		int vPoints = 0;
 

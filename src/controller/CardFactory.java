@@ -478,6 +478,7 @@ public class CardFactory {
         requirements.put(CAPTAIN, 2);
         requirements.put(PRIEST, 0);
         requirements.put(SETTLER, 0);
+        requirements.put(JACK_OF_ALL_TRADES, 0);
         Expedition anchor = new Expedition(requirements,2,4);
         cards.add(anchor);
 
@@ -486,6 +487,7 @@ public class CardFactory {
         requirements1.put(SETTLER, 2);
         requirements1.put(CAPTAIN, 0);
         requirements1.put(PRIEST, 0);
+        requirements1.put(JACK_OF_ALL_TRADES, 0);
         Expedition house = new Expedition(requirements1,2,4);
         cards.add(house);
 
@@ -494,6 +496,7 @@ public class CardFactory {
         requirements2.put(PRIEST, 2);
         requirements2.put(SETTLER, 0);
         requirements2.put(CAPTAIN, 0);
+        requirements2.put(JACK_OF_ALL_TRADES, 0);
         Expedition cross = new Expedition(requirements2,2,4);
         cards.add(cross);
 
@@ -502,6 +505,7 @@ public class CardFactory {
         requirements3.put(PRIEST, 2);
         requirements3.put(SETTLER, 1);
         requirements3.put(CAPTAIN, 0);
+        requirements3.put(JACK_OF_ALL_TRADES, 0);
         Expedition crossHouse = new Expedition(requirements3,3,6);
         cards.add(crossHouse);
 
@@ -510,6 +514,7 @@ public class CardFactory {
         requirements4.put(CAPTAIN, 2);
         requirements4.put(SETTLER, 1);
         requirements4.put(PRIEST, 0);
+        requirements4.put(JACK_OF_ALL_TRADES, 0);
         Expedition anchorHouse = new Expedition(requirements4,3,6);
         cards.add(anchorHouse);
 
@@ -520,6 +525,7 @@ public class CardFactory {
             requirements5.put(CAPTAIN, 1);
             requirements5.put(SETTLER, 1);
             requirements5.put(PRIEST, 1);
+            requirements5.put(JACK_OF_ALL_TRADES, 0);
             Expedition special = new Expedition(requirements5,3,5);
             cards.add(special);
         }

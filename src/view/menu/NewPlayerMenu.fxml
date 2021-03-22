@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane style="-fx-background-color: #F3E2A9;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root style="-fx-background-color: #F3E2A9;" type="BorderPane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #F3E2A9;">
         <columnConstraints>
@@ -68,17 +68,17 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <ComboBox fx:id="boxPlayer2" disable="true" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ComboBox fx:id="boxPlayer1" disable="true" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" />
-                  <ComboBox fx:id="boxPLayer3" disable="true" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ComboBox fx:id="boxPlayer4" disable="true" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <ComboBox fx:id="boxPlayer5" disable="true" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2">
+                  <ComboBox fx:id="boxPlayer2" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <ComboBox fx:id="boxPlayer1" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" />
+                  <ComboBox fx:id="boxPlayer3" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ComboBox fx:id="boxPlayer4" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <ComboBox fx:id="boxPlayer5" prefHeight="26.0" prefWidth="189.0" promptText="Spieler auswählen" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <Button fx:id="buttonP1" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button disable="true" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Button fx:id="buttonP2" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -93,17 +93,17 @@
                   <TextField fx:id="textfieldPlayer3" promptText="Spielername" GridPane.columnIndex="3" GridPane.rowIndex="2" />
                   <TextField fx:id="textfieldPlayer4" promptText="Spielername" GridPane.columnIndex="3" GridPane.rowIndex="3" />
                   <TextField fx:id="textfieldPlayer5" promptText="Spielername" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <Button disable="true" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                  <Button fx:id="buttonP3" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="2">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button disable="true" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                  <Button fx:id="buttonP4" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="3">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Button>
-                  <Button alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" prefWidth="25.0" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                  <Button fx:id="buttonP5" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onClickShowAddPlayerContext" prefWidth="25.0" style="-fx-background-radius: 100;" text="+" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <font>
                         <Font name="System Bold" size="12.0" />
                      </font>
@@ -136,16 +136,16 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <RadioButton mnemonicParsing="false" text="12 Siegpunkte" />
-                        <RadioButton mnemonicParsing="false" text="12 Siegpunkte + 1 Expedition" GridPane.rowIndex="1" />
+                        <RadioButton fx:id="defaultVariant" mnemonicParsing="false" text="12 Siegpunkte" />
+                        <RadioButton fx:id="gameVariant" mnemonicParsing="false" text="12 Siegpunkte + 1 Expedition" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <Button mnemonicParsing="false" onAction="#onClickStartGame" prefHeight="25.0" prefWidth="105.0" text="Spiel starten" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Kartendeck laden" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <Button mnemonicParsing="false" text="Zurück" GridPane.rowIndex="1" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onClickLoadDeck" text="Kartendeck laden" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#onClickGoBack" text="Zurück" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>
       </GridPane>
    </center>
-</BorderPane>
+</fx:root>
