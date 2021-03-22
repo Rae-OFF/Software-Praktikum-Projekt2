@@ -18,6 +18,11 @@ public class CardController {
 
    public static int UNDEFENDABLE_SHIP = 100;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public CardController(MainController mainController) {
 		this.mainController = mainController;
 		GameController gameController = mainController.getGameController();
@@ -32,7 +37,6 @@ public class CardController {
 	 * @param action
 	 * 		Bekommt die Aktion übergeben.
 	 */
-
 	public void execAdmiral(Move move, Action action) {
 		if(action.getAffectedCard() instanceof Person && ((Person) action.getAffectedCard()).getPersonType().equals(ADMIRAL)) {
 			List<Card> harbourCards = move.getHarbour().getCards();
@@ -163,7 +167,13 @@ public class CardController {
 		}
 	}
 
-
+	/**
+	 * Steuererhöhung mit max. Schwertern.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 * @param action
+	 * 		Bekommt eine Aktion übergeben.
+	 */
 	public void taxIncreaseOfMaxSwords(Move move, Action action) {
 
 		Card currentCard = action.getAffectedCard();
@@ -199,7 +209,13 @@ public class CardController {
 			}
 		}
 
-
+	/**
+	 * Steuererhöhung mit min. Siegpunkten.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 * @param action
+	 * 		Bekommt eine Aktion übergeben.
+	 */
 	public void taxIncreaseOfMinShields(Move move, Action action) {
 		Card currentCard = action.getAffectedCard();
 		List<PlayerState> players = move.getPlayers();
