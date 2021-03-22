@@ -15,7 +15,11 @@ public class IoController {
 
 	private PrintWriter writer;
 
-
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public IoController(MainController mainController) {
 
 		this.mainController = mainController;
@@ -133,6 +137,10 @@ public class IoController {
 		writer.close();
 	}
 
+	/**
+	 * Protokoll des Spiels.
+	 * @param message Bekommt einen String übergeben.
+	 */
 	public void log(String message){
 
 		String currentPath = System.getProperty("user.dir");
