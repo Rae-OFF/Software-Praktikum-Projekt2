@@ -412,21 +412,23 @@ public class CardController {
 					}
 					cards.removeAll(jacks);
 				}
+				if(materials.size()!=0 && jacksNeeded<=0) {
+					move.getDiscardPile().pushList(materials);
+					move.getDiscardPile().pushList(jacks);
 
-				move.getDiscardPile().pushList(materials);
-				move.getDiscardPile().pushList(jacks);
-
-				move.getExpeditionPile().getCards().remove(exped);
-
-				player.getCards().push(exped);
-
-				player.getCoins().pushList(gameController.popCardPile(move,((Expedition) exped).getCoins()));
-				//player.setVitoryPoints(player.getVitoryPoints() + ((Expedition) exped).getVictoryPoints());
+					move.getExpeditionPile().getCards().remove(exped);
 
 
+					player.getCards().push(exped);
+
+					player.getCoins().pushList(gameController.popCardPile(move, ((Expedition) exped).getCoins()));
+					//player.setVitoryPoints(player.getVitoryPoints() + ((Expedition) exped).getVictoryPoints());
 
 
 					// add "int coins" coins  to player's hand
+				}else{
+					cards.addAll(materials);
+				}
 			}
 		}
 
