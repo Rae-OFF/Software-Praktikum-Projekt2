@@ -359,7 +359,7 @@ public class CardController {
 
 				PlayerState player = move.getActivePlayer();
 
-				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange
+				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange.
 
 				Map<PersonType, Integer> require= ((Expedition) exped).getRequirements(); //get requirements of this Expedition
 
