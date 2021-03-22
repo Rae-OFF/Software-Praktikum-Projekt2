@@ -1,5 +1,7 @@
 package controller;
 
+import model.AINode;
+import model.AITree;
 import model.Action;
 import model.Move;
 
@@ -16,7 +18,13 @@ public class HardAi extends AiController {
 
 
 	@Override
-	public Action getAction(Move move) {
-		return null;
+	public Action getAction(Move move){
+
+		AINode root = AITree.generateTree(move,mainController,7);
+
+		Action action = AITree.getBestAction(root, move.getActor());
+
+		return action;
+
 	}
 }

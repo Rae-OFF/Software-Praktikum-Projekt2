@@ -38,6 +38,7 @@ public class GameController {
 				popCardPile.add(cardStack.pop());
 			}else{
 				shuffleDiscardPile(move);
+				popCardPile.add(cardStack.pop());
 			}
 		}
 		return popCardPile;
@@ -125,7 +126,7 @@ public class GameController {
 
 			for(PlayerState player : move.getPlayers()){
 
-				if(player.getVictoryPoints() >= 12 && move.getActor().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
+				if(player.getVictoryPoints() >= 12 && move.getActivePlayer().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
 					mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
 					mainController.getGameSystem().getCurrentGame().setOngoing(false);
 				}
@@ -202,6 +203,7 @@ public class GameController {
 		move.setPlayers(game.getPlayerStates());
 		move.setActor(states.get(0));
 		move.setActivePlayer(states.get(0));
+		move.setBuyLimit(1);
 
 		Action action = new Action(SHUFFLE, null);
 		move.setAction(action);
@@ -259,15 +261,15 @@ public class GameController {
 			//Es gibt keine Methode acceptShip() in CardController;
 			case ACCEPT_SHIP:
 				//mainController.getCardController().(nextMove, action);
-				move.getHarbour().push(move.getShipToDefend());
-				move.setShipToDefend(null);
+				nextMove.getHarbour().push(nextMove.getShipToDefend());
+				nextMove.setShipToDefend(null);
 				break;
 /*			case SHUFFLE:
 				mainController.getCardController().shuffle(nextMove, action);
 				break;*/
 		}
 		nextMove.setAction(action);
-		finishRound(nextMove);
+		//finishRound(nextMove);
 		return nextMove;
 	}
 
@@ -300,20 +302,20 @@ public class GameController {
 			return results;
 		}
 
-		if( actor == activePlayer && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() > 0) {
+		if( actor == activePlayer && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
 
 
-			if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
-				//TAKE_SHIP;
-				for (Card card : harbourCards) {
-					if (card instanceof Ship) {
-						results.add(new Action(TAKE_SHIP, card));
-					}
+		if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
+			//TAKE_SHIP;
+			for (Card card : harbourCards) {
+				if (card instanceof Ship) {
+					results.add(new Action(TAKE_SHIP, card));
 				}
 			}
+		}
 
 
 		//BUY_PERSON;
@@ -479,15 +481,16 @@ public class GameController {
 		 * 		weiterspielen kann.
 		 */
 		public boolean isZonked (Move move){
-			// neue Karte aufdecken
-			Card currentCard = move.getHarbour().peek();
-			List<Card> harbour = move.getHarbour().getCards();
-			if (currentCard instanceof Ship) {
-				for (Card card : harbour) {
-					if (!card.equals(currentCard) && card instanceof Ship && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
-						move.getDiscardPile().pushList(move.getHarbour().getCards());
-						move.getHarbour().getCards().clear();
-						return true;
+			if(move.getHarbour().getSize() > 0) {
+				Card currentCard = move.getHarbour().showLastCard();
+				List<Card> harbour = move.getHarbour().getCards();
+				if (currentCard instanceof Ship) {
+					for (Card card : harbour) {
+						if (card instanceof Ship && (!card.equals(currentCard)) && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
+							move.getDiscardPile().pushList(move.getHarbour().getCards());
+							move.getHarbour().getCards().clear();
+							return true;
+						}
 					}
 				}
 			}

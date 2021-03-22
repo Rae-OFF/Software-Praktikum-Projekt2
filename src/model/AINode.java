@@ -24,6 +24,27 @@ public class AINode {
         return this.currentMove;
     }
 
+    public int getDepth(){
+
+        if(this.isLeaf()){
+            return 0;
+        }
+        else{
+            List<AINode> children = this.getChildren();
+
+            int maxDepth = -1;
+
+            for(AINode child : children){
+                int childDepth = child.getDepth();
+                if(childDepth > maxDepth){
+                    maxDepth = childDepth;
+                }
+            }
+
+            return 1 + maxDepth;
+        }
+    }
+
     public void addChild(Action action, Move move){
         this.branches.put(action, new AINode(move));
     }

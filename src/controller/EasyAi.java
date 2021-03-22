@@ -3,6 +3,7 @@ package controller;
 import model.Action;
 import model.ActionType;
 import model.Move;
+import org.w3c.dom.ranges.Range;
 
 import java.util.List;
 import java.util.Random;
@@ -33,7 +34,6 @@ public class EasyAi extends AiController {
 			}
 		}
 		int randIndex = rand.nextInt(possibleActions.size());
-		//mainController.getPlayerController().executeAction(possibleActions.get(randIndex));
 		return possibleActions.get(randIndex);
 	}
 }

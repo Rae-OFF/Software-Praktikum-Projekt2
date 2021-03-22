@@ -75,6 +75,7 @@ public class CardControllerTest {
 
         actionList = TestFactory.actions();
         action = actionList.get(0);
+        move.setAction(action);
 
         gameSystem = new GameSystem();
         mainController.setGameSystem(gameSystem);
@@ -97,7 +98,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Admiral. der aktive Spieler hat Admiral
      */
     @Test
-    public void execAdmiral() { // if Bedingung erfuellt
+    public void execAdmiralHave() { // if Bedingung erfuellt
         move.getHarbour().getCards().add(cardFactory.generateBlueShips().get(0));
         move.getHarbour().getCards().add(cardFactory.generateRedShips().get(0));
         move.getHarbour().getCards().add(cardFactory.generateBlueShips().get(0));
@@ -120,7 +121,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Admiral. der aktive Spieler hat kein Admiral
      */
     @Test
-    public void execAdmiral1() { // else erfuellt
+    public void execAdmiralNotHave() { // else erfuellt
         move.setActivePlayer(playerStateList.get(0));
         move.getHarbour().getCards().add(cardFactory.generateBlueShips().get(0));
         move.getHarbour().getCards().add(cardFactory.generateRedShips().get(0));
@@ -149,7 +150,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Jester. der aktive Spieler hat Jester
      */
     @Test
-    public void execJester() { // if Bedingung. if JESTER is at player's hand, all these players get 1 coin
+    public void execJesterHave() { // if Bedingung. if JESTER is at player's hand, all these players get 1 coin
         move.setActivePlayer(playerStateList.get(0));
         move.setPhase1(true);
         action.setActionType(SKIP);
@@ -176,7 +177,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Jester. der aktive Spieler hat kein Jester
      */
     @Test
-    public void execJester1() { // else Bedingung.in phase 2, only active player get 1 coin
+    public void execJesterNotHave() { // else Bedingung.in phase 2, only active player get 1 coin
         move.setActivePlayer(playerStateList.get(0));
         move.setPhase1(false);
         action.setActionType(SKIP);
@@ -212,7 +213,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Jester. der aktive Spieler hat Trader
      */
     @Test
-    public void execTrader() { // active Player has Trader
+    public void execTraderHave() { // active Player has Trader
         move.setActivePlayer(playerStateList.get(0));
         action.setAffectedCard(cardFactory.generateGreenShips().get(0)); //greenTrader
         move.getActivePlayer().getCards().getCards().add(cardFactory.generateTrader().get(0));// greenTrader
@@ -227,7 +228,7 @@ public class CardControllerTest {
      * Testet die Funktionalitaet von Jester. der aktive Spieler hat kein Trader
      */
     @Test
-    public void execTrader1() { // active Player has not Trader
+    public void execTraderNotHave() { // active Player has not Trader
         move.setActivePlayer(playerStateList.get(1));
         action.setAffectedCard(cardFactory.generateGreenShips().get(0)); //greenTrader
         move.getActivePlayer().getCards().getCards().add(cardFactory.generateTrader().get(0));// greenTrader
@@ -254,7 +255,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche drawCard. der aktive Spieler hat eine TaxCard mit maxSwords aufgedeckt.
      */
     @Test
-    public void drawCard() { //if(card instanceof TaxIncrease ),if(((TaxIncrease) card).isTypeSwords())
+    public void drawCardTaxMaxSwords() { //if(card instanceof TaxIncrease ),if(((TaxIncrease) card).isTypeSwords())
         move.setActivePlayer(playerStateList.get(0));
         move.getCardPile().getCards().add(0, cardFactory.generateTaxIncrease().get(2));
 
@@ -268,7 +269,7 @@ public class CardControllerTest {
 
         assertEquals(playerStateList.get(0).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(1).getCoins().getSize(), 4);
-        assertEquals(playerStateList.get(2).getCoins().getSize(), 1);
+        assertEquals(playerStateList.get(2).getCoins().getSize(), 0); //1
         assertEquals(playerStateList.get(3).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(4).getCoins().getSize(), 0);
     }
@@ -277,7 +278,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche drawCard. der aktive Spieler hat eine TaxCard mit minShield aufgedeckt.
      */
     @Test
-    public void drawCard1() { //if(card instanceof TaxIncrease ),else.
+    public void drawCardTaxMinShield() { //if(card instanceof TaxIncrease ),else.
         move.setActivePlayer(playerStateList.get(0));
         move.getCardPile().getCards().add(0, cardFactory.generateTaxIncrease().get(0));
         action.setAffectedCard(cardFactory.generateTaxIncrease().get(0));
@@ -292,7 +293,7 @@ public class CardControllerTest {
         mainController.getCardController().drawCard(move, action);
 
         assertEquals(playerStateList.get(0).getCoins().getSize(), 0);
-        assertEquals(playerStateList.get(1).getCoins().getSize(), 5);
+        assertEquals(playerStateList.get(1).getCoins().getSize(), 4); //4
         assertEquals(playerStateList.get(2).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(3).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(4).getCoins().getSize(), 0);
@@ -303,7 +304,7 @@ public class CardControllerTest {
      * der aktive Spieler hat eine TaxCard mit Expedition aufgedeckt.
      */
     @Test
-    public void drawCard2() { // if(card instanceof Expedition){
+    public void drawCardExpedition() { // if(card instanceof Expedition){
         move.setActivePlayer(playerStateList.get(3));
         move.getCardPile().getCards().add(0, cardFactory.generateExpedition(true).get(5));
 
@@ -320,7 +321,7 @@ public class CardControllerTest {
      * der aktive Spieler hat eine ShipCard aufgedeckt, die die Bedingung isZonked() erfuellt.
      */
     @Test
-    public void drawCard3() { // if(card instanceof Ship). isZonked()==false
+    public void drawCardShipIsZonked() { // if(card instanceof Ship). isZonked()==false
         move.setActivePlayer(playerStateList.get(0));
         move.getCardPile().getCards().add(0, cardFactory.generateBlueShips().get(0));
         move.setActor(playerStateList.get(0));
@@ -337,7 +338,7 @@ public class CardControllerTest {
      * der aktive Spieler hat eine PersonCard aufgedeckt.
      */
     @Test
-    public void drawCard4() { // person
+    public void drawCardPerson() { // person
         move.setActivePlayer(playerStateList.get(0));
         move.getCardPile().getCards().add(0, cardFactory.generatePirate().get(2));
         playerStateList.get(0).getCards().getCards().add(cardFactory.generatePirate().get(2));
@@ -364,7 +365,7 @@ public class CardControllerTest {
      * wird die abgerundete Hälfte ihres Vermögens erfolgreich abgezogen.
      */
     @Test
-    public void coinsMoreThan12() {
+    public void coinsMoreThan12Have() {
         move.setActivePlayer(playerStateList.get(3));
         playerStateList.get(0).getCoins().getCards().addAll(cardFactory.generateBlueShips());
         playerStateList.get(0).getCards().getCards().addAll(cardFactory.generateYellowShips());
@@ -379,7 +380,7 @@ public class CardControllerTest {
      * wird die Anzahl von coins nicht veraendert.
      */
     @Test
-    public void coinsMoreThan12_1() { //no one more than 12
+    public void coinsMoreThan12NoOneHave() { //no one more than 12
         move.setActivePlayer(playerStateList.get(3));
         assertEquals(playerStateList.get(1).getCoins().getSize(), 4);
         mainController.getCardController().coinsMoreThan12(move);
@@ -401,9 +402,6 @@ public class CardControllerTest {
      */
     @Test
     public void taxIncreaseOfMinShields() {
-
-        move.setActivePlayer(playerStateList.get(0));
-        move.getCardPile().getCards().add(0, cardFactory.generateTaxIncrease().get(0));
         action.setAffectedCard(cardFactory.generateTaxIncrease().get(0));
         //victoryPoints: player0:6, player1:2, player2:4, player3:3, player4:3
 
@@ -413,7 +411,7 @@ public class CardControllerTest {
         assertEquals(playerStateList.get(3).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(4).getCoins().getSize(), 0);
 
-        mainController.getCardController().drawCard(move, action);
+        mainController.getCardController().taxIncreaseOfMinShields(move, action);
 
         assertEquals(playerStateList.get(0).getCoins().getSize(), 0);
         assertEquals(playerStateList.get(1).getCoins().getSize(), 5);
@@ -461,7 +459,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche Aufnahme von shipCard.(aktive plager == actor)
      */
     @Test
-    public void takeShip() { // if active place wants to take the ship
+    public void takeShip_ActivePlayerIsActor() { // if active place wants to take the ship
         move.setActivePlayer(playerStateList.get(0));
         move.setActor(playerStateList.get(0));
         action.setAffectedCard(cardFactory.generateBlueShips().get(0)); // coins: 1
@@ -478,7 +476,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche Aufnahme von shipCard.(aktive plager != actor)
      */
     @Test
-    public void takeShip1() { // actor is not activePlayer
+    public void takeShip_ActivePlayerIsNotActor() { // actor is not activePlayer
         move.setActivePlayer(playerStateList.get(0));
         move.setActor(playerStateList.get(1));
         action.setAffectedCard(cardFactory.generateRedShips().get(1));// coins: 2
@@ -505,7 +503,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche Aufnahme von personCard.(aktive plager != actor)
      */
     @Test
-    public void buyPerson() { // actor is not active Player
+    public void buyPerson_ActivePlayerIsNotActor() { // actor is not active Player
         move.setActivePlayer(playerStateList.get(0));
         move.setActor(playerStateList.get(1));
 
@@ -532,7 +530,7 @@ public class CardControllerTest {
      * Testet das erfolgreiche Aufnahme von personCard.(aktive plager == actor)
      */
     @Test
-    public void buyPerson1() { // actor is active Player
+    public void buyPerson_ActivePlayerIsActor() { // actor is active Player
         move.setActivePlayer(playerStateList.get(1));
         move.setActor(playerStateList.get(1));
 
@@ -629,11 +627,8 @@ public class CardControllerTest {
      * Testet eine erfolgreiche Expendition.
      */
     @Test
-    public void startExpedition() {
+    public void startExpedition_WithJackCard_3materials() {
         List<Card> materials = new ArrayList<>();
-        materials.add(cardFactory.generateSettlerCaptain().get(0));//settler
-        materials.add(cardFactory.generateSettlerCaptain().get(1));//captain
-        materials.add(cardFactory.generateJackOfAllTrader().get(1));//JackOfAllTrader
 
         action.setActionType(START_EXPEDITION);
         action.setMaterials(materials);
@@ -642,33 +637,79 @@ public class CardControllerTest {
 
         assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move),3);
         mainController.getCardController().startExpedition(move,action);
-        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move),7);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move),3); //7
     }
-
-/*
-    @Test
-    public void startExpedition1() { //without jackofalltrader
-        List<Card> priest = new ArrayList<>();
-        move.getExpeditionPile().getCards().add(cardFactory.generateExpedition(false).get(4)); // 2 Captain, 1 SETTLER
-
-        priest.add(cardFactory.generatePriest().get(0));
-        priest.add(cardFactory.generatePriest().get(0));
+    /**
+     * Testet eine erfolgreiche Expendition.
+     */
+    @Test// falsche Ergebnis
+    public void startExpedition_WithJackCard_2Settler() {
+        playerStateList.get(3).getCards().getCards().add(cardFactory.generateSettlerCaptain().get(0));
         action.setActionType(START_EXPEDITION);
-        action.setMaterials(priest);
+        move.setActivePlayer(playerStateList.get(3)); // trader captain jack
 
-        playerStateList.get(0).getCards().getCards().add(cardFactory.generatePriest().get(0));
-        playerStateList.get(0).getCards().getCards().add(cardFactory.generatePriest().get(0));
-        move.setActivePlayer(playerStateList.get(3)); // 1 settler, 1 jackofalltrader
-        action.setAffectedCard(cardFactory.generateSettlerCaptain().get(1)); // 1 captain.
-
-        System.out.println(cardFactory.generateExpedition(false).get(2).toString());
-
-        assertEquals(mainController.getPlayerController().getVictoryPoints(playerState3, move),3);
-        mainController.getCardController().startExpedition(move,action);
-        assertEquals(mainController.getPlayerController().getVictoryPoints(playerState3, move),7);
+        for (Card card : playerStateList.get(3).getCards().getCards()) {
+            System.out.println(card.toString());
+        }
+        System.out.println();
+        action.setAffectedCard(cardFactory.generateExpedition(true).get(1)); // 2 settler, victoryPoints:4
+        //System.out.println(cardFactory.generateExpedition(true).get(1));
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(0), move), 6);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(1), move), 2);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(2), move), 4);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move), 4);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(4), move), 3);
+        mainController.getCardController().startExpedition(move, action);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(0), move), 6);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(1), move), 2);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(2), move), 4);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move), 7);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(4), move), 3);
+        for (Card card : playerStateList.get(3).getCards().getCards()) {
+            System.out.println(card.toString());
+        }
     }
 
- */
+
+    /**
+     * Testet eine erfolgreiche Expendition.
+     */
+
+    @Test
+    public void startExpedition_WithoutJackCard_2Priest() {
+        List<Card> materials = new ArrayList<>();
+
+        action.setActionType(START_EXPEDITION);
+        action.setMaterials(materials);
+        move.setActivePlayer(playerStateList.get(4)); // 1 priest, 1 captain, 1 Admiral
+        playerStateList.get(4).getCards().getCards().add(cardFactory.generatePriest().get(0));
+
+        action.setAffectedCard(cardFactory.generateExpedition(true).get(2)); // 2 priest, sumVictoryPoints:3
+        for (Card card: playerStateList.get(4).getCards().getCards()) {
+            System.out.println(card.toString());
+        }
+        System.out.println();
+
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(0), move),6);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(1), move),2);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(2), move),4);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move),3);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(4), move),4);
+        mainController.getCardController().startExpedition(move,action);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(0), move),6);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(1), move),2);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(2), move),4);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(3), move),3);
+        assertEquals(mainController.getPlayerController().getVictoryPoints(playerStateList.get(4), move),6);
+        for (Card card: playerStateList.get(4).getCards().getCards()) {
+            System.out.println(card.toString());
+        }
+        System.out.println();
+    }
+
+
+
+
 
 
     /**

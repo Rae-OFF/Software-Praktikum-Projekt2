@@ -23,8 +23,8 @@ public class StartEasyAIGame extends Application {
 
             this.mainController = mainController;
 
-            Player player1 = new Player("EASY", PlayerType.EASYAI);
-            Player player2 = new Player("MEDIUM", PlayerType.MEDIUMAI);
+            Player player2 = new Player("EASY", PlayerType.EASYAI);
+            Player player1 = new Player("HARD", PlayerType.HARDAI);
 
             List<Player> players = new ArrayList<>();
             players.add(player1);
@@ -53,6 +53,8 @@ public class StartEasyAIGame extends Application {
 
         MediumAi mediumAI = mainController.getMediumAi();
 
+        HardAi hardAi = mainController.getHardAi();
+
         CardController cardController = mainController.getCardController();
 
         IoController ioController = mainController.getIoController();
@@ -64,6 +66,8 @@ public class StartEasyAIGame extends Application {
             PlayerState actor = gameController.getActor();
 
             Move lastMove = gameController.currentMove();
+            gameController.finishRound(lastMove);
+
             ioController.log(lastMove,i);
             Action action = null;
 
@@ -75,8 +79,12 @@ public class StartEasyAIGame extends Application {
             else if(type.equals(PlayerType.MEDIUMAI)){
                 action = mediumAI.getAction(lastMove);
             }
+            else if(type.equals(PlayerType.HARDAI)){
+                action = hardAi.getAction(lastMove);
+            }
 
             playerController.executeAction(action);
+
 
             System.out.println("Round: " + i);
             i++;
@@ -96,8 +104,18 @@ public class StartEasyAIGame extends Application {
         }
 
         System.out.println("Game finished");
-
         Move lastMove = gameController.currentMove();
+        List<PlayerState> playerStates = lastMove.getPlayers();
+        PlayerState winner = null;
+        for(PlayerState state : playerStates){
+            if(state.getVictoryPoints() >= 12){
+                winner = state;
+            }
+        }
+
+        if(winner != null){
+            System.out.println("Winner: " + winner.getPlayer().getName());
+        }
         ioController.log(lastMove,999);
     }
 
