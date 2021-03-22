@@ -17,6 +17,11 @@ public class GameController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public GameController(MainController mainController) {
 		this.mainController = mainController;
 	}
@@ -30,6 +35,14 @@ public class GameController {
 		return mainController.getGameSystem().getCurrentGame().getLastMove();
 	}
 
+	/**
+	 * Nimmt eine bestimmte Anzahl an Karten vom Stapel ab.
+	 * @param move
+	 * 		Bekommt einen Zug übergeben.
+	 * @param num
+	 * 		Bekommt die Anzahl übergeben.
+	 * @return Gibt eine Liste von Karten zurück.
+	 */
 	public List<Card> popCardPile (Move move, int num) {
 		CardStack cardStack = move.getCardPile();
 		List<Card> popCardPile = new ArrayList<>();
@@ -213,14 +226,26 @@ public class GameController {
 
 	}
 
+	/**
+	 *
+	 * @return Gibt den aktiven Spieler zurück.
+	 */
 	public PlayerState getActivePlayer(){
 		return currentMove().getActivePlayer();
 	}
 
+	/**
+	 *
+	 * @return Gibt den Spieler zurück der gerade am Zug ist (Phase 2).
+	 */
 	public PlayerState getActor(){
 		return currentMove().getActor();
 	}
 
+	/**
+	 *
+	 * @return Gibt zurück ob das Spiel noch läuft oder schon beendet wurde.
+	 */
 	public boolean currentGameIsRunning(){
 		return mainController.getGameSystem().getCurrentGame().isOngoing();
 	}
