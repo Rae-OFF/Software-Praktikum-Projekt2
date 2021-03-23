@@ -1,7 +1,9 @@
 package view.harbourfield;
 
 import controller.MainController;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import model.Card;
 import model.Move;
@@ -14,8 +16,11 @@ public class ExpeditionsViewController extends StackPane {
 
     private List<CardImageViewController> cardImageList = new ArrayList<>();
 
+    private MainController mainController;
+
     public ExpeditionsViewController(MainController controller, List<Card> expedition){
         super();
+        mainController = controller;
         //cardImage = new CardImageViewController(expedition);
         this.setAlignment(Pos.TOP_LEFT);
         this.setTranslateX(270);
@@ -43,6 +48,18 @@ public class ExpeditionsViewController extends StackPane {
             getChildren().addAll(cardImageList);
         }
 
+    }
+
+    public void callExpedition(List<Card> card){
+        //mainController.getGameController().currentMove().getHarbour().push(card);
+        for(CardImageViewController exp : cardImageList){
+            exp.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    System.out.println("call Expedition");
+                }
+            });
+        }
     }
 
 }

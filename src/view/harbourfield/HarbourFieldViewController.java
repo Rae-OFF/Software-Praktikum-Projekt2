@@ -2,8 +2,10 @@ package view.harbourfield;
 
 import controller.CardFactory;
 import controller.MainController;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,6 +52,11 @@ public class HarbourFieldViewController extends StackPane {
         openExpeditions.setAlignment(Pos.TOP_LEFT);
         getChildren().add(openExpeditions);
 
+        shipToDefend = new ShipToDefendFieldViewController(mainController, move);
+        shipToDefend.setAlignment(Pos.TOP_LEFT);
+        getChildren().add(shipToDefend);
+
+
         skip =  new ImageView("view/resources/skipButton.png");
         skip.setFitWidth(160);
         skip.setFitHeight(160);
@@ -74,7 +81,7 @@ public class HarbourFieldViewController extends StackPane {
             @Override
             public void handle(MouseEvent event) {
                 Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
-                mainController.getPlayerController().executeAction(drawCard); //TODO drawCard testen
+                mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
 
                 //Zum Testen
                 CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
@@ -86,13 +93,13 @@ public class HarbourFieldViewController extends StackPane {
                 exp.add(card1);
                 exp.add(card2);
 
-                harbour = new HarbourViewController(mainController, stack.popList(7));
-               //harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
+                //harbour = new HarbourViewController(mainController, stack.popList(7));
+               harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
                 getChildren().add(harbour);
 
 
-                openExpeditions = new ExpeditionsViewController(mainController, exp);
-                //openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards());
+                //openExpeditions = new ExpeditionsViewController(mainController, exp);
+                openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards());
                 getChildren().add(openExpeditions);
 
                 shipToDefend = new ShipToDefendFieldViewController(mainController, move);
@@ -105,6 +112,17 @@ public class HarbourFieldViewController extends StackPane {
         discardPile.setAlignment(Pos.TOP_LEFT);
         discardPile.setTranslateX(40);
         discardPile.setTranslateY(180);
+
+        //Zum Testen
+        CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
+        Card card = stack.getCards().get(stack.getSize()-6);
+        Card card1 = stack.getCards().get(stack.getSize()-5);
+        Card card2 = stack.getCards().get(stack.getSize()-4);
+        List<Card> exp = new ArrayList<>();
+        exp.add(card);
+        exp.add(card1);
+        exp.add(card2);
+        openExpeditions.callExpedition(exp);
 
         getChildren().add(discardPile);
         getChildren().add(skip);
