@@ -15,6 +15,11 @@ public class EasyAi extends AiController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public EasyAi(MainController mainController){
 		this.mainController = mainController;
 	}

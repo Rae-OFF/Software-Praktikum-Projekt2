@@ -10,6 +10,9 @@ import java.util.Map;
 import static model.Colour.*;
 import static model.PersonType.*;
 
+/**
+ * Zum Erstellen von karten.
+ */
 public class CardFactory {
 
 
@@ -569,6 +572,10 @@ public class CardFactory {
 
     }
 
+    /**
+     * Erstellt einen Kartenstapel mit 6 Expeditionskarten.
+     * @return Gibt einen Kartenstapel zurück.
+     */
     public static CardStack newCardsWithSpecial(){
 
         CardStack stack = new CardStack();

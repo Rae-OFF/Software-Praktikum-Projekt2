@@ -12,6 +12,11 @@ public class PlayerController {
 
 	private MainController mainController;
 
+	/**
+	 * Konstruktor.
+	 * @param mainController
+	 * 		Bekommt den MainController übergeben.
+	 */
 	public PlayerController(MainController mainController) {
 		this.mainController = mainController;
 	}
@@ -116,5 +121,13 @@ public class PlayerController {
 		}
 		return expeditions;
 	}
+
+	/**
+	 *
+	 * @return
+	public PlayerState getActor(){
+		return mainController.getGameSystem().getCurrentGame().
+	}
+	 */
 
 }

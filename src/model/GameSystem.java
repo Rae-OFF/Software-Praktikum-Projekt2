@@ -28,7 +28,7 @@ public class GameSystem {
 	public GameSystem(){
 		this.players = new ArrayList<>();
 		this.games = new ArrayList<>();
-		this.getHighscoreList(); //TODO Konstruktor anpassen
+		this.highscoreList = new ArrayList<>();
 		this.currentGame = null;
 	}
 

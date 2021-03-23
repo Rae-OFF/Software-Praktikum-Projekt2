@@ -42,9 +42,6 @@ public class CardControllerTest {
 
     /**
      * Erstellt eine neue Testumgebung
-     *
-     * @throws Exception
-     *      Moegliche Exception.
      */
     @Before
     public void setUp() {
@@ -90,6 +87,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void execAdmiralNull() {
@@ -141,6 +139,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void execJesterNull() {
@@ -203,6 +202,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void execTraderNull(){
@@ -244,6 +244,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void drawCardNull(){
@@ -352,6 +353,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void coinsMoreThan12Null(){
@@ -388,6 +390,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void taxIncreaseOfMinShieldsNull() {
@@ -420,6 +423,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void taxIncreaseOfMaxSwordsNull() {
@@ -444,6 +448,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void takeShipNull() {
@@ -487,6 +492,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void buyPersonNull() {
@@ -550,6 +556,7 @@ public class CardControllerTest {
     /**
      * Testet ob parameter null sind.
      * @throws NullPointerException
+     *      Wirft eine NullPointerException.
      */
     @Test(expected = NullPointerException.class)
     public void defendNull() throws NullPointerException{

@@ -8,10 +8,15 @@ import static model.PlayerType.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Daten zum Testen.
+ */
 public class TestFactory {
 
-
+    /**
+     * Erstellt eine Liste von Spielern.
+     * @return Gibt eine Liste von Spielern zurück.
+     */
     public static List<Player> getPlayers() {
 
 
@@ -26,6 +31,10 @@ public class TestFactory {
         return players;
     }
 
+    /**
+     * Erstellt Spielerzustände mit Handkarten.
+     * @return Gibt eine Liste von Spielerzuständen zurück.
+     */
     public static List<PlayerState> getPlayerState() {
 
         List<PlayerState> players = new ArrayList<>();
@@ -84,6 +93,10 @@ public class TestFactory {
         return players;
     }
 
+    /**
+     * Erstellt Züge.
+     * @return Gibt eine Liste von Zügen zurück.
+     */
     public static List<Move> moves(){
 
         List<Move> moves = new ArrayList<>();
@@ -106,7 +119,10 @@ public class TestFactory {
         return moves;
     }
 
-
+    /**
+     * Erstellt Aktionen.
+     * @return Gibt eine Liste von Aktionen zurück.
+     */
     public static List<Action> actions(){
 
         List<Action> actions = new ArrayList<>();
