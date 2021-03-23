@@ -67,7 +67,18 @@ public class GameController {
 		PlayerState actor = move.getActor();
 		int index = (playerList.indexOf(actor)+1) % playerList.size();
 		move.setActor(playerList.get(index));
-		move.setBuyLimit(1);
+
+		int govenors = mainController.getCardController().getAmountOf(GOVERNOR, move.getActor());
+		move.setBuyLimit(1 + govenors);
+
+
+		int admiral = mainController.getCardController().getAmountOf(ADMIRAL, move.getActor());
+
+		if(admiral > 0 && move.isPhase1() == false){
+			for(int i = 1; i <= admiral; i++){
+				mainController.getCardController().execAdmiral(move,move.getActor());
+			}
+		}
 	}
 
 	/**
@@ -94,6 +105,9 @@ public class GameController {
 
 			if(lastAction.getActionType().equals(DRAW_CARD)){
 				if(isZonked(move)){
+
+					mainController.getCardController().execJester(move);
+
 					changeActivePlayer(move);
 /*					if(move.equals(currentMove())){
 						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
@@ -104,6 +118,8 @@ public class GameController {
 
 			if(lastAction.getActionType().equals(DEFEND)){
 				if(isZonked(move)){
+
+					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
 /*					if(move.equals(currentMove())){
 						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
@@ -113,6 +129,8 @@ public class GameController {
 
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
 				if(isZonked(move)){
+
+					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
 /*					if(move.equals(currentMove())){
 						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
@@ -323,7 +341,7 @@ public class GameController {
 			return results;
 		}
 
-		if( actor == activePlayer && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
+		if( actor.getPlayer().equals(activePlayer.getPlayer()) && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
@@ -343,17 +361,24 @@ public class GameController {
 		for (Card card : harbourCards) {
 			if(card instanceof Person){
 
-				if(actor.equals(activePlayer)){
-					if(move.getBuyLimit() >0 && ((Person) card).getPrice() <= actor.getCoins().getSize()){
-						results.add(new Action(BUY_PERSON, card));
-					}
+				int costs = ((Person) card).getPrice();
+
+				if(!actor.getPlayer().equals(activePlayer.getPlayer())){
+					costs++;
 				}
 
-				else {
-					if(move.getBuyLimit() >0 && ((Person) card).getPrice() + 1 <= actor.getCoins().getSize()){
-						results.add(new Action(BUY_PERSON, card));
-					}
+				int mademoiselle = mainController.getCardController().getAmountOf(MADEMOISELLE, actor);
+
+				costs = costs - mademoiselle;
+
+				if(costs < 0){
+					costs = 0;
 				}
+
+				if(move.getBuyLimit() >0 && costs <= actor.getCoins().getSize()){
+					results.add(new Action(BUY_PERSON, card));
+				}
+
 			}
 		}
 

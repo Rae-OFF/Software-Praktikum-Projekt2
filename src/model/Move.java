@@ -30,6 +30,8 @@ public class Move {
 
 	private int buyLimit;
 
+	private boolean jesterEnabled;
+
 	/**
 	 * Konstruktor.
 	 * @param actor
@@ -54,6 +56,7 @@ public class Move {
 		this.cardPile = new CardStack();
 		this.discardPile = new CardStack();
 		this.expeditionPile = new CardStack();
+		this.jesterEnabled = true;
 
 
 
@@ -78,6 +81,7 @@ public class Move {
 		this.action = skeleton.getAction();
 		this.buyLimit = skeleton.getBuyLimit();
 		this.expeditionPile = new CardStack(skeleton.getExpeditionPile());
+		this.jesterEnabled = skeleton.isJesterEnabled();
 
 		for(PlayerState playerState: skeleton.getPlayers()){
 
@@ -92,6 +96,23 @@ public class Move {
 				this.actor = tplayer;
 			}
 		}
+	}
+
+	/**
+	 *
+	 * @return Gibt zurück ob die Jesterkarte in Effekt tritt.
+	 */
+	public boolean isJesterEnabled() {
+		return jesterEnabled;
+	}
+
+	/**
+	 * Setzt ob die Jesterkarte in Effekt tritt.
+	 * @param jesterEnabled
+	 * 		Bekommt übergeben ob die Jesterkarte in Effekt tritt (true) oder nicht (false).
+	 */
+	public void setJesterEnabled(boolean jesterEnabled) {
+		this.jesterEnabled = jesterEnabled;
 	}
 
 	/**
