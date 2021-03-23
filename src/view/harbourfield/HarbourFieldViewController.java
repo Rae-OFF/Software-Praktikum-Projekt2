@@ -48,7 +48,7 @@ public class HarbourFieldViewController extends StackPane {
         harbour.setAlignment(Pos.CENTER);
         getChildren().add(harbour);
 
-        openExpeditions = new ExpeditionsViewController(mainController, null);
+        openExpeditions = new ExpeditionsViewController(mainController, null, move);
         openExpeditions.setAlignment(Pos.TOP_LEFT);
         getChildren().add(openExpeditions);
 
@@ -98,12 +98,13 @@ public class HarbourFieldViewController extends StackPane {
                 getChildren().add(harbour);
 
 
-                //openExpeditions = new ExpeditionsViewController(mainController, exp);
-                openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards());
+                openExpeditions = new ExpeditionsViewController(mainController, exp, move);
+                //openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards());
                 getChildren().add(openExpeditions);
 
                 shipToDefend = new ShipToDefendFieldViewController(mainController, move);
                 getChildren().add(shipToDefend);
+
                 System.out.println("Draw card!");
             }
         });
@@ -122,7 +123,7 @@ public class HarbourFieldViewController extends StackPane {
         exp.add(card);
         exp.add(card1);
         exp.add(card2);
-        openExpeditions.callExpedition(exp);
+        //openExpeditions.callExpedition(exp);
 
         getChildren().add(discardPile);
         getChildren().add(skip);
