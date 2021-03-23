@@ -39,7 +39,6 @@ public class Main extends Application {
 			//system.getCurrentGame().setLastMove(move);
 
 
-
 			//Eigentlicher Code
 			GameViewController gameViewController = new GameViewController(mainController);
 			Scene scene = new Scene(gameViewController,1280,720);

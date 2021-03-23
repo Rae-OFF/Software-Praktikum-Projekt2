@@ -1,11 +1,7 @@
 package view.assets;
 
-import javafx.geometry.Pos;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import model.*;
 
 import java.util.Set;
@@ -60,7 +56,7 @@ public class CardImageViewController extends StackPane {
         }
         else {
 
-            cardImage = new ImageView("view/cards/EXPEDITION-CC.png");
+            cardImage = new ImageView("view/cards/EXPEDITION_PCS.png");
             cardImage.setVisible(false);
             cardImage.setFitWidth(80);
             cardImage.setFitHeight(120);
