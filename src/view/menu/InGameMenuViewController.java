@@ -33,7 +33,12 @@ public class InGameMenuViewController extends BorderPane {
 
         @FXML
         void onClickStop(ActionEvent event) {
-                mainController.getIoController().save();
+                try {
+                        mainController.getIoController().save();
+                }catch(IOException e ){
+                        //TODO: Fehlerbehandlund, wenn z.B. Datei nicht geoeffnet werden darf
+                        System.out.println(e.getMessage());
+                }
 
                 HomePageViewController home = new HomePageViewController(mainController);
                 Scene scene = new Scene(home, 1280, 720);
