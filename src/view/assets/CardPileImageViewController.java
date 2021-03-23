@@ -9,7 +9,7 @@ public class CardPileImageViewController  extends ImageView {
 
     public CardPileImageViewController(){
         //super("view/resources/CoinCard.png");
-        pileImage = new Image("view/resources/CoinCard.png"); //TODO Dateinamen einfügen
+        pileImage = new Image("view/resources/CoinCard.png");
         this.setImage(pileImage);
     }
 

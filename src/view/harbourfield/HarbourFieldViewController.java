@@ -49,8 +49,8 @@ public class HarbourFieldViewController extends StackPane {
         cardPile = new CardPileImageViewController();
         cardPile.setFitHeight(120);
         cardPile.setFitWidth(80);
-        cardPile.setTranslateX(-250);
-        cardPile.setTranslateY(5);
+        cardPile.setTranslateX(140);
+        cardPile.setTranslateY(180);
         cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {

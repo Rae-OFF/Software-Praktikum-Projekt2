@@ -2,6 +2,7 @@ package view.game;
 
 import controller.MainController;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -51,8 +52,9 @@ public class GameFieldViewController extends StackPane {
         hint.setFitWidth(50);
         hint.setTranslateX(-240);
         hint.setTranslateY(-270);
-        harbourField.setTranslateX(0);
-        harbourField.setTranslateY(-120);
+        harbourField.setAlignment(Pos.TOP_LEFT);
+        harbourField.setTranslateX(210);
+        harbourField.setTranslateY(0);
 
         undo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
