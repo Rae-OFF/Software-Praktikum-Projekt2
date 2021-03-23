@@ -93,17 +93,22 @@ public class AITree {
      */
     public static int getValue(AINode root, PlayerState player, int depth){
         List<AINode> children = root.getChildren();
-
+        int secondBest=0;
+        int currentPlayervalue=0;
         if(root.isLeaf()){
             List<PlayerState> players = root.getCurrentMove().getPlayers();
 
             for(PlayerState tplayer : players){
+                int evaluatePlayer = evaluateMove(tplayer);
                 if(player.getPlayer().equals(tplayer.getPlayer())){
-                    return tplayer.getVictoryPoints();
+                    currentPlayervalue=evaluatePlayer;
+                    //return tplayer.getVictoryPoints();
+                }else if(evaluatePlayer>secondBest){
+                    secondBest=evaluatePlayer;
                 }
             }
 
-            return 0;
+            return currentPlayervalue-secondBest;
         }
 
         else {
@@ -118,7 +123,7 @@ public class AITree {
 
            List<PlayerState> list = root.getCurrentMove().getPlayers();
 
-           int actDepth = root.getDepth();;
+           int actDepth = root.getDepth();
 
             for(PlayerState tplayer : list){
                 if(player.getPlayer().equals(tplayer.getPlayer())){
@@ -127,5 +132,34 @@ public class AITree {
             }
             return ownValue + sum;
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static int evaluateMove(PlayerState player){
+        int coins = player.getCoins().getSize();
+        int victoryPoins = player.getVictoryPoints();
+        int specialCards=0;
+        for(Card card:player.getCards().getCards()){
+            if(card instanceof Person){
+                switch(((Person) card).getPersonType()){
+                    case PIRATE:
+                    case SAILOR:
+                    case JESTER:
+                        specialCards+=1;
+                        break;
+                    case MADEMOISELLE:
+                    case GOVERNOR:
+                    case JACK_OF_ALL_TRADES:
+                        specialCards+=2;
+                        break;
+                }
+            }
+        }
+
+        int value = (coins)+victoryPoins+specialCards;
+        return value;
     }
 }
