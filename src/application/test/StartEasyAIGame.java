@@ -24,7 +24,7 @@ public class StartEasyAIGame extends Application {
             this.mainController = mainController;
 
             Player player2 = new Player("EASY", PlayerType.EASYAI);
-            Player player1 = new Player("HARD", PlayerType.HARDAI);
+            Player player1 = new Player("MEDIUM", PlayerType.MEDIUMAI);
 
             List<Player> players = new ArrayList<>();
             players.add(player1);
@@ -66,9 +66,19 @@ public class StartEasyAIGame extends Application {
             PlayerState actor = gameController.getActor();
 
             Move lastMove = gameController.currentMove();
-            gameController.finishRound(lastMove);
+            //gameController.finishRound(lastMove);
 
             ioController.log(lastMove,i);
+
+            for(PlayerState player : lastMove.getPlayers()){
+
+                if(player.getVictoryPoints() >= 12 && lastMove.getActivePlayer().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer()) && lastMove.getActivePlayer().getPlayer().equals(lastMove.getActor().getPlayer())){
+                    mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
+                    mainController.getGameSystem().getCurrentGame().setOngoing(false);
+                }
+
+            }
+
             Action action = null;
 
             Player player = actor.getPlayer();

@@ -122,10 +122,10 @@ public class PlayerController {
 		return expeditions;
 	}
 
-	/*
+	/**
 	 *
 	 * @return
-	public PlayerState getActor(){ //TODO Methode entfernen?
+	public PlayerState getActor(){
 		return mainController.getGameSystem().getCurrentGame().
 	}
 	 */

@@ -95,21 +95,28 @@ public class GameController {
 			if(lastAction.getActionType().equals(DRAW_CARD)){
 				if(isZonked(move)){
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+/*					if(move.equals(currentMove())){
+						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+					}*/
+
 				}
 			}
 
 			if(lastAction.getActionType().equals(DEFEND)){
 				if(isZonked(move)){
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+/*					if(move.equals(currentMove())){
+						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+					}*/
 				}
 			}
 
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
 				if(isZonked(move)){
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+/*					if(move.equals(currentMove())){
+						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+					}*/
 				}
 			}
 
@@ -134,15 +141,6 @@ public class GameController {
 			}
 
 			if(lastAction.getActionType().equals(SHUFFLE)){
-
-			}
-
-			for(PlayerState player : move.getPlayers()){
-
-				if(player.getVictoryPoints() >= 12 && move.getActivePlayer().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
-					mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
-					mainController.getGameSystem().getCurrentGame().setOngoing(false);
-				}
 
 			}
 
@@ -285,16 +283,14 @@ public class GameController {
 				break;
 			//Es gibt keine Methode acceptShip() in CardController;
 			case ACCEPT_SHIP:
-				//mainController.getCardController().(nextMove, action);
-				nextMove.getHarbour().push(nextMove.getShipToDefend());
-				nextMove.setShipToDefend(null);
+				mainController.getCardController().acceptShip(nextMove, action);
 				break;
 /*			case SHUFFLE:
 				mainController.getCardController().shuffle(nextMove, action);
 				break;*/
 		}
 		nextMove.setAction(action);
-		//finishRound(nextMove);
+		finishRound(nextMove);
 		return nextMove;
 	}
 
@@ -421,15 +417,6 @@ public class GameController {
 				if(fulfilled == true){
 					results.add(new Action(START_EXPEDITION, expedition));
 					//mainController.getIoController().log("Expedition possible");
-				}
-				else{
-					/*int distance = captainDistance + priestDistance + settlerDistance;
-					mainController.getIoController().log("Actor: " +  actor.getPlayer().getName());
-					mainController.getIoController().log("Captains: " + captains);
-					mainController.getIoController().log("Settlers: " + settlers);
-					mainController.getIoController().log("Priests: " + priests);
-					mainController.getIoController().log("Whole distance: " + distance);*/
-
 				}
 
 			}
