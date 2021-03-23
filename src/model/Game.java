@@ -18,8 +18,6 @@ public class Game {
 
 	private boolean ongoing;
 
-	private boolean jesterEnabled;
-
 	private List<Player> players;
 
 	private CardStack initCardPile;
@@ -58,7 +56,6 @@ public class Game {
 		this.initCardPile = cardStack;
 		this.highscoreEnabled = true;
 		this.ongoing = true;
-		this.jesterEnabled = false;
 		this.moves = new ArrayList<>();
 		this.playerStates = new ArrayList<>();
 
@@ -172,23 +169,6 @@ public class Game {
 	 */
 	public void setOngoing(boolean ongoing) {
 		this.ongoing = ongoing;
-	}
-
-	/**
-	 *
-	 * @return Gibt zurück ob die Jesterkarte in Effekt tritt.
-	 */
-	public boolean isJesterEnabled() {
-		return jesterEnabled;
-	}
-
-	/**
-	 * Setzt ob die Jesterkarte in Effekt tritt.
-	 * @param jesterEnabled
-	 * 		Bekommt übergeben ob die Jesterkarte in Effekt tritt (true) oder nicht (false).
-	 */
-	public void setJesterEnabled(boolean jesterEnabled) {
-		this.jesterEnabled = jesterEnabled;
 	}
 
 	/**
