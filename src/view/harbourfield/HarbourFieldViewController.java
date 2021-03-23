@@ -2,15 +2,19 @@ package view.harbourfield;
 
 import controller.MainController;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import model.*;
 import view.assets.CardImageViewController;
 import view.assets.CardPileImageViewController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,8 +23,8 @@ public class HarbourFieldViewController extends StackPane {
     private MainController mainController;
     private CardPileImageViewController cardPile;
     private CardImageViewController discardPile;
-    private List<ExpeditionsViewController> openExpeditions;
-    private List<HarbourViewController> harbour;
+    private List<ExpeditionsViewController> openExpeditions = new ArrayList<>();
+    private HarbourViewController harbour;
     private ShipToDefendFieldViewController shipToDefend;
     private ImageView harbourImage;
     private ImageView skip;
@@ -32,11 +36,15 @@ public class HarbourFieldViewController extends StackPane {
         harbourImage.setFitWidth(860);
         harbourImage.setFitHeight(470);
 
+        harbour = new HarbourViewController(mainController, null);
+        harbour.setAlignment(Pos.CENTER);
+        getChildren().add(harbour);
+
         skip =  new ImageView("view/resources/skipButton.png");
         skip.setFitWidth(160);
         skip.setFitHeight(160);
-        skip.setTranslateX(310);
-        skip.setTranslateY(230);
+        skip.setTranslateX(650);
+        skip.setTranslateY(380);
         skip.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -56,8 +64,10 @@ public class HarbourFieldViewController extends StackPane {
             public void handle(MouseEvent event) {
                 Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
                 mainController.getPlayerController().executeAction(drawCard); //TODO drawCard testen
-                //HarbourViewController harbourCard = new HarbourViewController(mainController, drawCard.getAffectedCard());
-                //harbour.add(harbourCard);
+                harbour = new HarbourViewController(mainController, null);
+                harbour.setAlignment(Pos.CENTER);
+                getChildren().add(harbour);
+
                 System.out.println("Draw card!");
             }
         });
@@ -66,6 +76,7 @@ public class HarbourFieldViewController extends StackPane {
         discardPile = new CardImageViewController(move.getDiscardPile().peek());
         discardPile.setTranslateX(-350);
         discardPile.setTranslateY(5);
+
 
         getChildren().add(skip);
         getChildren().add(cardPile);
@@ -91,11 +102,11 @@ public class HarbourFieldViewController extends StackPane {
             openExpeditions.add(new ExpeditionsViewController(mainController,card));
         }
         //harbour wird aktualisiert
-        harbour.clear();
-        for(Card card : harbourCards){
+        //harbour.clear(); //TODO anpassen
+        /*for(Card card : harbourCards){
             harbour.add(new HarbourViewController(mainController,card));
         }
-
+*/
 
     }
 }
