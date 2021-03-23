@@ -128,13 +128,13 @@ public class CardController {
 		action.setAffectedCard(card);   // set this popped card as affected card
 
 		if(card instanceof TaxIncrease ){
-			/*coinsMoreThan12(move);
+			coinsMoreThan12(move);
 			if(((TaxIncrease) card).isTypeSwords()){
 				taxIncreaseOfMaxSwords(move, action);
 			}else{
 				taxIncreaseOfMinShields(move, action);
-			}*/
-			move.getHarbour().push(card);
+			}
+			move.getDiscardPile().push(card);
 		}else if(card instanceof Expedition){
 
 			move.getExpeditionPile().push(card);  //if is Expedition, put it in expedition's pile
@@ -205,9 +205,9 @@ public class CardController {
 		List<PlayerState> players = move.getPlayers();
 
 		for (PlayerState playerState : players) {  // check if anyone has more than 12 coins, if yes, take 1/2 coins
-			int numOfCoins = playerState.getCoins().getCards().size();
+			int numOfCoins = playerState.getCoins().getSize();
 			if (numOfCoins >= 12) {
-				move.getDiscardPile().getCards().addAll(playerState.getCoins().popList(numOfCoins/2));
+				move.getDiscardPile().pushList(playerState.getCoins().popList(numOfCoins/2));
 			}
 		}
 	}
@@ -221,37 +221,35 @@ public class CardController {
 	 */
 	public void taxIncreaseOfMaxSwords(Move move, Action action) {
 
-		Card currentCard = action.getAffectedCard();
 		List<PlayerState> players = move.getPlayers();
 
 		int maxSwords = -1;
-		int playerSwords = 0;
+		List<PlayerState> maxPlayers = new ArrayList<>();
 
-			move.getDiscardPile().getCards().add(currentCard);
-			// if no one has more than 12 coins:
-			List<Integer> swordlist = new ArrayList<>();
-			if (action.getAffectedCard() instanceof TaxIncrease && ((TaxIncrease) action.getAffectedCard()).isTypeSwords()) {
 				for (PlayerState playerState : players) {
 					List<Card> playerHand = playerState.getCards().getCards();
+					int playerSwords = 0;
 					for (Card card : playerHand) {
+
 						if (card instanceof Person && (((Person) card).getPersonType().equals(SAILOR) || ((Person) card).getPersonType().equals(PIRATE))) {
 							playerSwords += ((Person) card).getSwords();
 						}
 					}
-					swordlist.add(playerSwords);  // create a list number of swords of all each player
 
-					if (maxSwords < playerSwords) {     //get the maximum number
+					if (playerSwords > maxSwords) {     //get the maximum number
 						maxSwords = playerSwords;
+						maxPlayers.clear();
+						maxPlayers.add(playerState);
 					}
-					playerSwords=0;
+					else if(playerSwords == maxSwords){
+						maxPlayers.add(playerState);
+					}
 				}
-				for (int i = 0; i < players.size(); i++) {         // check again in players list, get the one that has minShield or maxSwords
-					if (swordlist.get(i) == maxSwords) {
 
-						players.get(i).getCoins().getCards().add(move.getCardPile().pop());
-					}
+				for(PlayerState tplayer : maxPlayers){
+					tplayer.getCoins().pushList(gameController.popCardPile(move,1));
 				}
-			}
+
 		}
 
 	/**
@@ -262,26 +260,29 @@ public class CardController {
 	 * 		Bekommt eine Aktion übergeben.
 	 */
 	public void taxIncreaseOfMinShields(Move move, Action action) {
-		Card currentCard = action.getAffectedCard();
-		List<PlayerState> players = move.getPlayers();
-		int minShield = 99;
 
-		List<Integer> shildList = new ArrayList<>();   // create a list number of shilds of all each player
+		List<PlayerState> players = move.getPlayers();
+		int minPoints = 999;
+		List<PlayerState> minPlayers = new ArrayList<>();
+
 		for (PlayerState playerState : players) {
 
-			int playerShield = mainController.getPlayerController().getVictoryPoints(playerState, move);
+			int playerPoints = playerState.getVictoryPoints();
 
-			if (minShield >= playerShield) {              //get the minimum number
-				minShield = playerShield;
+			if (playerPoints < minPoints) {              //get the minimum number
+				minPoints = playerPoints;
+				minPlayers.clear();
+				minPlayers.add(playerState);
 			}
-			shildList.add(playerShield);
+
+			else if(playerPoints == minPoints){
+				minPlayers.add(playerState);
+			}
+
 		}
 
-		for (int i = 0; i < players.size(); i++) {         // check again in players list, get the one that has minShield or maxSwords
-			if (shildList.get(i) == minShield) {
-
-				players.get(i).getCoins().getCards().add(move.getCardPile().pop());
-			}
+		for(PlayerState tplayer : minPlayers){
+			tplayer.getCoins().pushList(gameController.popCardPile(move,1));
 		}
 	}
 
