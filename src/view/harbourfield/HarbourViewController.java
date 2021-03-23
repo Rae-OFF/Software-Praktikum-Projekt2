@@ -24,6 +24,7 @@ public class HarbourViewController extends StackPane {
      *      Karte.
      */
     public HarbourViewController(MainController controller, List<Card> cards){
+        super();
         Rectangle rect = new Rectangle(50, 50, Color.BLUE);
         getChildren().add(rect);
         //cardImageList.addAll(cards.stream().map(CardImageViewController::new).collect(Collectors.toList()));

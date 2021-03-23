@@ -30,6 +30,7 @@ public class PlayerFieldViewController extends StackPane {
     private PlayerState playerState;
 
     public PlayerFieldViewController(MainController mainController, PlayerState player) {
+        super();
         this.mainController = mainController;
         playerState = player;
 

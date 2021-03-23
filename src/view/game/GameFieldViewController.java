@@ -27,6 +27,7 @@ public class GameFieldViewController extends StackPane {
     private ImageView hint;
 
     public GameFieldViewController(MainController mainController, Move move){
+        super();
         for(PlayerState player : move.getPlayers()){
             playerFields.add(new PlayerFieldViewController(mainController,player));
         }

@@ -30,6 +30,7 @@ public class HarbourFieldViewController extends StackPane {
     private ImageView skip;
 
     public HarbourFieldViewController(MainController mainController, Move move) {
+        super();
         this.mainController = mainController;
         harbourImage = new ImageView("view/resources/Harbourfield.png");
         getChildren().add(harbourImage);
@@ -72,15 +73,15 @@ public class HarbourFieldViewController extends StackPane {
             }
         });
 
-
         discardPile = new CardImageViewController(move.getDiscardPile().peek());
-        discardPile.setTranslateX(-350);
-        discardPile.setTranslateY(5);
+        discardPile.setAlignment(Pos.TOP_LEFT);
+        discardPile.setTranslateX(40);
+        discardPile.setTranslateY(180);
 
-
+        getChildren().add(discardPile);
         getChildren().add(skip);
         getChildren().add(cardPile);
-        getChildren().add(discardPile);
+
     }
 
     public void refresh(Move move) {
@@ -89,7 +90,9 @@ public class HarbourFieldViewController extends StackPane {
 
 
         //DiscardPile wird aktualisiert
+        getChildren().remove(discardPile);
         discardPile = new CardImageViewController(move.getDiscardPile().peek());
+        getChildren().add(discardPile);
 
         // shipToDefend wird aktualisiert
         shipToDefend = new ShipToDefendFieldViewController(mainController,move);

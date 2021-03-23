@@ -25,7 +25,7 @@ public class GameViewController extends StackPane {
     private ImageView menu;
 
     public GameViewController(MainController mainController){
-
+        super();
         GameViewController gameView = this;
         backgroundImage =  new ImageView("view/resources/backgroundImage.png");
         getChildren().add(backgroundImage);

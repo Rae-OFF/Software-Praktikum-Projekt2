@@ -13,6 +13,7 @@ public class ExpeditionsViewController extends StackPane {
     private CardImageViewController cardImage;
 
     public ExpeditionsViewController(MainController controller, Card expedition){
+        super();
         Move move = controller.getGameController().currentMove();
         cardImage = new CardImageViewController(expedition);
     }
