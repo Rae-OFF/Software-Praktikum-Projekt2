@@ -43,15 +43,30 @@ public class IoController {
 	/**
 	 * Lädt einen Spielstand.
 	 */
-	public void load() {
-
+	public void load() throws IOException, ClassNotFoundException{
+		String path =  System.getProperty("user.dir")+"\\PausedGame";
+		FileInputStream fileIn = new FileInputStream(path);
+		ObjectInputStream objIn = new ObjectInputStream(fileIn);
+		Game loadedGame = (Game) objIn.readObject();
+		fileIn.close();
+		objIn.close();
+		mainController.getGameSystem().setCurrentGame(loadedGame);
 	}
 
 	/**
 	 * Speichert einen Spielstand.
 	 */
-	public void save() {
-
+	public void save() throws IOException{
+	    Game currentGame = mainController.getGameSystem().getCurrentGame();
+	    if(!currentGame.isOngoing()){
+	    	return;
+		}
+	    String path =  System.getProperty("user.dir")+"\\PausedGame";;
+		FileOutputStream fileOut = new FileOutputStream(path);
+		ObjectOutputStream objOut = new ObjectOutputStream(fileOut);
+		objOut.writeObject(mainController.getGameSystem().getCurrentGame());
+		objOut.close();
+		fileOut.close();
 	}
 
 	/**
