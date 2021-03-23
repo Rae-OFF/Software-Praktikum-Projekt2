@@ -15,10 +15,10 @@ public class CardImageViewController extends StackPane {
     private ImageView cardImage;
 
     public CardImageViewController(Card card){
-        this.setAlignment(Pos.TOP_LEFT);
-        //this.setTranslateX();
-        Rectangle rect = new Rectangle(50, 50, Color.RED);
-        getChildren().add(rect);
+        super();
+        //this.setAlignment(Pos.TOP_LEFT);
+        //Rectangle rect = new Rectangle(50, 50, Color.RED);
+        //getChildren().add(rect);
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){
@@ -59,7 +59,12 @@ public class CardImageViewController extends StackPane {
             getChildren().add(cardImage);
         }
         else {
-            //this.setVisible(false);
+
+            cardImage = new ImageView("view/cards/EXPEDITION-CC.png");
+            cardImage.setVisible(false);
+            cardImage.setFitWidth(80);
+            cardImage.setFitHeight(120);
+            getChildren().add(cardImage);
             System.out.println("No Card");
         }
 

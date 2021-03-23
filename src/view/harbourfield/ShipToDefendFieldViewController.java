@@ -10,6 +10,7 @@ public class ShipToDefendFieldViewController extends StackPane {
     private CardImageViewController cardImage;
 
     public ShipToDefendFieldViewController(MainController controller, Move move){
+        super();
         cardImage = new CardImageViewController(move.getShipToDefend());
     }
 }
