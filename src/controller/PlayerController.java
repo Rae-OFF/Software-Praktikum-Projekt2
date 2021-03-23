@@ -117,12 +117,4 @@ public class PlayerController {
 		return expeditions;
 	}
 
-	/**
-	 *
-	 * @return
-	public PlayerState getActor(){
-		return mainController.getGameSystem().getCurrentGame().
-	}
-	 */
-
 }

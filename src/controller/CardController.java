@@ -146,6 +146,51 @@ public class CardController {
 		}
 	}
 
+	public int getBuyLimitFromShips(Move move){
+		List<Card> harbour = move.getHarbour().getCards();
+
+		int yellow = 0;
+		int blue = 0;
+		int green = 0;
+		int red = 0;
+		int black = 0;
+
+		for(Card card : harbour){
+			if(card instanceof Ship){
+				Ship ship = (Ship) card;
+
+				if(ship.getColour() == Colour.YELLOW && yellow == 0){
+					yellow++;
+				}
+				else if(ship.getColour() == Colour.BLUE && blue == 0){
+					blue++;
+				}
+				else if(ship.getColour() == Colour.GREEN && green == 0){
+					green++;
+				}
+				else if(ship.getColour() == Colour.RED && red == 0){
+					red++;
+				}
+				else if(ship.getColour() == Colour.BLACK && black == 0){
+					black++;
+				}
+			}
+		}
+
+		int sum = yellow + blue + green + red + black;
+
+		if(sum == 5){
+			return 3;
+		}
+		else if(sum == 4){
+			return 2;
+		}
+
+		else {
+			return 1;
+		}
+	}
+
 
 	/**
 	 * method of execute a taxIncrease card
@@ -310,7 +355,6 @@ public class CardController {
 	 */
 	public void defend(Move move, Action action) {
 
-		if (action.getActionType().equals(ActionType.DEFEND)) {
 			Ship shipCard = (Ship) action.getAffectedCard();
 			List<Card> cardsInHand = move.getActivePlayer().getCards().getCards();
 			int numSwords = 0;
@@ -339,7 +383,16 @@ public class CardController {
 				}
 
 			}
-		}
+			int limit = getBuyLimitFromShips(move);
+			move.setBuyLimit(limit);
+
+	}
+
+	public void acceptShip(Move move, Action action){
+		move.getHarbour().push(move.getShipToDefend());
+		move.setShipToDefend(null);
+		int limit = getBuyLimitFromShips(move);
+		move.setBuyLimit(limit);
 	}
 
 		/**
@@ -356,7 +409,7 @@ public class CardController {
 
 			if(action.getActionType().equals(START_EXPEDITION)){
 
-				PlayerState player = move.getActivePlayer();
+				PlayerState player = move.getActor();
 
 				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange.
 
@@ -421,7 +474,6 @@ public class CardController {
 					player.getCards().push(exped);
 
 					player.getCoins().pushList(gameController.popCardPile(move, ((Expedition) exped).getCoins()));
-					//player.setVitoryPoints(player.getVitoryPoints() + ((Expedition) exped).getVictoryPoints());
 
 			}
 		}
