@@ -1,17 +1,24 @@
 package view.assets;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import model.*;
 
-import java.util.Map;
 import java.util.Set;
 
-public class CardImageViewController extends ImageView {
+public class CardImageViewController extends StackPane {
 
-    private Image cardImage;
+    private ImageView cardImage;
 
     public CardImageViewController(Card card){
+        this.setAlignment(Pos.TOP_LEFT);
+        //this.setTranslateX();
+        Rectangle rect = new Rectangle(50, 50, Color.RED);
+        getChildren().add(rect);
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){
@@ -45,19 +52,24 @@ public class CardImageViewController extends ImageView {
 
         }
         if(!fileName.equals("")){
-            cardImage = new Image("view/resources/" +fileName + ".png");
+            System.out.println(fileName);
+            cardImage = new ImageView("view/cards/" +fileName + ".png");
+            cardImage.setFitWidth(80);
+            cardImage.setFitHeight(120);
+            getChildren().add(cardImage);
         }
-        else
-            this.setVisible(false);
+        else {
+            //this.setVisible(false);
             System.out.println("No Card");
+        }
 
     }
 
-    public Image getCardImage() {
+    public ImageView getCardImage() {
         return cardImage;
     }
 
-    public void setCardImage(Image cardImage) {
+    public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
     }
 }
