@@ -81,10 +81,10 @@ public class HarbourViewController extends StackPane {
 
     public void refresh(Move move, List<Action> posAc){
         List<Card> cards = move.getHarbour().getCards();
-        setCards(cards);
+        setCards(cards); //TODO nötig?
         System.out.println("Hafensize: " + move.getHarbour().getSize());
 
-        /*for(Card card : wie oben hinzugefügt, prüfen ob clickhändler sein muss)
+        /*for(Card card : wie oben hinzugefügt, prüfen ob clickhändler sein muss) //TODO der teil in setcard?
             for(Action action : posAc)
                 if(action.getActionType().equals(ActionType.BUY_PERSON) || take person)
                 if(card.equals(action.getAffectedCard()) //ggf über == prüfen)

@@ -137,30 +137,24 @@ public class HarbourFieldViewController extends StackPane {
 
     public void refresh(Move move, List<Action> posAc) {
 
-        // CardPile wird aktualisiert
-
-
         //DiscardPile wird aktualisiert
         getChildren().remove(discardPile);
         discardPile = new CardImageViewController(move.getDiscardPile().peek());
         getChildren().add(discardPile);
 
-        // shipToDefend wird aktualisiert
-        //getChildren().remove(shipToDefend);
-        //shipToDefend = new ShipToDefendFieldViewController(mainController,move);
-
-
         List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
 
         harbour.refresh(move, posAc);
         shipToDefend.refresh(move, posAc);
-        //openExpeditions.refresh(move, posAc);
+        openExpeditions.refresh(move, posAc);
+
         skip.setOpacity(0.5);
         cardPile.setOpacity(0.5);
         skip.setOnMouseClicked(null);
         cardPile.setOnMouseClicked(null);
 
         for (Action action : possibleActions) {
+            System.out.println(action.getActionType().toString());
             if (action.getActionType().equals(ActionType.SKIP)) {
                 skip.setOnMouseClicked(event -> {
                     mainController.getPlayerController().executeAction(action);
@@ -169,15 +163,12 @@ public class HarbourFieldViewController extends StackPane {
             }
 
             if (action.getActionType().equals(ActionType.DRAW_CARD)) {
+                System.out.println("Draw Card");
+                cardPile.setOpacity(1.0);
                 cardPile.setOnMouseClicked(event -> {
+
                     mainController.getPlayerController().executeAction(action);
-                    cardPile.setOpacity(1.0);
 
-                   /* harbour =  new HarbourViewController(mainController);
-                    getChildren().add(harbour);
-
-                    openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards(), move);
-                    getChildren().add(openExpeditions);*/
                 });
             }
 

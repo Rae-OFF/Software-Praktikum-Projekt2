@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import model.Action;
 import model.ActionType;
 import model.Card;
 import model.Move;
@@ -28,10 +29,10 @@ public class ExpeditionsViewController extends StackPane {
         this.setTranslateX(270);
         this.setTranslateY(25);
 
-        this.setCards(expedition);
+        /*this.setCards(expedition);
         if(move != null && move.getActivePlayer().equals(move.getActor())){
             this.callExpedition(expedition);
-        }
+        }*/
     }
 
     public void setCards(List<Card> cards){
@@ -47,7 +48,6 @@ public class ExpeditionsViewController extends StackPane {
                 cardImage.setAlignment(Pos.TOP_LEFT);
                 cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
                 System.out.println(cardImage.getTranslateX()+" "+ cardCount + " " + cardImageList.size() + " " + cards.size());
-                //cardImage.setTranslateY(y+cardCount*130);
                 cardCount++;
             }
             getChildren().addAll(cardImageList);
@@ -55,7 +55,8 @@ public class ExpeditionsViewController extends StackPane {
 
     }
 
-    public void callExpedition(List<Card> card){
+    //sollte nicht mehr nötig sein
+   /* public void callExpedition(List<Card> card){
         for(CardImageViewController exp : cardImageList){
             exp.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -70,6 +71,33 @@ public class ExpeditionsViewController extends StackPane {
                 }
             });
         }
+    }*/
+
+    public void refresh(Move move, List<Action> posAc){
+        List<Card> cards = move.getExpeditionPile().getCards();
+        setCards(cards);
+
+        int cardCount = 0;
+        for(Card card : cards){
+            CardImageViewController cardImage = new CardImageViewController(card);
+            cardImageList.add(cardImage);
+            cardImage.setAlignment(Pos.TOP_LEFT);
+            cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
+            System.out.println("Expedition: " + cardImage.getTranslateX()+" "+ cardCount + " " + cardImageList.size() + " " + cards.size());
+            for(Action action : posAc){
+                if(action.getActionType().equals(ActionType.START_EXPEDITION)){
+                    if(card == action.getAffectedCard()){
+                        cardImage.setOnMouseClicked(event -> {
+                            System.out.println("Supposed to start Expedition");
+                            mainController.getPlayerController().executeAction(action);
+                        });
+
+                    }
+                }
+            }
+            cardCount++;
+        }
+        getChildren().addAll(cardImageList);
     }
 
 }
