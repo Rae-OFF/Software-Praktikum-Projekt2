@@ -54,25 +54,26 @@ public class HarbourViewController extends StackPane {
         int y = 0;
         /*this.setTranslateX(270);
         this.setTranslateY(180);*/
-        int cardCount = 0;
+        int cardCount1 = 0;
+        int cardCount2 = 0;
         if (cards != null) {
             for(Card card : cards){
-                if(cardCount < 6){
+                if(cardCount1 < 6){
                     CardImageViewController cardImage = new CardImageViewController(card);
                     cardImageList.add(cardImage);
 
                     cardImage.setAlignment(Pos.TOP_LEFT);
-                    cardImage.setTranslateX(x+(cardCount * 90)); //Width 80, Height 120
-                    System.out.println(cardImage.getTranslateX()+" "+ cardCount + " " + cardImageList.size() + " " + cards.size());
+                    cardImage.setTranslateX(x+(cardCount1 * 90)); //Width 80, Height 120
+                    System.out.println(cardImage.getTranslateX()+" "+ cardCount1 + " " + cardImageList.size() + " " + cards.size());
                     //cardImage.setTranslateY(y+cardCount*130);
-                    cardCount++;
+                    cardCount1++;
                 } else {
                     CardImageViewController cardImage = new CardImageViewController(card);
                     cardImageList.add(cardImage);
                     cardImage.setAlignment(Pos.TOP_LEFT);
-                    cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
-                    cardImage.setTranslateY(y+130);
-                    cardCount++;
+                    cardImage.setTranslateX(cardCount2 * 90); //Width 80, Height 120
+                    cardImage.setTranslateY(y+200);
+                    cardCount2++;
                 }
 
             }
@@ -95,35 +96,41 @@ public class HarbourViewController extends StackPane {
                             mainController.executeAction())
         }*/
         //take ship, buy person
+        getChildren().removeAll(cardImageList);
+        cardImageList.clear();
         int x = 0;
         int y = 0;
-        int cardCount = 0;
+        int cardCount1 = 0;
+        int cardCount2 = 0;
         for(Card card : cards){
-            if(cardCount < 6){
+            if(cardCount1 < 6){
                 CardImageViewController cardImage = new CardImageViewController(card);
                 cardImageList.add(cardImage);
 
                 cardImage.setAlignment(Pos.TOP_LEFT);
-                cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
+                cardImage.setTranslateX(cardCount1 * 90); //Width 80, Height 120
                 //System.out.println(cardImage.getTranslateX()+" "+ cardCount + " " + cardImageList.size() + " " + cards.size());
-
+                //cardImage.setTranslateY(cardCounty+180);
                 for(Action action : posAc){
                     if(action.getActionType().equals(ActionType.BUY_PERSON)||action.getActionType().equals(ActionType.TAKE_SHIP)){
                         if(card == action.getAffectedCard()){
                             cardImage.setOnMouseClicked(event -> {
+                                System.out.println("Take Ship or Buy Person");
                                 mainController.getPlayerController().executeAction(action);
                                 cardImage.setOpacity(1.0);
                             });
                         }
                     }
                 }
-                cardCount++;
-            } else {
+                cardCount1++;
+
+            } else if(cardCount2 < 6) {
                 CardImageViewController cardImage = new CardImageViewController(card);
                 cardImageList.add(cardImage);
                 cardImage.setAlignment(Pos.TOP_LEFT);
-                cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
-                cardImage.setTranslateY(y+130);
+                cardImage.setTranslateX(0);
+                cardImage.setTranslateX(cardCount2 * 90); //Width 80, Height 120
+                cardImage.setTranslateY(y+150);
                 for(Action action : posAc){
                     if(action.getActionType().equals(ActionType.BUY_PERSON)||action.getActionType().equals(ActionType.TAKE_SHIP)){
                         if(card == action.getAffectedCard()){
@@ -134,10 +141,12 @@ public class HarbourViewController extends StackPane {
                         }
                     }
                 }
-                cardCount++;
+                cardCount2++;
 
             }
+
         }
+        getChildren().addAll(cardImageList);
     }
 }
 

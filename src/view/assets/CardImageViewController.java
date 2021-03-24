@@ -25,7 +25,12 @@ public class CardImageViewController extends StackPane {
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){
-            fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            if(((Person) card).getPersonType().equals(PersonType.TRADER)){
+                fileName = ((Person) card).getName() + ((Person) card).getPrice() + ((Person) card).getColour();
+            } else{
+                fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            }
+
 
         }
         //Expeditionskarten
@@ -43,7 +48,8 @@ public class CardImageViewController extends StackPane {
         }
         //Schiffskarten
         else if(card instanceof Ship){
-            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
+            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins()+((Ship) card).getForce();
+            //fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
         }
         //Steuererhöhungskarten
         else if(card instanceof TaxIncrease){
