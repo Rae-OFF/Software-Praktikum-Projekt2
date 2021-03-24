@@ -13,8 +13,6 @@ public class IoController {
 
 	private MainController mainController;
 
-	private PrintWriter writer;
-
 	/**
 	 * Konstruktor.
 	 * @param mainController

@@ -38,7 +38,7 @@ public class StartEasyAIGame extends Application {
             MainController mainController = new MainController();
             this.mainController = mainController;
 
-            testAI();
+            oneGame();
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -62,7 +62,7 @@ public class StartEasyAIGame extends Application {
     public Tuple oneGame(){
 
         Player player2 = new Player("EASY", PlayerType.EASYAI);
-        Player player1 = new Player("MEDIUM", PlayerType.MEDIUMAI);
+        Player player1 = new Player("MEDIUM", PlayerType.EASYAI);
 
         List<Player> players = new ArrayList<>();
         players.add(player1);
@@ -103,9 +103,8 @@ public class StartEasyAIGame extends Application {
             PlayerState actor = gameController.getActor();
 
             Move lastMove = gameController.currentMove();
-            //gameController.finishRound(lastMove);
 
-            //ioController.log(lastMove,i);
+            ioController.log(lastMove,i);
 
             for(PlayerState player : lastMove.getPlayers()){
 
@@ -143,7 +142,7 @@ public class StartEasyAIGame extends Application {
             playerController.executeAction(action);
 
 
-            //System.out.println("Round: " + i);
+            System.out.println("Round: " + i);
             i++;
         }
 
@@ -160,7 +159,7 @@ public class StartEasyAIGame extends Application {
         if(winner != null){
             System.out.println("Winner: " + winner.getPlayer().getName());
         }
-        //ioController.log(lastMove,999);
+        ioController.log(lastMove,999);
         return new Tuple(easyWins,medWins);
     }
 

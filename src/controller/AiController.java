@@ -17,10 +17,10 @@ public abstract class AiController {
 
 	/**
 	 * Setzt eine AI als Spieler der am Zug ist.
-	 * @param ai
+	 * @param aiState
 	 * 		Bekommt einen Spielerzustand übergeben.
 	 */
-	public void setAsActor(PlayerState ai){
+	public void setAsActor(PlayerState aiState){
 
 	}
 
