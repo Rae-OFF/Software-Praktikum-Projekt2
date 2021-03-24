@@ -57,7 +57,8 @@ public class ShipToDefendFieldViewController extends StackPane {
                     @Override
                     public void handle(MouseEvent event) {
                         Action defend = new Action(ActionType.DEFEND, move.getShipToDefend());
-                        mainController.getGameController().generateMove(move, defend);
+                        //mainController.getGameController().generateMove(move, defend);
+                        mainController.getPlayerController().executeAction(defend);
                         System.out.println("Schiff abgewehrt");
                     }
                 });
