@@ -84,15 +84,12 @@ public class HarbourViewController extends StackPane {
         setCards(cards);
         System.out.println("Hafensize: " + move.getHarbour().getSize());
 
-        //for(Card card : wie oben hinzugefügt, prüfen ob clickhändler sein muss)
-        /*{
-
-            for(Action action : posAc){
+        /*for(Card card : wie oben hinzugefügt, prüfen ob clickhändler sein muss)
+            for(Action action : posAc)
                 if(action.getActionType().equals(ActionType.BUY_PERSON) || take person)
                 if(card.equals(action.getAffectedCard()) //ggf über == prüfen)
                     card.clickhandler
                             mainController.executeAction())
-            }
         }*/
         //take ship, buy person
         int x = 0;

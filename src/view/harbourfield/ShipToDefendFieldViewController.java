@@ -2,6 +2,7 @@ package view.harbourfield;
 
 import controller.CardFactory;
 import controller.MainController;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,6 +16,7 @@ import model.CardStack;
 import model.Move;
 import view.assets.CardImageViewController;
 
+import javax.swing.text.html.ImageView;
 import java.util.List;
 
 
@@ -23,6 +25,10 @@ public class ShipToDefendFieldViewController extends StackPane {
     private CardImageViewController cardImage;
 
     private MainController mainController;
+
+    private Button take;
+
+    private Button defend;
 
     public ShipToDefendFieldViewController(MainController mainController){
         super();
@@ -33,10 +39,28 @@ public class ShipToDefendFieldViewController extends StackPane {
         this.setHeight(120);
         this.setWidth(80);
 
-        Rectangle rect = new Rectangle(200, 200, Color.BEIGE);
-        getChildren().add(rect);
+       /* Rectangle rect = new Rectangle(200, 200, Color.BEIGE);
+        getChildren().add(rect);*/
         cardImage = new CardImageViewController(mainController.getGameController().currentMove().getShipToDefend());
         getChildren().add(cardImage);
+
+        //defend Button
+        defend = new Button("Abwehren");
+        getChildren().add(defend);
+        defend.setAlignment(Pos.TOP_LEFT);
+        defend.setTranslateX(-40);
+        defend.setTranslateY(120);
+        defend.setMaxSize(75, 20);
+        defend.setVisible(false);
+        //accept button
+        take = new Button("Aufnehmen");
+        getChildren().add(take);
+        take.setAlignment(Pos.TOP_LEFT);
+        take.setTranslateX(40);
+        take.setTranslateY(120);
+        take.setMaxSize(80, 20);
+        take.setVisible(false);
+
 
         //cardImage = new CardImageViewController(move.getShipToDefend());
         //CardStack stack = controller.CardFactory.newCardsWithoutSpecial(); //zum testen feste Karte übergeben
@@ -48,7 +72,7 @@ public class ShipToDefendFieldViewController extends StackPane {
         /*cardImage = new CardImageViewController(null);
         getChildren().add(cardImage);*/
 
-        /*cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() { //TODO in Refresh
+        /*cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
 
@@ -79,7 +103,7 @@ public class ShipToDefendFieldViewController extends StackPane {
                 take.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-                        //TODO in GUI auf Hafen verschieben
+
                         System.out.println("Schiff aufgenommen");
                     }
                 });*/
@@ -99,37 +123,31 @@ public class ShipToDefendFieldViewController extends StackPane {
         //cardImage = new CardImageViewController(stack.getCards().get(0));
         getChildren().add(cardImage);
         cardImage.setAlignment(Pos.TOP_LEFT);
-        //setVisible(false);
+
+        defend.setOnMouseClicked(null);
+        take.setOnMouseClicked(null);
+        setVisible(false);
 
         for(Action action : posAc){
             if(action.getActionType().equals(ActionType.DEFEND)){
-                //defend Button
-                Button defend = new Button("Abwehren");
-                getChildren().add(defend);
-                defend.setAlignment(Pos.TOP_LEFT);
-                defend.setTranslateX(-40);
-                defend.setTranslateY(120);
-                defend.setMaxSize(75, 20);
-
+                setVisible(true);
+                defend.setVisible(true);
                 defend.setOnMouseClicked(event -> {
                     mainController.getPlayerController().executeAction(action);
                 });
 
-                setVisible(true);
+
             }
             if(action.getActionType().equals(ActionType.ACCEPT_SHIP)){
-                //accept button
-                Button take = new Button("Aufnehmen");
-                getChildren().add(take);
-                take.setAlignment(Pos.TOP_LEFT);
-                take.setTranslateX(40);
-                take.setTranslateY(120);
-                take.setMaxSize(80, 20);
+                setVisible(true);
+                take.setVisible(true);
+                System.out.println("Want to take ship");
                 take.setOnMouseClicked(event -> {
+                    System.out.println("Take ship");
                     mainController.getPlayerController().executeAction(action);
+
                 });
 
-                setVisible(true);
             }
         }
     }

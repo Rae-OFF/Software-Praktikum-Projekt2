@@ -154,7 +154,7 @@ public class HarbourFieldViewController extends StackPane {
 
         harbour.refresh(move, posAc);
         shipToDefend.refresh(move, posAc);
-        //openExpeditions
+        //openExpeditions.refresh(move, posAc);
         skip.setOpacity(0.5);
         cardPile.setOpacity(0.5);
         skip.setOnMouseClicked(null);
