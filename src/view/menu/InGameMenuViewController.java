@@ -35,6 +35,7 @@ public class InGameMenuViewController extends BorderPane {
         void onClickStop(ActionEvent event) {
                 try {
                         mainController.getIoController().save();
+                        mainController.setGameViewAUI(null);
                 }catch(IOException e ){
                         //TODO: Fehlerbehandlund, wenn z.B. Datei nicht geoeffnet werden darf
                         System.out.println(e.getMessage());

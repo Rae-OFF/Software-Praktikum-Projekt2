@@ -161,18 +161,28 @@ public class HarbourFieldViewController extends StackPane {
         //harbour wird aktualisiert
         //getChildren().remove(harbour);
 
-        skip.setOnMouseClicked(null);
-
         List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
-        for(Action action : possibleActions){
-            if(action.getActionType().equals(ActionType.SKIP)){
+
+        skip.setOnMouseClicked(null);
+        cardPile.setOnMouseClicked(null);
+
+        for (Action action : possibleActions) {
+            if (action.getActionType().equals(ActionType.SKIP)) {
                 skip.setOnMouseClicked(event -> {
+                    mainController.getPlayerController().executeAction(action); //TODO Skip Testen
+                });
+            }
+
+            if (action.getActionType().equals(ActionType.DRAW_CARD)) {
+                cardPile.setOnMouseClicked(event -> {
                     mainController.getPlayerController().executeAction(action);
                 });
             }
+
+            // ...
         }
 
-        initialize(move);
+        //initialize(move);
 
     }
 }
