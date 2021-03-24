@@ -571,6 +571,10 @@ public class GameControllerTest {
 
 
     }
+
+    /**
+     * Testet ob eine Expedition möglich ist.
+     */
     @Test
     public void checkExpeditionPossible(){
 

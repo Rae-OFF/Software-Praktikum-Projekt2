@@ -11,6 +11,9 @@ import static model.ActionType.DRAW_CARD;
 import static model.ActionType.TAKE_SHIP;
 import static org.junit.Assert.*;
 
+/**
+ * Test für den PlayerController.
+ */
 public class PlayerControllerTest {
 
     private MainController mainController;
@@ -24,6 +27,11 @@ public class PlayerControllerTest {
     private List<PlayerState> states;
     private CardStack stack;
 
+    /**
+     * Erstellt Testumgebung
+     * @throws Exception
+     *      Wirft eine Exception.
+     */
     @Before
     public void setUp() throws Exception {
 
