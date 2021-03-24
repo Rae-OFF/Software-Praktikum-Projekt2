@@ -8,6 +8,7 @@ import view.GameViewAUI;
 import java.util.List;
 
 import static model.ActionType.DRAW_CARD;
+import static model.ActionType.TAKE_SHIP;
 import static org.junit.Assert.*;
 
 public class PlayerControllerTest {
@@ -53,13 +54,17 @@ public class PlayerControllerTest {
     public void executeAction() {
 
         GameViewAUI gameViewAUI = mainController.getGameViewAUI();
-        mainController.setGameViewAUI( gameViewAUI);
+
+        mainController.setGameViewAUI(gameViewAUI);
         game.setLastMove(move);
         action.setActionType(DRAW_CARD);
         move.setCardPile(stack);
-
+        assertNull(gameViewAUI);
         playerController.executeAction(action);
-        mainController.setGameViewAUI(null);
+
+         gameViewAUI = move -> move.setAction(action);
+
+        assertNotNull(gameViewAUI);
         playerController.executeAction(action);
 
 
@@ -125,6 +130,7 @@ public class PlayerControllerTest {
         CardStack coin = player.getCoins();
 
         assertEquals(playerController.getCoins(player,move),coin.getSize());
+        assertEquals(playerController.getCoins(states.get(2),move),0);
     }
     /**
      * return player's expedition card number

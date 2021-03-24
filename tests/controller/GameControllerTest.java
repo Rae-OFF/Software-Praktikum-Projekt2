@@ -462,6 +462,9 @@ public class GameControllerTest {
 
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
         assertEquals(controller.getPossibleActions(move).get(1).getActionType(), ACCEPT_SHIP);
+        move.setShipToDefend(new Ship(BLUE, 2, 0));
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
+
         move.setShipToDefend(new Ship(BLUE, 2, 4));
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
 
