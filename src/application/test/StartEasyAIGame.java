@@ -20,28 +20,32 @@ public class StartEasyAIGame extends Application {
     public void start(Stage primaryStage) {
         try {
             MainController mainController = new MainController();
-
             this.mainController = mainController;
 
-            Player player2 = new Player("EASY", PlayerType.EASYAI);
-            Player player1 = new Player("MEDIUM", PlayerType.MEDIUMAI);
-
-            List<Player> players = new ArrayList<>();
-            players.add(player1);
-            players.add(player2);
-
-            GameSystem gameSystem = new GameSystem();
-            gameSystem.setPlayers(players);
-            mainController.setGameSystem(gameSystem);
-            GameController gameController = mainController.getGameController();
-            String cardPilePath = "src/ressources/shuffled.csv";
-            gameController.init(cardPilePath, players, false, true, false);
-
-            gameLoop();
+            oneGame();
 
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void oneGame(){
+
+        Player player2 = new Player("EASY", PlayerType.EASYAI);
+        Player player1 = new Player("MEDIUM", PlayerType.MEDIUMAI);
+
+        List<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+
+        GameSystem gameSystem = new GameSystem();
+        gameSystem.setPlayers(players);
+        mainController.setGameSystem(gameSystem);
+        GameController gameController = mainController.getGameController();
+        String cardPilePath = "src/ressources/shuffled.csv";
+        gameController.init(cardPilePath, players, false, true, false);
+
+        gameLoop();
     }
 
     public void gameLoop(){
@@ -98,19 +102,6 @@ public class StartEasyAIGame extends Application {
 
             System.out.println("Round: " + i);
             i++;
-
-
-
-/*            try{
-                sleep(5000);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }*/
-
-
-
-
         }
 
         System.out.println("Game finished");

@@ -81,10 +81,8 @@ public class HarbourFieldViewController extends StackPane {
        /* cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
-                //Action drawCard = new Action(ActionType.DRAW_CARD, null);
-                //mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
-                //mainController.getPlayerController().executeAction(drawCard);
+                Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
+                mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
 
                 //Zum Testen
                 CardStack stack = controller.CardFactory.newCardsWithoutSpecial();

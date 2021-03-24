@@ -9,10 +9,6 @@ import model.PlayerState;
  */
 public abstract class AiController {
 
-	private MainController mainController;
-
-	private EasyAi easyAi;
-
 	/**
 	 *
 	 * @return Gibt die Aktion zurück die die KI ausführen soll.
