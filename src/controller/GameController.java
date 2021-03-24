@@ -105,36 +105,26 @@ public class GameController {
 
 			if(lastAction.getActionType().equals(DRAW_CARD)){
 				if(isZonked(move)){
-
+					System.out.println("ZONKED____________");
 					mainController.getCardController().execJester(move);
-
 					changeActivePlayer(move);
-/*					if(move.equals(currentMove())){
-						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
-					}*/
-
 				}
 			}
 
 			if(lastAction.getActionType().equals(DEFEND)){
 				if(isZonked(move)){
-
+					System.out.println("ZONKED____________");
 					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
-/*					if(move.equals(currentMove())){
-						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
-					}*/
+
 				}
 			}
 
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
 				if(isZonked(move)){
-
+					System.out.println("ZONKED____________");
 					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
-/*					if(move.equals(currentMove())){
-						mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
-					}*/
 				}
 			}
 
@@ -225,15 +215,14 @@ public class GameController {
 		mainController.getGameSystem().setCurrentGame(game);
 
 		Move move = new Move(null, true, null, null);
-		Card firstCard = cardPile.pop();
 		move.setCardPile(cardPile);
-		move.getHarbour().push(firstCard);
 		move.setPlayers(game.getPlayerStates());
 		move.setActor(states.get(0));
 		move.setActivePlayer(states.get(0));
 		move.setBuyLimit(1);
 
-		Action action = new Action(SHUFFLE, null);
+		Action action = new Action(DRAW_CARD,move.getCardPile().peek());
+		mainController.getCardController().drawCard(move,action);
 		move.setAction(action);
 
 		game.setLastMove(move);
@@ -324,7 +313,10 @@ public class GameController {
 		//DRAW_CARD;
 		if(move.getShipToDefend() != null)  {
 			//DEFEND
-			results.add(new Action(DEFEND, move.getShipToDefend()));
+			Ship ship = (Ship) move.getShipToDefend();
+			if(ship.getForce() <= mainController.getCardController().getNumSwords(move.getActor())){
+				results.add(new Action(DEFEND, move.getShipToDefend()));
+			}
 
 			//ACCEPT_SHIP
 			results.add(new Action(ACCEPT_SHIP, move.getShipToDefend()));
@@ -332,7 +324,7 @@ public class GameController {
 			return results;
 		}
 
-		if( actor.getPlayer().equals(activePlayer.getPlayer()) && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
+		if(actor.getPlayer().equals(activePlayer.getPlayer()) && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 

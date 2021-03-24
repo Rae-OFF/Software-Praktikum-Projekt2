@@ -371,31 +371,26 @@ public class CardController {
 	public void defend(Move move, Action action) {
 
 			Ship shipCard = (Ship) action.getAffectedCard();
-			List<Card> cardsInHand = move.getActivePlayer().getCards().getCards();
-			int numSwords = 0;
 
-			if (shipCard.getForce() >= 100) {
-				move.getHarbour().push(shipCard);
+			move.getDiscardPile().push(shipCard);
 
-			} else {
-				for (Card card : cardsInHand) {
-					if (card instanceof Person) {
-						if ((((Person) card).getPersonType().equals(PIRATE) || ((Person) card).getPersonType().equals(SAILOR))) {
-							numSwords += ((Person) card).getSwords();
-						}
-					}
-				}
-				if (numSwords >= shipCard.getForce()) {
-					move.getDiscardPile().push(shipCard);
-				}
-				else{
-					move.getHarbour().push(shipCard);
-				}
-			}
 			move.setShipToDefend(null);
 			int limit = getBuyLimitFromShips(move);
 			move.setBuyLimit(limit);
+	}
 
+	public int getNumSwords(PlayerState player){
+		List<Card> cardsInHand = player.getCards().getCards();
+		int numSwords = 0;
+		for (Card card : cardsInHand) {
+			if (card instanceof Person) {
+				if ((((Person) card).getPersonType().equals(PIRATE) || ((Person) card).getPersonType().equals(SAILOR))) {
+					numSwords += ((Person) card).getSwords();
+				}
+			}
+		}
+
+		return numSwords;
 	}
 
 	public void acceptShip(Move move, Action action){
