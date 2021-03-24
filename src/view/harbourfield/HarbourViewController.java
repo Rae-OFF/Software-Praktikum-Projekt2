@@ -29,12 +29,15 @@ public class HarbourViewController extends StackPane {
      */
     public HarbourViewController(MainController mainController){
         super();
+        this.setPickOnBounds(false);
         this.mainController = mainController;
-        //Rectangle rect = new Rectangle(50, 50, Color.BLUE);
-        //getChildren().add(rect);
+        /*Rectangle rect = new Rectangle(50, 50, Color.BLUE);
+        rect.setHeight(120);
+        rect.setWidth(80);*/
+        /*getChildren().add(rect);*/
         this.setAlignment(Pos.TOP_LEFT);
-        this.setTranslateX(270);
-        this.setTranslateY(180);
+        this.setTranslateX(280);
+        this.setTranslateY(0);
 
         //this.setCards(cards);
 
@@ -59,7 +62,7 @@ public class HarbourViewController extends StackPane {
                     cardImageList.add(cardImage);
 
                     cardImage.setAlignment(Pos.TOP_LEFT);
-                    cardImage.setTranslateX(cardCount * 90); //Width 80, Height 120
+                    cardImage.setTranslateX(x+(cardCount * 90)); //Width 80, Height 120
                     System.out.println(cardImage.getTranslateX()+" "+ cardCount + " " + cardImageList.size() + " " + cards.size());
                     //cardImage.setTranslateY(y+cardCount*130);
                     cardCount++;
@@ -81,7 +84,7 @@ public class HarbourViewController extends StackPane {
 
     public void refresh(Move move, List<Action> posAc){
         List<Card> cards = move.getHarbour().getCards();
-        setCards(cards); //TODO nötig?
+        setCards(cards);
         System.out.println("Hafensize: " + move.getHarbour().getSize());
 
         /*for(Card card : wie oben hinzugefügt, prüfen ob clickhändler sein muss) //TODO der teil in setcard?

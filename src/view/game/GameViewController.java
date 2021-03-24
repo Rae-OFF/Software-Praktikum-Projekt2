@@ -3,6 +3,8 @@ package view.game;
 import controller.MainController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -70,6 +72,29 @@ public class GameViewController extends StackPane implements GameViewAUI {
             }
         });
 
+    }
+
+    /*public void mouseEventDebugger(){
+        this.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, (EventHandler<MouseEvent>) event -> {
+            EventTarget comp = event.getTarget();
+            System.out.println("## " + (comp != null ? comp.getClass().getSimpleName() : event.getClass().getSimpleName()) + " [" + event.getEventType() + "] ## Komponente: " + event.getTarget() + " --------> Details:" + event);
+        });
+    }*/
+
+    public void mouseEventDebugger() {
+        this.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, (EventHandler<MouseEvent>) event -> {
+            EventTarget comp = event.getTarget();
+            System.out.println("## " + (comp != null ? comp.getClass().getSimpleName() : event.getClass().getSimpleName()) + " [" + event.getEventType() + "] ## Komponente: " + event.getTarget() + " --------> Details:" + event);
+            // print scene graph
+
+            if (event.getTarget() instanceof Node) {
+                Node node = null;
+                do  {
+                    node = node == null ? (Node) event.getTarget() : node.getParent();
+                    System.out.println(node);
+                } while (node.getParent() != null);
+            }
+        });
     }
 
     public void refresh(Move move){

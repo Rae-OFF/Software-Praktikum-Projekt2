@@ -1,5 +1,6 @@
 package view.assets;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import model.*;
@@ -12,9 +13,15 @@ public class CardImageViewController extends StackPane {
 
     public CardImageViewController(Card card){
         super();
+        this.setPickOnBounds(false);
         //this.setAlignment(Pos.TOP_LEFT);
         //Rectangle rect = new Rectangle(50, 50, Color.RED);
         //getChildren().add(rect);
+        this.setAlignment(Pos.TOP_LEFT);
+        this.setTranslateX(270);
+        this.setTranslateY(180);
+        this.setHeight(400);
+        this.setWidth(400);
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){

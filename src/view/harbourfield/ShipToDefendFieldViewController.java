@@ -27,12 +27,16 @@ public class ShipToDefendFieldViewController extends StackPane {
 
     public ShipToDefendFieldViewController(MainController mainController){
         super();
+        this.setPickOnBounds(false);
         this.mainController = mainController;
         this.setAlignment(Pos.TOP_LEFT);
-        this.setTranslateX(100);
-        this.setTranslateY(320);
-        this.setHeight(120);
-        this.setWidth(80);
+        this.setTranslateX(-190);
+        this.setTranslateY(140);
+        this.setHeight(470);
+        this.setWidth(860);
+
+        cardImage = new CardImageViewController(null);
+        getChildren().add(cardImage);
 
        /* Rectangle rect = new Rectangle(200, 200, Color.BEIGE);
         getChildren().add(rect);*/
@@ -41,17 +45,18 @@ public class ShipToDefendFieldViewController extends StackPane {
         defend = new Button("Abwehren");
         getChildren().add(defend);
         defend.setAlignment(Pos.TOP_LEFT);
-        defend.setTranslateX(-40);
-        defend.setTranslateY(120);
+        defend.setTranslateX(230);
+        defend.setTranslateY(300);
         defend.setMaxSize(75, 20);
+
         defend.setVisible(false);
 
         //accept button
         accept = new Button("Aufnehmen");
         getChildren().add(accept);
         accept.setAlignment(Pos.TOP_LEFT);
-        accept.setTranslateX(40);
-        accept.setTranslateY(120);
+        accept.setTranslateX(320);
+        accept.setTranslateY(300);
         accept.setMaxSize(80, 20);
         accept.setVisible(false);
         /*accept = new ImageView("view/resources/redoButton.png");
@@ -61,10 +66,6 @@ public class ShipToDefendFieldViewController extends StackPane {
         accept.setTranslateY(120);
         accept.setVisible(false);
         getChildren().add(accept);*/
-
-        cardImage = new CardImageViewController(null);
-        getChildren().add(cardImage);
-
     }
 
     public void refresh(Move move, List<Action> posAc){
@@ -99,7 +100,6 @@ public class ShipToDefendFieldViewController extends StackPane {
                     mainController.getPlayerController().executeAction(action); //TODO onClick funktional kriegen
 
                 });
-
             }
         }
     }

@@ -21,8 +21,9 @@ public class ExpeditionsViewController extends StackPane {
 
     private MainController mainController;
 
-    public ExpeditionsViewController(MainController controller, List<Card> expedition, Move move){
+    public ExpeditionsViewController(MainController controller, List<Card> expedition, Move move){ //TODO Move entfernen
         super();
+        this.setPickOnBounds(false);
         mainController = controller;
         //cardImage = new CardImageViewController(expedition);
         this.setAlignment(Pos.TOP_LEFT);
@@ -38,8 +39,8 @@ public class ExpeditionsViewController extends StackPane {
     public void setCards(List<Card> cards){
         getChildren().removeAll(cardImageList);
         cardImageList.clear();
-        int cardCount = 0;
 
+        int cardCount = 0;
         if(cards != null){
             for(Card card : cards){
                 CardImageViewController cardImage = new CardImageViewController(card);
