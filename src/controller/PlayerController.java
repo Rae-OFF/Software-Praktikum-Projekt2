@@ -31,6 +31,10 @@ public class PlayerController {
 		Move currentMove = gameController.currentMove();
 		Move newMove= gameController.generateMove(currentMove, action);
 		mainController.getGameSystem().getCurrentGame().setLastMove(newMove);
+
+		if (mainController.getGameViewAUI() != null) {
+			mainController.getGameViewAUI().refresh(newMove);
+		}
 	}
 
 	/**
@@ -122,7 +126,7 @@ public class PlayerController {
 		return expeditions;
 	}
 
-	/**
+	/*
 	 *
 	 * @return
 	public PlayerState getActor(){

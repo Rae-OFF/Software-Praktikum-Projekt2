@@ -29,8 +29,8 @@ public class ExpeditionsViewController extends StackPane {
         this.setTranslateY(25);
 
         this.setCards(expedition);
-        if(move.getActivePlayer().equals(move.getActor())){
-            this.callExpedition(expedition, move);
+        if(move != null && move.getActivePlayer().equals(move.getActor())){
+            this.callExpedition(expedition);
         }
     }
 
@@ -55,7 +55,7 @@ public class ExpeditionsViewController extends StackPane {
 
     }
 
-    public void callExpedition(List<Card> card, Move move){
+    public void callExpedition(List<Card> card){
         for(CardImageViewController exp : cardImageList){
             exp.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override

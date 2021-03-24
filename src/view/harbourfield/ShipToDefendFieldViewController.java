@@ -28,10 +28,15 @@ public class ShipToDefendFieldViewController extends StackPane {
         this.setHeight(120);
         this.setWidth(80);
 
-        cardImage = new CardImageViewController(move.getShipToDefend());
-        //CardStack stack = controller.CardFactory.newCardsWithoutSpecial(); //zum testen feste Karte übergeben
-        //cardImage = new CardImageViewController(stack.getCards().get(0));
-        cardImage.setAlignment(Pos.TOP_LEFT);
+        if(move != null){
+            cardImage = new CardImageViewController(move.getShipToDefend());
+            //CardStack stack = controller.CardFactory.newCardsWithoutSpecial(); //zum testen feste Karte übergeben
+            //cardImage = new CardImageViewController(stack.getCards().get(0));
+            cardImage.setAlignment(Pos.TOP_LEFT);
+            getChildren().add(cardImage);
+        }
+
+        cardImage = new CardImageViewController(null);
         getChildren().add(cardImage);
 
 
