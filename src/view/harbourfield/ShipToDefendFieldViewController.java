@@ -39,8 +39,7 @@ public class ShipToDefendFieldViewController extends StackPane {
         cardImage = new CardImageViewController(null);
         getChildren().add(cardImage);
 
-
-        cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        cardImage.setOnMouseClicked(new EventHandler<MouseEvent>() { //TODO Refresh
             @Override
             public void handle(MouseEvent event) {
                 //TODO Abfrage ob beide angezeigt werden sollen

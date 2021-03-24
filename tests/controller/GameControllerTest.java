@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static model.ActionType.*;
 import static model.Colour.*;
@@ -502,11 +504,14 @@ public class GameControllerTest {
         move.setBuyLimit(2);
 
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
-
-        move.setShipToDefend(null);
-        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
         move.setBuyLimit(-7);
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+
+        move.setShipToDefend(null); move.setBuyLimit(0);
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+        move.setBuyLimit(2);
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+
 
 
     }
@@ -549,34 +554,60 @@ public class GameControllerTest {
      */
     @Test
     public void getPossibleActionsExpedition() {
+//tests only if active player same as actor is -- 1st "if" condition
+        Move move = moves.get(0);
+
+        move.setPlayers(states);
+        move.setActivePlayer(states.get(3));
+        move.setActor(states.get(1));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+        move.setActor(states.get(1));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+
+    }
+    @Test
+    public void checkExpeditionPossible(){
 
         Move move = moves.get(0);   //under this move,  active player has one Priest, one Pirate.
 
         move.setPlayers(states);
         move.setActivePlayer(states.get(3));
+        move.setActor(states.get(3));
+        PlayerState activePlayer = move.getActivePlayer();
 
-        move.getActivePlayer().setCoins(stack);
+        activePlayer.setCoins(stack);
+
         List<Card> exped = new ArrayList<>();
-        move.getExpeditionPile().setCards(exped); exped.add(cardFactory.generateJester().get(0));
-        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+        move.getExpeditionPile().setCards(exped);
+        exped.add(cardFactory.generateJester().get(0));
 
-        exped.add(cardFactory.generateExpedition(true).get(5) ); // special card
+        Map<PersonType, Integer> requirements = new HashMap<>();
+        requirements.put(CAPTAIN, 1);
+        requirements.put(SETTLER, 1);
+        requirements.put(PRIEST, 1);
+        requirements.put(JACK_OF_ALL_TRADES, 0);
+
+        Expedition expedition = new Expedition(requirements,3,5);
+        exped.add(expedition); // special card
 
         List<Card> cards = move.getActivePlayer().getCards().getCards();
+        //when the requirements fulfilled
+        assertFalse(controller.checkExpeditionPossible(activePlayer, expedition));
+   //     assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
 
-     //when the requirements fulfilled
         cards.add(cardFactory.generatePriest().get(0));
         cards.add(cardFactory.generatePriest().get(0));
         cards.add(cardFactory.generateSettlerCaptain().get(0));
         cards.add(cardFactory.generateSettlerCaptain().get(0));
         cards.add(cardFactory.generateSettlerCaptain().get(1));
         cards.add(cardFactory.generateSettlerCaptain().get(1));
-        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+        assertTrue(controller.checkExpeditionPossible(move.getActivePlayer(), expedition));
+        assertEquals(controller.getPossibleActions(move).get(1).getActionType(), START_EXPEDITION);
 //when the requirements not fulfilled
         cards.clear();
-        move.getExpeditionPile().setCards(exped);
         cards.addAll(cardFactory.generateRedShips());
-
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
 
     }
