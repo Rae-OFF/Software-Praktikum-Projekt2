@@ -157,10 +157,10 @@ public class GameController {
 					changeActivePlayer(move);
 				}
 			}
-
+/*
 			if(lastAction.getActionType().equals(SHUFFLE)){
 
-			}
+			}*/
 
 	}
 
@@ -188,7 +188,6 @@ public class GameController {
 	 * Führt das initialie Starten des Spiels aus (alle Spieler bekommen 3 Münzen, Nachziehstapel etc.)
 	 */
 
-	// nicht fertig. Nach Ergaenzung von CardFactory Controller wird die Methode fertig gemacht.
 	public void init(String cardPilePath, List<Player> players, boolean variant, boolean shuffleCards, boolean randomPlayerOrder) {
 
 		PlayerController playerController = mainController.getPlayerController();
@@ -296,16 +295,9 @@ public class GameController {
 			case START_EXPEDITION:
 				mainController.getCardController().startExpedition(nextMove, action);
 				break;
-			case SKIP:
-				//mainController.getCardController().skip(nextMove, action);
-				break;
-			//Es gibt keine Methode acceptShip() in CardController;
 			case ACCEPT_SHIP:
 				mainController.getCardController().acceptShip(nextMove, action);
 				break;
-/*			case SHUFFLE:
-				mainController.getCardController().shuffle(nextMove, action);
-				break;*/
 		}
 		nextMove.setAction(action);
 		finishRound(nextMove);
@@ -323,7 +315,6 @@ public class GameController {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
 		List<Card> expeditionCards = move.getExpeditionPile().getCards();
-		List<Card> playerCards = move.getActivePlayer().getCards().getCards();
 		PlayerState activePlayer = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
@@ -345,8 +336,6 @@ public class GameController {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
 
-
-
 		if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
 			//TAKE_SHIP;
 			for (Card card : harbourCards) {
@@ -355,7 +344,6 @@ public class GameController {
 				}
 			}
 		}
-
 
 		//BUY_PERSON;
 		for (Card card : harbourCards) {
@@ -382,76 +370,89 @@ public class GameController {
 			}
 		}
 
-
 		//START_EXPEDITION;
-		for(Card expedition : expeditionCards){
-			if(expedition instanceof Expedition){
-				// Test if current expedition card is claimable
-				int captains = 0;
-				int priests = 0;
-				int settlers = 0;
-				int jacks = 0;
+		if (actor.getPlayer().equals(activePlayer.getPlayer())) {
+			for (Card expedition : expeditionCards) {
+				if (expedition instanceof Expedition) {
+					// Test if current expedition card is claimable
+					boolean fulfilled = checkExpeditionPossible(activePlayer, (Expedition) expedition);
 
-				Map<PersonType, Integer> require= ((Expedition) expedition).getRequirements();
-
-				List<Card> cards = actor.getCards().getCards();
-
-				for(Card card : cards){
-					if(card instanceof Person){
-						if(require.containsKey(((Person) card).getPersonType())){
-							if(((Person) card).getPersonType().equals(CAPTAIN)){
-								captains++;
-							}
-
-							if(((Person) card).getPersonType().equals(PRIEST)){
-								priests++;
-							}
-
-							if(((Person) card).getPersonType().equals(SETTLER)){
-								settlers++;
-							}
-
-							if(((Person) card).getPersonType().equals(JACK_OF_ALL_TRADES)){
-								jacks++;
-							}
-						}
+					if (fulfilled == true) {
+						results.add(new Action(START_EXPEDITION, expedition));
 					}
 				}
-
-				int captainDistance = (require.get(CAPTAIN) - captains);
-				int priestDistance = (require.get(PRIEST) - priests);
-				int settlerDistance = (require.get(SETTLER) - settlers);
-
-				if(captainDistance < 0){
-					captainDistance = 0;
-				}
-
-				if(priestDistance < 0){
-					priestDistance = 0;
-				}
-
-				if(settlerDistance < 0){
-					settlerDistance = 0;
-				}
-
-				boolean fulfilled = false;
-
-				if((captainDistance + priestDistance + settlerDistance) <= jacks){
-					fulfilled = true;
-				}
-				if(fulfilled == true){
-					results.add(new Action(START_EXPEDITION, expedition));
-					//mainController.getIoController().log("Expedition possible");
-				}
-
 			}
-
 		}
 
 		//SKIP;
 		results.add(new Action(SKIP, null));
 
 		return results;
+	}
+
+	/**
+	 * Überprüft, ob eine Expedition möglich ist.
+	 * @param activePlayer
+	 * 		Bekommt den aktiven Spieler.
+	 * @param expedition
+	 * 		Bekommt eine zu überprüfende Expedition.
+	 * @return Gibt zurück, ob die übergebene Expedition möglich ist.
+	 */
+	public boolean checkExpeditionPossible(PlayerState activePlayer, Expedition expedition){
+		int captains = 0;
+		int priests = 0;
+		int settlers = 0;
+		int jacks = 0;
+
+		Map<PersonType, Integer> require =  expedition.getRequirements();
+
+		List<Card> cards = activePlayer.getCards().getCards();
+
+		for (Card card : cards) {
+			if (card instanceof Person) {
+				if (require.containsKey(((Person) card).getPersonType())) {
+					if (((Person) card).getPersonType().equals(CAPTAIN)) {
+						captains++;
+					}
+
+					if (((Person) card).getPersonType().equals(PRIEST)) {
+						priests++;
+					}
+
+					if (((Person) card).getPersonType().equals(SETTLER)) {
+						settlers++;
+					}
+
+					if (((Person) card).getPersonType().equals(JACK_OF_ALL_TRADES)) {
+						jacks++;
+					}
+				}
+			}
+		}
+
+		int captainDistance = (require.get(CAPTAIN) - captains);
+		int priestDistance = (require.get(PRIEST) - priests);
+		int settlerDistance = (require.get(SETTLER) - settlers);
+
+		if (captainDistance < 0) {
+			captainDistance = 0;
+		}
+
+		if (priestDistance < 0) {
+			priestDistance = 0;
+		}
+
+		if (settlerDistance < 0) {
+			settlerDistance = 0;
+		}
+
+		boolean fulfilled = false;
+
+		if ((captainDistance + priestDistance + settlerDistance) <= jacks) {
+			fulfilled = true;
+		}
+
+		return fulfilled;
 	}
 
 	/**

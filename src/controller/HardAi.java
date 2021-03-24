@@ -27,7 +27,7 @@ public class HardAi extends AiController {
 
 		AINode root = AITree.generateTree(move,mainController,7);
 
-		Action action = AITree.getBestAction(root, move.getActor());
+		Action action = AITree.getBestActionHard(root, move.getActor());
 
 		return action;
 

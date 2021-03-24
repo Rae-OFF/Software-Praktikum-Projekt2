@@ -66,7 +66,7 @@ public class HarbourFieldViewController extends StackPane {
             @Override
             public void handle(MouseEvent event) {
                 Action skip = new Action(ActionType.SKIP, null);
-                mainController.getPlayerController().executeAction(skip);
+                mainController.getPlayerController().executeAction(skip); //TODO Skip Testen
                 refresh(move);
                 System.out.println("SKIP!");
             }
@@ -81,10 +81,8 @@ public class HarbourFieldViewController extends StackPane {
        /* cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                //Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().peek());
-                //Action drawCard = new Action(ActionType.DRAW_CARD, null);
-                //mainController.getGameController().generateMove(move, drawCard);
-                //mainController.getPlayerController().executeAction(drawCard);
+                Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
+                mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
 
                 //Zum Testen
                 CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
@@ -121,12 +119,23 @@ public class HarbourFieldViewController extends StackPane {
         discardPile.setTranslateX(40);
         discardPile.setTranslateY(180);
 
+        //Zum Testen
+        CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
+        Card card = stack.getCards().get(stack.getSize()-6);
+        Card card1 = stack.getCards().get(stack.getSize()-5);
+        Card card2 = stack.getCards().get(stack.getSize()-4);
+        List<Card> exp = new ArrayList<>();
+        exp.add(card);
+        exp.add(card1);
+        exp.add(card2);
+        //openExpeditions.callExpedition(exp);
+
         getChildren().add(discardPile);
         getChildren().add(skip);
         getChildren().add(cardPile);
     }
 
-    public void refresh(Move move, List<Action> posAc) {
+    public void refresh(Move move) {
 
         // CardPile wird aktualisiert
 
@@ -140,33 +149,28 @@ public class HarbourFieldViewController extends StackPane {
         //getChildren().remove(shipToDefend);
         //shipToDefend = new ShipToDefendFieldViewController(mainController,move);
 
+
+        List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
+
         skip.setOpacity(0.5);
         skip.setOnMouseClicked(null);
         cardPile.setOnMouseClicked(null);
-        System.out.println("get actions");
 
-        for (Action action : posAc) {
-            System.out.println(action.toString());
+        for (Action action : possibleActions) {
             if (action.getActionType().equals(ActionType.SKIP)) {
-                skip.setOpacity(1.0);
                 skip.setOnMouseClicked(event -> {
                     mainController.getPlayerController().executeAction(action);
-
+                    skip.setOpacity(1.0);
                 });
-                /*skip.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent event) {
-                        mainController.getPlayerController().executeAction(action);
-                        skip.setOpacity(1.0);
-                        System.out.println("Skip");
-                    }
-                });*/
             }
 
             if (action.getActionType().equals(ActionType.DRAW_CARD)) {
                 cardPile.setOnMouseClicked(event -> {
-                    System.out.println("");
                     mainController.getPlayerController().executeAction(action);
+                    if(move.getShipToDefend() != null){
+                        shipToDefend = new ShipToDefendFieldViewController(mainController, move);
+                        getChildren().add(shipToDefend);
+                    }
 
                     harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
                     getChildren().add(harbour);
@@ -176,18 +180,6 @@ public class HarbourFieldViewController extends StackPane {
                 });
             }
 
-            if(action.getActionType().equals(ActionType.DEFEND)){
-
-                shipToDefend = new ShipToDefendFieldViewController(mainController, move);
-                getChildren().add(shipToDefend);
-            }
-
-            if(action.getActionType().equals(ActionType.ACCEPT_SHIP)){
-                mainController.getPlayerController().executeAction(action);
-                shipToDefend = new ShipToDefendFieldViewController(mainController, move);
-                getChildren().add(shipToDefend);
-
-            }
             // ...
         }
 
