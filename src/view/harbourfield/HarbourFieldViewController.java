@@ -44,7 +44,7 @@ public class HarbourFieldViewController extends StackPane {
         harbourImage.setFitWidth(860);
         harbourImage.setFitHeight(470);
 
-        harbour = new HarbourViewController(mainController, null);
+        harbour = new HarbourViewController(mainController);
         harbour.setAlignment(Pos.CENTER);
         getChildren().add(harbour);
 
@@ -52,7 +52,7 @@ public class HarbourFieldViewController extends StackPane {
         openExpeditions.setAlignment(Pos.TOP_LEFT);
         getChildren().add(openExpeditions);
 
-        shipToDefend = new ShipToDefendFieldViewController(mainController, null);
+        shipToDefend = new ShipToDefendFieldViewController(mainController);
         shipToDefend.setAlignment(Pos.TOP_LEFT);
         getChildren().add(shipToDefend);
 
@@ -152,7 +152,11 @@ public class HarbourFieldViewController extends StackPane {
 
         List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
 
+        harbour.refresh(move, posAc);
+        shipToDefend.refresh(move, posAc);
+        //openExpeditions
         skip.setOpacity(0.5);
+        cardPile.setOpacity(0.5);
         skip.setOnMouseClicked(null);
         cardPile.setOnMouseClicked(null);
 
@@ -167,16 +171,13 @@ public class HarbourFieldViewController extends StackPane {
             if (action.getActionType().equals(ActionType.DRAW_CARD)) {
                 cardPile.setOnMouseClicked(event -> {
                     mainController.getPlayerController().executeAction(action);
-                    if(move.getShipToDefend() != null){
-                        shipToDefend = new ShipToDefendFieldViewController(mainController, move);
-                        getChildren().add(shipToDefend);
-                    }
+                    cardPile.setOpacity(1.0);
 
-                    harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
+                   /* harbour =  new HarbourViewController(mainController);
                     getChildren().add(harbour);
 
                     openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards(), move);
-                    getChildren().add(openExpeditions);
+                    getChildren().add(openExpeditions);*/
                 });
             }
 
