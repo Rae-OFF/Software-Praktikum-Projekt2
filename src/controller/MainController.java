@@ -3,6 +3,7 @@ package controller;
 import model.Action;
 import model.GameSystem;
 import model.Move;
+import view.GameViewAUI;
 
 /**
  * MainController, verwaltet die anderen Controller.
@@ -26,6 +27,8 @@ public class MainController {
 	private IoController ioController;
 
 	private HighscoreController highscoreController;
+
+	private GameViewAUI gameViewAUI;
 
 	/**
 	 * Konstruktor.
@@ -120,4 +123,20 @@ public class MainController {
 		return highscoreController;
 	}
 
+	/**
+	 *
+	 * @return Gibt die GameViewAUI zurück.
+	 */
+	public GameViewAUI getGameViewAUI() {
+		return gameViewAUI;
+	}
+
+	/**
+	 * Setzt die GameViewAUI.
+	 * @param gameViewAUI
+	 * 		Bekommt eine GameViewAUI übergeben.
+	 */
+	public void setGameViewAUI(GameViewAUI gameViewAUI) {
+		this.gameViewAUI = gameViewAUI;
+	}
 }

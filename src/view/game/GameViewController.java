@@ -10,11 +10,12 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Move;
+import view.GameViewAUI;
 import view.events.ButtonClickEvent;
 import view.events.ButtonClickEventHandler;
 import view.menu.InGameMenuViewController;
 
-public class GameViewController extends StackPane {
+public class GameViewController extends StackPane implements GameViewAUI {
 
     private GameFieldViewController gameField;
 

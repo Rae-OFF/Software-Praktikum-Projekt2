@@ -48,7 +48,7 @@ public class HarbourFieldViewController extends StackPane {
         harbour.setAlignment(Pos.CENTER);
         getChildren().add(harbour);
 
-        openExpeditions = new ExpeditionsViewController(mainController, null);
+        openExpeditions = new ExpeditionsViewController(mainController, null, move);
         openExpeditions.setAlignment(Pos.TOP_LEFT);
         getChildren().add(openExpeditions);
 
@@ -72,6 +72,7 @@ public class HarbourFieldViewController extends StackPane {
             }
         });
 
+        System.out.println("Harbour: " + move.getCardPile().getSize());
         cardPile = new CardPileImageViewController();
         cardPile.setFitHeight(120);
         cardPile.setFitWidth(80);
@@ -80,8 +81,10 @@ public class HarbourFieldViewController extends StackPane {
         cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
-                mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
+                //Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
+                //Action drawCard = new Action(ActionType.DRAW_CARD, null);
+                //mainController.getGameController().generateMove(move, drawCard); //TODO drawCard testen
+                //mainController.getPlayerController().executeAction(drawCard);
 
                 //Zum Testen
                 CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
@@ -93,17 +96,21 @@ public class HarbourFieldViewController extends StackPane {
                 exp.add(card1);
                 exp.add(card2);
 
+                if(move.getShipToDefend() != null){
+                    shipToDefend = new ShipToDefendFieldViewController(mainController, move);
+                    getChildren().add(shipToDefend);
+                }
+
+                System.out.println("Harbourkarten in Draw Card: " + move.getCardPile().getSize());
                 //harbour = new HarbourViewController(mainController, stack.popList(7));
-               harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
+                harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
                 getChildren().add(harbour);
 
 
-                //openExpeditions = new ExpeditionsViewController(mainController, exp);
-                openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards());
+                //openExpeditions = new ExpeditionsViewController(mainController, exp, move);
+                openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards(), move);
                 getChildren().add(openExpeditions);
 
-                shipToDefend = new ShipToDefendFieldViewController(mainController, move);
-                getChildren().add(shipToDefend);
                 System.out.println("Draw card!");
             }
         });
@@ -122,7 +129,7 @@ public class HarbourFieldViewController extends StackPane {
         exp.add(card);
         exp.add(card1);
         exp.add(card2);
-        openExpeditions.callExpedition(exp);
+        //openExpeditions.callExpedition(exp);
 
         getChildren().add(discardPile);
         getChildren().add(skip);
@@ -143,7 +150,6 @@ public class HarbourFieldViewController extends StackPane {
         getChildren().remove(shipToDefend);
         shipToDefend = new ShipToDefendFieldViewController(mainController,move);
 
-
         //ShipToDefend, Harbour und Expedition werden on Click refreshed ? //TODO wann muss der cardPile refresht werden?
         //List<Card> expeditionCards = move.getExpeditionPile().getCards();
         //List<Card> harbourCards = move.getHarbour().getCards();
@@ -155,7 +161,28 @@ public class HarbourFieldViewController extends StackPane {
         //harbour wird aktualisiert
         //getChildren().remove(harbour);
 
-        initialize(move);
+        List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
+
+        skip.setOnMouseClicked(null);
+        cardPile.setOnMouseClicked(null);
+
+        for (Action action : possibleActions) {
+            if (action.getActionType().equals(ActionType.SKIP)) {
+                skip.setOnMouseClicked(event -> {
+                    mainController.getPlayerController().executeAction(action); //TODO Skip Testen
+                });
+            }
+
+            if (action.getActionType().equals(ActionType.DRAW_CARD)) {
+                cardPile.setOnMouseClicked(event -> {
+                    mainController.getPlayerController().executeAction(action);
+                });
+            }
+
+            // ...
+        }
+
+        //initialize(move);
 
     }
 }

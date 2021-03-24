@@ -3,8 +3,10 @@ package view.harbourfield;
 import controller.MainController;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import model.ActionType;
 import model.Card;
 import model.Move;
 import view.assets.CardImageViewController;
@@ -18,7 +20,7 @@ public class ExpeditionsViewController extends StackPane {
 
     private MainController mainController;
 
-    public ExpeditionsViewController(MainController controller, List<Card> expedition){
+    public ExpeditionsViewController(MainController controller, List<Card> expedition, Move move){
         super();
         mainController = controller;
         //cardImage = new CardImageViewController(expedition);
@@ -27,6 +29,9 @@ public class ExpeditionsViewController extends StackPane {
         this.setTranslateY(25);
 
         this.setCards(expedition);
+        if(move.getActivePlayer().equals(move.getActor())){
+            this.callExpedition(expedition, move);
+        }
     }
 
     public void setCards(List<Card> cards){
@@ -50,13 +55,18 @@ public class ExpeditionsViewController extends StackPane {
 
     }
 
-    public void callExpedition(List<Card> card){
-        //mainController.getGameController().currentMove().getHarbour().push(card);
+    public void callExpedition(List<Card> card, Move move){
         for(CardImageViewController exp : cardImageList){
             exp.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    System.out.println("call Expedition");
+                    Button start = new Button("Start Expedition");
+                    getChildren().add(start);
+                    start.setAlignment(Pos.TOP_LEFT);
+                    start.setTranslateX(0);
+                    start.setTranslateY(120);
+                    //mainController.getGameController().currentMove().getHarbour().push(card);
+                    System.out.println("call Expedition"+ exp.getCardImage().getImage().getUrl());
                 }
             });
         }

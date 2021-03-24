@@ -41,6 +41,7 @@ public class Main extends Application {
 
 			//Eigentlicher Code
 			GameViewController gameViewController = new GameViewController(mainController);
+			mainController.setGameViewAUI(gameViewController);
 			Scene scene = new Scene(gameViewController,1280,720);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
