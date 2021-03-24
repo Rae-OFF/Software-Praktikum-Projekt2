@@ -135,7 +135,7 @@ public class HarbourFieldViewController extends StackPane {
         getChildren().add(cardPile);
     }
 
-    public void refresh(Move move) {
+    public void refresh(Move move, List<Action> posAc) {
 
         // CardPile wird aktualisiert
 
