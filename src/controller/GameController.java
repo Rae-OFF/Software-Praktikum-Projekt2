@@ -15,7 +15,7 @@ import static model.PersonType.*;
  */
 public class GameController {
 
-	private MainController mainController;
+	private final MainController mainController;
 
 	/**
 	 * Konstruktor.
@@ -47,12 +47,10 @@ public class GameController {
 		CardStack cardStack = move.getCardPile();
 		List<Card> popCardPile = new ArrayList<>();
 		for( int i = 0; i< num ; i++ ){
-			if(cardStack.peek()!=null){
-				popCardPile.add(cardStack.pop());
-			}else{
+			if(cardStack.peek()==null){
 				shuffleDiscardPile(move);
-				popCardPile.add(cardStack.pop());
 			}
+			popCardPile.add(cardStack.pop());
 		}
 		return popCardPile;
 	}
@@ -74,7 +72,7 @@ public class GameController {
 
 		int admiral = mainController.getCardController().getAmountOf(ADMIRAL, move.getActor());
 
-		if(admiral > 0 && move.isPhase1() == false){
+		if(admiral > 0 && !move.isPhase1()){
 			for(int i = 1; i <= admiral; i++){
 				mainController.getCardController().execAdmiral(move,move.getActor());
 			}
@@ -147,10 +145,6 @@ public class GameController {
 					changeActivePlayer(move);
 				}
 			}
-/*
-			if(lastAction.getActionType().equals(SHUFFLE)){
-
-			}*/
 
 	}
 
@@ -182,8 +176,6 @@ public class GameController {
 
 		PlayerController playerController = mainController.getPlayerController();
 
-		CardStack discardPile = new CardStack();
-		CardStack harbourPile = new CardStack();
 		CardStack cardPile;
 		if(cardPilePath == null){
 			if(players.size() < 5){
@@ -369,7 +361,7 @@ public class GameController {
 					// Test if current expedition card is claimable
 					boolean fulfilled = checkExpeditionPossible(activePlayer, (Expedition) expedition);
 
-					if (fulfilled == true) {
+					if (fulfilled) {
 						results.add(new Action(START_EXPEDITION, expedition));
 					}
 				}
