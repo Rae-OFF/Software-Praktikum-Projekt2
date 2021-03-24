@@ -438,69 +438,49 @@ public class CardController {
 		 * 		Bekommt die Aktion übergeben.
 		 */
 		public void startExpedition (Move move, Action action){
-			if(action.getActionType().equals(START_EXPEDITION)){
-				PlayerState player = move.getActor();
-				Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange.
-				Map<PersonType, Integer> require= ((Expedition) exped).getRequirements(); //get requirements of this Expedition
-				int captains = require.get(CAPTAIN);
-				int priests = require.get(PRIEST);
-				int settlers = require.get(SETTLER);
-				List<Card> materials = new ArrayList<>();
-				List<Card> cards = player.getCards().getCards();
+			PlayerState player = move.getActor();
+			Card exped = action.getAffectedCard();  // get this Expedition card from pile, which the player wants to exchange.
+			Map<PersonType, Integer> require= ((Expedition) exped).getRequirements(); //get requirements of this Expedition
+			int captains = require.get(CAPTAIN);
+			int priests = require.get(PRIEST);
+			int settlers = require.get(SETTLER);
+			List<Card> materials = new ArrayList<>();
+			List<Card> cards = player.getCards().getCards();
+			for(Card card : cards){
+				if(card instanceof Person){
+					Person person = (Person) card;
+					if(person.getPersonType().equals(CAPTAIN) && captains > 0){
+						captains--;
+					}
+					else if(person.getPersonType().equals(PRIEST) && priests > 0){
+						priests--;
+					}
+					else if(person.getPersonType().equals(SETTLER) && settlers > 0) {
+						settlers--;
+					}else continue;
+					materials.add(person);
+				}
+			}
+			List<Card> jacks = new ArrayList<>();
+			int jacksNeeded = captains + priests + settlers;
+			if(jacksNeeded> 0){
 				for(Card card : cards){
 					if(card instanceof Person){
 						Person person = (Person) card;
-						if(person.getPersonType().equals(CAPTAIN) && captains > 0){
-							captains--;
+						if(person.getPersonType().equals(JACK_OF_ALL_TRADES) && jacksNeeded > 0){
+							jacksNeeded--;
+							jacks.add(card);
 						}
-						else if(person.getPersonType().equals(PRIEST) && priests > 0){
-							priests--;
-						}
-						else if(person.getPersonType().equals(SETTLER) && settlers > 0) {
-							settlers--;
-						}else continue;
-						materials.add(person);
-					}
-				}
-				List<Card> jacks = new ArrayList<>();
-				CardStack jacksOnHand = getPlayerJacks(move, player);
-				int jacksNeeded = captains + priests + settlers;
-				if(jacksNeeded> 0){
-					while(jacksNeeded>0){
-								jacksNeeded--;
-								jacks.add(jacksOnHand.pop());
-					}
-				}
-				cards.removeAll(materials);
-				cards.removeAll(jacks);
-				move.getDiscardPile().pushList(materials);
-				move.getDiscardPile().pushList(jacks);
-				move.getExpeditionPile().getCards().remove(exped);
-				player.getCards().push(exped);
-				player.getCoins().pushList(gameController.popCardPile(move, ((Expedition) exped).getCoins()));
-			}
-		}
-
-
-		public CardStack getPlayerJacks(Move move, PlayerState actor) {
-			List<Card> playerCards = new ArrayList<Card>();
-			List<Card> jacks = new ArrayList<>();
-			for(PlayerState player : move.getPlayers()){
-				if(player==actor){
-					playerCards = player.getCards().getCards();
-				}
-			}
-			for (Card card : playerCards) {
-				if (card instanceof Person) {
-					Person person = (Person) card;
-					if (person.getPersonType().equals(JACK_OF_ALL_TRADES)) {
-						jacks.add(card);
 					}
 				}
 			}
-			CardStack playersJacks = new CardStack();
-			playersJacks.setCards(jacks);
-			return playersJacks;
+			cards.removeAll(materials);
+			cards.removeAll(jacks);
+			move.getDiscardPile().pushList(materials);
+			move.getDiscardPile().pushList(jacks);
+			move.getExpeditionPile().getCards().remove(exped);
+			player.getCards().push(exped);
+			player.getCoins().pushList(gameController.popCardPile(move, ((Expedition) exped).getCoins()));
 		}
 
 	/*	/**
