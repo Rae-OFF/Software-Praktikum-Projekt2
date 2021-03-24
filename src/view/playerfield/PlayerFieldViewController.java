@@ -11,11 +11,12 @@ import view.assets.CardPileImageViewController;
 import view.playerfield.CoinPileViewController;
 import view.playerfield.IconsViewController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerFieldViewController extends StackPane {
 
-    private List<IconsViewController> iconList;
+    private List<IconsViewController> iconList = new ArrayList<>();
 
     private CoinPileViewController coinPile;
 
@@ -117,7 +118,7 @@ public class PlayerFieldViewController extends StackPane {
         }
     }
 
-    public void refresh(Move move) {
+    public void refresh(Move move, List<Action> posAc) {
         // iconList wird geleert und neu erstellt
         iconList.clear();
         drawIcons(playerState);
@@ -133,13 +134,13 @@ public class PlayerFieldViewController extends StackPane {
         victoryPoints.setText(""+vPoints);
 
         // coinPile wird aktualisiert
-        if(Integer.parseInt(coinPile.getPileLabel().toString()) != playerState.getCoins().getSize()){
+       /* if(Integer.parseInt(coinPile.getPileLabel().toString()) != playerState.getCoins().getSize()){
             if(playerState.getCoins().getSize() == 0 && coinPile.getPileLabel() != null)
                 coinPile.setPileImage(null);
             else if(playerState.getCoins().getSize() > 0 && coinPile.getPileLabel() == null)
                 coinPile.setPileImage(new CardPileImageViewController());
             coinPile.setPileLabel(new PileLabelViewController(""+ playerState.getCoins().getSize()));
             }
-
+*/
     }
 }

@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import model.Action;
 import model.Move;
 import model.PlayerState;
 import view.harbourfield.HarbourFieldViewController;
@@ -84,10 +85,11 @@ public class GameFieldViewController extends StackPane {
 
     }
 
-    public void refresh(Move move){
+    public void refresh(Move move, List<Action> posAc){
         for(PlayerFieldViewController player : playerFields){
-            player.refresh(move);
+            player.refresh(move, posAc);
         }
-        harbourField.refresh(move);
+        harbourField.refresh(move, posAc);
+        System.out.println("GameFieldView refresh");
     }
 }

@@ -47,6 +47,7 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.show();
+			gameViewController.refresh(mainController.getGameController().currentMove());
 
 			System.out.println("Spiel läuft!");
 		} catch(Exception e) {

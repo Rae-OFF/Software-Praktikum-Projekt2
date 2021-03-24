@@ -9,11 +9,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Action;
 import model.Move;
 import view.GameViewAUI;
 import view.events.ButtonClickEvent;
 import view.events.ButtonClickEventHandler;
 import view.menu.InGameMenuViewController;
+
+import java.util.List;
 
 public class GameViewController extends StackPane implements GameViewAUI {
 
@@ -25,8 +28,11 @@ public class GameViewController extends StackPane implements GameViewAUI {
 
     private ImageView menu;
 
+    private MainController mainController;
+
     public GameViewController(MainController mainController){
         super();
+        this.mainController = mainController;
         GameViewController gameView = this;
         backgroundImage =  new ImageView("view/resources/backgroundImage.png");
         getChildren().add(backgroundImage);
@@ -67,7 +73,9 @@ public class GameViewController extends StackPane implements GameViewAUI {
     }
 
     public void refresh(Move move){
-        gameField.refresh(move);
+        List<Action> posActions = mainController.getGameController().getPossibleActions(move);
+        gameField.refresh(move, posActions);
+        System.out.println("GameView refresh");
     }
 
 
