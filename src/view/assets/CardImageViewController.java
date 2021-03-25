@@ -1,5 +1,6 @@
 package view.assets;
 
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import model.*;
@@ -12,13 +13,24 @@ public class CardImageViewController extends StackPane {
 
     public CardImageViewController(Card card){
         super();
+        this.setPickOnBounds(false);
         //this.setAlignment(Pos.TOP_LEFT);
         //Rectangle rect = new Rectangle(50, 50, Color.RED);
         //getChildren().add(rect);
+        this.setAlignment(Pos.TOP_LEFT);
+        this.setTranslateX(270);
+        this.setTranslateY(180);
+        this.setHeight(400);
+        this.setWidth(400);
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){
-            fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            if(((Person) card).getPersonType().equals(PersonType.TRADER)){
+                fileName = ((Person) card).getName() + ((Person) card).getPrice() + ((Person) card).getColour();
+            } else{
+                fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            }
+
 
         }
         //Expeditionskarten
@@ -36,7 +48,8 @@ public class CardImageViewController extends StackPane {
         }
         //Schiffskarten
         else if(card instanceof Ship){
-            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
+            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins()+((Ship) card).getForce();
+            //fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
         }
         //Steuererhöhungskarten
         else if(card instanceof TaxIncrease){

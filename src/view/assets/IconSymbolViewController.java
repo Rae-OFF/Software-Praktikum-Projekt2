@@ -15,7 +15,8 @@ public class IconSymbolViewController  extends ImageView {
           String colour = personCard.getColour().toString();
           fileName = fileName + "_" + colour;
         }
-        iconSymbol = new Image("view.resources." +fileName + ".png");
+        iconSymbol = new Image("view/resources/" +fileName + ".png");
+        this.setImage(iconSymbol);
     }
 
     public Image getIconSymbol() {

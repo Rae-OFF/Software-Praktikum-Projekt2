@@ -462,6 +462,12 @@ public class GameControllerTest {
 
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
         assertEquals(controller.getPossibleActions(move).get(1).getActionType(), ACCEPT_SHIP);
+        move.setShipToDefend(new Ship(BLUE, 2, 0));
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
+
+        move.setShipToDefend(new Ship(BLUE, 2, 4));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
+
     }
 
     /**
@@ -498,7 +504,7 @@ public class GameControllerTest {
     public void getPossibleActionsTakeShip() {
 
         Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
-
+        move.getHarbour().getCards().clear();
         move.getHarbour().getCards().add(new Ship(BLUE, 2, 1));
         move.setShipToDefend(new Ship(BLUE, 2, 1));
         move.setBuyLimit(2);
@@ -511,8 +517,6 @@ public class GameControllerTest {
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
         move.setBuyLimit(2);
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
-
-
 
     }
     /**
@@ -567,6 +571,10 @@ public class GameControllerTest {
 
 
     }
+
+    /**
+     * Testet ob eine Expedition möglich ist.
+     */
     @Test
     public void checkExpeditionPossible(){
 

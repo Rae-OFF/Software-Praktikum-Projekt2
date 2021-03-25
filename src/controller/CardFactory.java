@@ -386,7 +386,7 @@ public class CardFactory {
             cards.add(sailor);
         }
 // 2pcs - 5 coins, 2 victoryPoint
-        for(int i=0; i<1; i++){
+        for(int i=0; i<2; i++){
             Person sailor2 = new Person();
             sailor2.setMetaData(SAILOR.name(), null, SAILOR);
             sailor2.setValues(5,2,1);

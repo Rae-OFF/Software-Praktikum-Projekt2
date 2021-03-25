@@ -48,6 +48,7 @@ public class Main extends Application {
 			primaryStage.setResizable(false);
 			primaryStage.show();
 			gameViewController.refresh(mainController.getGameController().currentMove());
+			gameViewController.mouseEventDebugger();
 
 			System.out.println("Spiel läuft!");
 		} catch(Exception e) {
