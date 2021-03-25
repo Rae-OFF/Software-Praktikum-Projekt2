@@ -86,7 +86,7 @@ public class Ship implements Card {
 	@Override
 	public boolean equals(Card card) {
 		if(card instanceof Ship){
-			return (this.colour == ((Ship) card).getColour()
+			return (this.colour.equals(((Ship) card).getColour())
 					&& this.coins == ((Ship) card).getCoins()
 					&& this.force == ((Ship) card).getForce());
 		}else{

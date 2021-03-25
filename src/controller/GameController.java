@@ -183,12 +183,17 @@ public class GameController {
 			}
 			else{
 				cardPile = CardFactory.newCardsWithSpecial(); //  defaultCards in CardFactoryController
+
 			}
+			Collections.shuffle(cardPile.getCards());
 
 		}else{
 			cardPile = mainController.getIoController().loadCardDeck(cardPilePath, players.size());
-			Collections.shuffle(cardPile.getCards());
+			if(shuffleCards){
+				Collections.shuffle(cardPile.getCards());
+			}
 		}
+
 		List<Player> playersOrdered = playerController.setPlayerOrder(players, randomPlayerOrder);
 
 		List<PlayerState> states = new ArrayList<>();
@@ -508,7 +513,7 @@ public class GameController {
 				List<Card> harbour = move.getHarbour().getCards();
 				if (currentCard instanceof Ship) {
 					for (Card card : harbour) {
-						if (card instanceof Ship && (!card.equals(currentCard)) && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
+						if (card instanceof Ship && (!(harbour.indexOf(currentCard) == harbour.indexOf(card))) && ((Ship) card).getColour().equals(((Ship) currentCard).getColour())) {
 							move.getDiscardPile().pushList(move.getHarbour().getCards());
 							move.getHarbour().getCards().clear();
 							return true;
