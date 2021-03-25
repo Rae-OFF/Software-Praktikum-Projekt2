@@ -31,6 +31,10 @@ public class PlayerController {
 		Move currentMove = gameController.currentMove();
 		Move newMove= gameController.generateMove(currentMove, action);
 		mainController.getGameSystem().getCurrentGame().setLastMove(newMove);
+
+		if (mainController.getGameViewAUI() != null) {
+			mainController.getGameViewAUI().refresh(newMove);
+		}
 	}
 
 	/**
@@ -125,7 +129,7 @@ public class PlayerController {
 	/*
 	 *
 	 * @return
-	public PlayerState getActor(){ //TODO Methode entfernen?
+	public PlayerState getActor(){
 		return mainController.getGameSystem().getCurrentGame().
 	}
 	 */

@@ -1,16 +1,23 @@
 package view.harbourfield;
 
+import controller.CardFactory;
 import controller.MainController;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import model.*;
 import view.assets.CardImageViewController;
 import view.assets.CardPileImageViewController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,83 +26,157 @@ public class HarbourFieldViewController extends StackPane {
     private MainController mainController;
     private CardPileImageViewController cardPile;
     private CardImageViewController discardPile;
-    private List<ExpeditionsViewController> openExpeditions;
-    private List<HarbourViewController> harbour;
+    private ExpeditionsViewController openExpeditions;
+    private HarbourViewController harbour;
     private ShipToDefendFieldViewController shipToDefend;
     private ImageView harbourImage;
     private ImageView skip;
 
     public HarbourFieldViewController(MainController mainController, Move move) {
+        super();
         this.mainController = mainController;
+        initialize();
+    }
+
+    public void initialize(){
         harbourImage = new ImageView("view/resources/Harbourfield.png");
         getChildren().add(harbourImage);
         harbourImage.setFitWidth(860);
         harbourImage.setFitHeight(470);
 
+        shipToDefend = new ShipToDefendFieldViewController(mainController);
+        shipToDefend.setAlignment(Pos.TOP_LEFT);
+        getChildren().add(shipToDefend);
+
+        harbour = new HarbourViewController(mainController);
+        harbour.setAlignment(Pos.CENTER);
+        getChildren().add(harbour);
+
+        openExpeditions = new ExpeditionsViewController(mainController, null, null);
+        openExpeditions.setAlignment(Pos.TOP_LEFT);
+        getChildren().add(openExpeditions);
+
+
+
+
         skip =  new ImageView("view/resources/skipButton.png");
         skip.setFitWidth(160);
         skip.setFitHeight(160);
-        skip.setTranslateX(310);
-        skip.setTranslateY(230);
-        skip.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        skip.setTranslateX(650);
+        skip.setTranslateY(380);
+        /*skip.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 Action skip = new Action(ActionType.SKIP, null);
-                mainController.getPlayerController().executeAction(skip); //TODO Skip Testen
+                mainController.getPlayerController().executeAction(skip);
+                refresh(move);
                 System.out.println("SKIP!");
             }
         });
 
+        System.out.println("Harbour: " + move.getCardPile().getSize());*/
         cardPile = new CardPileImageViewController();
         cardPile.setFitHeight(120);
         cardPile.setFitWidth(80);
-        cardPile.setTranslateX(-250);
-        cardPile.setTranslateY(5);
-        cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        cardPile.setTranslateX(140);
+        cardPile.setTranslateY(180);
+       /* cardPile.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 Action drawCard = new Action(ActionType.DRAW_CARD, move.getCardPile().pop());
-                mainController.getPlayerController().executeAction(drawCard); //TODO drawCard testen
-                //HarbourViewController harbourCard = new HarbourViewController(mainController, drawCard.getAffectedCard());
-                //harbour.add(harbourCard);
+                mainController.getGameController().generateMove(move, drawCard);
+
+                //Zum Testen
+                CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
+                Card card = stack.getCards().get(stack.getSize()-6);
+                Card card1 = stack.getCards().get(stack.getSize()-5);
+                Card card2 = stack.getCards().get(stack.getSize()-4);
+                List<Card> exp = new ArrayList<>();
+                exp.add(card);
+                exp.add(card1);
+                exp.add(card2);
+
+                if(move.getShipToDefend() != null){
+                    shipToDefend = new ShipToDefendFieldViewController(mainController, move);
+                    getChildren().add(shipToDefend);
+                }
+
+                System.out.println("Harbourkarten in Draw Card: " + move.getCardPile().getSize());
+                //harbour = new HarbourViewController(mainController, stack.popList(7));
+                harbour =  new HarbourViewController(mainController, move.getHarbour().getCards());
+                getChildren().add(harbour);
+
+
+                //openExpeditions = new ExpeditionsViewController(mainController, exp, move);
+                openExpeditions = new ExpeditionsViewController(mainController, move.getExpeditionPile().getCards(), move);
+                getChildren().add(openExpeditions);
+
                 System.out.println("Draw card!");
             }
-        });
+        });*/
 
+        //discardPile = new CardImageViewController(move.getDiscardPile().peek());
+        discardPile = new CardImageViewController(null);
+        discardPile.setAlignment(Pos.TOP_LEFT);
+        discardPile.setTranslateX(40);
+        discardPile.setTranslateY(180);
 
-        discardPile = new CardImageViewController(move.getDiscardPile().peek());
-        discardPile.setTranslateX(-350);
-        discardPile.setTranslateY(5);
+        //Zum Testen
+        CardStack stack = controller.CardFactory.newCardsWithoutSpecial();
+        Card card = stack.getCards().get(stack.getSize()-6);
+        Card card1 = stack.getCards().get(stack.getSize()-5);
+        Card card2 = stack.getCards().get(stack.getSize()-4);
+        List<Card> exp = new ArrayList<>();
+        exp.add(card);
+        exp.add(card1);
+        exp.add(card2);
+        //openExpeditions.callExpedition(exp);
 
+        getChildren().add(discardPile);
         getChildren().add(skip);
         getChildren().add(cardPile);
-        getChildren().add(discardPile);
     }
 
-    public void refresh(Move move) {
-
-        // CardPile wird aktualisiert
-
-
+    public void refresh(Move move, List<Action> posAc) {
+        System.out.println("HarbourField refresh");
         //DiscardPile wird aktualisiert
+        getChildren().remove(discardPile);
         discardPile = new CardImageViewController(move.getDiscardPile().peek());
+        getChildren().add(discardPile);
 
-        // shipToDefend wird aktualisiert
-        shipToDefend = new ShipToDefendFieldViewController(mainController,move);
+        List<Action> possibleActions = mainController.getGameController().getPossibleActions(move);
 
-        List<Card> expeditionCards = move.getExpeditionPile().getCards();
-        List<Card> harbourCards = move.getHarbour().getCards();
-        // openExpeditions wird aktualisiert
-        openExpeditions.clear();
-        for(Card card : expeditionCards){
-            openExpeditions.add(new ExpeditionsViewController(mainController,card));
+        shipToDefend.refresh(move, posAc);
+        harbour.refresh(move, posAc);
+
+        openExpeditions.refresh(move, posAc);
+
+        skip.setOpacity(0.5);
+        cardPile.setOpacity(0.5);
+        skip.setOnMouseClicked(null);
+        cardPile.setOnMouseClicked(null);
+
+        for (Action action : possibleActions) {
+            System.out.println("HarbourField: " + action.getActionType().toString());
+            if (action.getActionType().equals(ActionType.SKIP)) {
+                skip.setOpacity(1.0);
+                skip.setOnMouseClicked(event -> {
+                    mainController.getPlayerController().executeAction(action);
+
+                });
+            }
+
+            if (action.getActionType().equals(ActionType.DRAW_CARD)) {
+                System.out.println("Draw Card");
+                cardPile.setOpacity(1.0);
+                cardPile.setOnMouseClicked(event -> {
+                    mainController.getPlayerController().executeAction(action);
+
+                });
+            }
+
+            // ...
         }
-        //harbour wird aktualisiert
-        harbour.clear();
-        for(Card card : harbourCards){
-            harbour.add(new HarbourViewController(mainController,card));
-        }
-
 
     }
 }

@@ -6,7 +6,9 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static model.ActionType.*;
 import static model.Colour.*;
@@ -45,13 +47,12 @@ public class GameControllerTest {
         players = TestFactory.getPlayers();
         states = TestFactory.getPlayerState();
         moves = TestFactory.moves();
+        moves.get(0).setPlayers(states);
         actions = TestFactory.actions();
         game = new Game(true,states.get(0), true, players,stack);
         gameSystem.setCurrentGame(game);
         game.setMoves(moves);
         game.setPlayerStates(states);
-        //game.setPlayers(players);
-
 
     }
     /**
@@ -148,7 +149,6 @@ public class GameControllerTest {
 
         Move move = moves.get(0);
 
-        move.setPlayers(states);
         move.setActor(states.get(4));
         game.setLastMove(move);
 
@@ -174,7 +174,6 @@ public class GameControllerTest {
 
         Move move = moves.get(0);
 
-        move.setPlayers(states);
         move.setActivePlayer(states.get(3));
         game.setLastMove(move);
         controller.changeActivePlayer(move);
@@ -199,15 +198,32 @@ public class GameControllerTest {
     @Test
     public void finishRound() {
 
-        Move move = moves.get(0); move.setPlayers(states);
-
-        move.setPlayers(states);
+        Move move = moves.get(0);
+        game.setLastMove(move); move.setCardPile(stack);
+        move.setActivePlayer(states.get(2));
+   //setup harbour cards, so will be zonked
+        CardStack harbour = move.getHarbour();
+        harbour.getCards().clear();
+        harbour.setCards(cardFactory.generateBlueShips());
         int n = states.indexOf(move.getActivePlayer());
         move.getAction().setActionType(DRAW_CARD);
+
         controller.finishRound(move);
-        if(controller.isZonked(move) ) {
-            assertEquals(states.indexOf(move.getActivePlayer()), (n+1)% states.size());
-        }
+        assertEquals(states.indexOf(move.getActivePlayer()), (n+1)% states.size());
+
+//in case of Defend and accept ship, nothing will happen, tests with result of same actor
+        move.getAction().setActionType(DEFEND);
+        harbour.setCards(cardFactory.generateRedShips());
+        int m = states.indexOf(move.getActivePlayer());
+        controller.finishRound(move);
+        assertEquals(states.indexOf(move.getActivePlayer()),(m+1)% states.size());
+
+        harbour.setCards(cardFactory.generateGreenShips());
+        move.getAction().setActionType(ACCEPT_SHIP);
+        int j = states.indexOf(move.getActivePlayer());
+        controller.finishRound(move);
+        assertEquals(states.indexOf(move.getActivePlayer()), (j+1)% states.size());
+
 
         move.getAction().setActionType(BUY_PERSON);
         controller.finishRound(move);
@@ -218,33 +234,19 @@ public class GameControllerTest {
         controller.finishRound(move);
         assertFalse(move.isPhase1());
 
-
         move.getAction().setActionType(SKIP);
-        move.setActor(move.getActivePlayer());
+        move.setActivePlayer(states.get(4));
+        move.setActor(states.get(4));
+        int old = states.indexOf(move.getActivePlayer());
 
         controller.finishRound(move);
-        assertEquals(states.indexOf(move.getActivePlayer()), (n+1)% states.size());
-//in case of Defend and accept ship, nothing will happen, tests with result of same actor
-        move.getAction().setActionType(DEFEND);
-        int m = states.indexOf(move.getActor());
+        assertEquals(states.indexOf(move.getActor()), (old+1)% states.size());
+
+
+
+        move.getAction().setActionType(SHUFFLE);System.out.println(move.getAction().getActionType() );
         controller.finishRound(move);
-        assertEquals(states.indexOf(move.getActor()), m);
-
-        move.getAction().setActionType(ACCEPT_SHIP);
-        controller.finishRound(move);
-        assertEquals(states.indexOf(move.getActor()), m);
-
-        move.getAction().setActionType(SHUFFLE);
-        controller.finishRound(move);
-
-        for(PlayerState player : states){
-
-            if(player.getVictoryPoints()>=12 && game.getStartPlayer().equals(move.getActor())){
-
-                assertFalse(game.isOngoing());
-            }
-        }
-
+        assertEquals(move.getAction().getActionType(),SHUFFLE);
 
     }
 
@@ -257,14 +259,10 @@ public class GameControllerTest {
     public void finishGame() {
 
 
-        moves.get(0).setPlayers(states);
-
-        List<Object> wins = new ArrayList<>();
-//no player has victory point more than 12
+        List<Integer> wins = new ArrayList<>();
+        states.get(0).getCards().setCards(cardFactory.generateExpedition(false));
         for(int j=0; j<players.size();j++){
-
             states.get(j).setPlayer(players.get(j));
-            assertTrue(states.get(j).getVictoryPoints()<12);
             wins.add(players.get(j).getWins());
         }
 
@@ -272,13 +270,30 @@ public class GameControllerTest {
         controller.finishGame(moves.get(0));
         List<Player> scores = mainController.getHighscoreController().getHighscoreList();
 
-//scores are the same as original victory point
+//scores are the same as original victory point, who has more than 12, get wins+1
 
         for(int i=0; i< scores.size();i++){
             assertEquals(states.get(i).getVictoryPoints(), scores.get(i).getScore());
-            assertEquals(players.get(i).getWins(), wins.get(i));
+
+            if(states.get(i).getVictoryPoints()>12){
+                assertEquals(players.get(i).getWins(), wins.get(i)+1);
+            }
         }
     }
+    /**
+     * test when players order random,
+     */
+    @Test(expected = NullPointerException.class)
+    public void init2Players() {
+
+        List<Player> player = new ArrayList<>();
+        player.add(players.get(1));
+        player.add(players.get(2));
+        controller.init(null,player,true,false,true);
+        game.getCardPile().setCards(cardFactory.generateRedShips());
+        controller.init("--",player,true,false,true);
+    }
+
 
     /**
      * test when players order random,
@@ -315,15 +330,6 @@ public class GameControllerTest {
         }
 
     }
-    /**
-     * test parameter null
-     */
-    @Test(expected = NullPointerException.class)
-    public void initNull() {
-
-        controller.init(null,null,false,false,false);
-
-    }
 
     /**
      * testet the current game is ongoing
@@ -332,9 +338,10 @@ public class GameControllerTest {
     public void currentGameIsRunning(){
 
         game.setOngoing(false);
-        assertFalse(game.isOngoing());
+        assertFalse(controller.currentGameIsRunning() );
+
         game.setOngoing(true);
-        assertTrue(game.isOngoing());
+        assertTrue(controller.currentGameIsRunning());
 
     }
 
@@ -346,7 +353,7 @@ public class GameControllerTest {
     @Test
     public void generateMoveDrawTake() {
 //test Draw card
-        moves.get(0).setPlayers(states);
+
         Move nextMove= controller.generateMove(moves.get(0), actions.get(0)); //with ActionType DRAW CARD
 
         assertEquals(nextMove.getAction().getActionType(), DRAW_CARD);
@@ -367,7 +374,8 @@ public class GameControllerTest {
     public void generateMoveBuyPerson() {
 
         Move move = moves.get(0);
-        move.setPlayers(states);
+
+
         move.setActor(move.getActor());
         move.getActor().setCoins(stack);
         ((Person)actions.get(2).getAffectedCard()).setPrice(1);
@@ -383,7 +391,7 @@ public class GameControllerTest {
      */
     @Test
     public void generateMoveAcceptShip() {
-        moves.get(0).setPlayers(states);
+
         actions.get(0).setActionType(ACCEPT_SHIP);
         Move nextMove= controller.generateMove(moves.get(0), actions.get(0));
 
@@ -454,6 +462,12 @@ public class GameControllerTest {
 
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
         assertEquals(controller.getPossibleActions(move).get(1).getActionType(), ACCEPT_SHIP);
+        move.setShipToDefend(new Ship(BLUE, 2, 0));
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
+
+        move.setShipToDefend(new Ship(BLUE, 2, 4));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DEFEND);
+
     }
 
     /**
@@ -467,12 +481,44 @@ public class GameControllerTest {
         move.setActor(states.get(0));
         move.setActivePlayer(move.getActor());
         move.setPhase1(true);
-        move.setCardPile(stack);
-        if(!controller.isZonked(move)) {
-            assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
-        }
-    }
+        move.getHarbour().getCards().clear();
+        move.getHarbour().getCards().add(new Ship(BLACK,1,1));
 
+            assertEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
+        move.getHarbour().setCards(cardFactory.generateBlueShips());
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
+        move.setPhase1(false);
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
+        move.setPhase1(true);
+        move.getDiscardPile().getCards().clear();
+        move.getCardPile().getCards().clear();
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
+        move.setActivePlayer(states.get(2));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), DRAW_CARD);
+    }
+    /**
+     *
+     * test action type buy person and take ship
+     */
+    @Test
+    public void getPossibleActionsTakeShip() {
+
+        Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
+        move.getHarbour().getCards().clear();
+        move.getHarbour().getCards().add(new Ship(BLUE, 2, 1));
+        move.setShipToDefend(new Ship(BLUE, 2, 1));
+        move.setBuyLimit(2);
+
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+        move.setBuyLimit(-7);
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+
+        move.setShipToDefend(null); move.setBuyLimit(0);
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+        move.setBuyLimit(2);
+        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
+
+    }
     /**
      *
      * test action type buy person
@@ -483,14 +529,20 @@ public class GameControllerTest {
         Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
         move.setActor(states.get(0));
         move.setActivePlayer(states.get(0));
-        move.getActor().setCoins(stack);
         move.setPhase1(false);
 
-        move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
-
+        move.setHarbour(states.get(2).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
+//when player's money less than price
         int price = ((Person)move.getHarbour().getCards().get(0)).getPrice();
+        move.getActor().getCards().getCards().add(cardFactory.generateMademoiselles().get(2));
+        move.getActor().getCards().getCards().add(cardFactory.generateMademoiselles().get(2));
+        move.getActor().getCards().getCards().add(cardFactory.generateMademoiselles().get(2));
 
-        move.setBuyLimit(2); System.out.println(price);
+        assertFalse((price < move.getActivePlayer().getCoins().getSize()));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), BUY_PERSON);
+  //when player's money more than price
+        move.setBuyLimit(2);
+        move.getActor().setCoins(stack);
         assertTrue((price < stack.getSize()));
         assertEquals(controller.getPossibleActions(move).get(0).getActionType(), BUY_PERSON);
 //here added in the list 2nd time Buy person since the coin size is bigger than price even when actor!=active player
@@ -499,44 +551,72 @@ public class GameControllerTest {
         assertTrue((price+1 < stack.getSize()));
         assertEquals(controller.getPossibleActions(move).get(1).getActionType(), BUY_PERSON);
     }
-    /**
-     *
-     * test action type buy person and take ship
-     */
-    @Test
-    public void getPossibleActionsTakeShip() {
 
-        Move move = moves.get(0);   //under this move, is player1 with 3 coins by CoinStack
-        move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
-        move.getHarbour().getCards().add(new Ship(BLUE, 2, 1));
-        move.setBuyLimit(2);
-        move.setShipToDefend(null);
-
-        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), TAKE_SHIP);
-    }
     /**
      *
      * test action type start Expedition
      */
     @Test
     public void getPossibleActionsExpedition() {
+//tests only if active player same as actor is -- 1st "if" condition
+        Move move = moves.get(0);
 
-        Move move = moves.get(0);   //under this move,  active player has one Priest, one Pirate.
-        //move.setHarbour(states.get(1).getCards());  // added a Sailor, price 3, the other 2 cards are over 3
         move.setPlayers(states);
-        move.setActor(move.getActivePlayer());
-        PlayerState actor = move.getActor();
-        move.getActor().setCoins(stack);
-        List<Card> exped = new ArrayList<>();
-        exped.add(cardFactory.generateExpedition(false).get(2) ); // 2 PRIEST on card
-        move.getExpeditionPile().setCards(exped);
-        List<Card> cards = actor.getCards().getCards();
-    //when the requirements not fulfilled
+        move.setActivePlayer(states.get(3));
+        move.setActor(states.get(1));
         assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
 
-     //when the requirements fulfilled
-        cards.add(cardFactory.generateJackOfAllTrader().get(0));
-        assertEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+        move.setActor(states.get(1));
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+
+    }
+
+    /**
+     * Testet ob eine Expedition möglich ist.
+     */
+    @Test
+    public void checkExpeditionPossible(){
+
+        Move move = moves.get(0);   //under this move,  active player has one Priest, one Pirate.
+
+        move.setPlayers(states);
+        move.setActivePlayer(states.get(3));
+        move.setActor(states.get(3));
+        PlayerState activePlayer = move.getActivePlayer();
+
+        activePlayer.setCoins(stack);
+
+        List<Card> exped = new ArrayList<>();
+        move.getExpeditionPile().setCards(exped);
+        exped.add(cardFactory.generateJester().get(0));
+
+        Map<PersonType, Integer> requirements = new HashMap<>();
+        requirements.put(CAPTAIN, 1);
+        requirements.put(SETTLER, 1);
+        requirements.put(PRIEST, 1);
+        requirements.put(JACK_OF_ALL_TRADES, 0);
+
+        Expedition expedition = new Expedition(requirements,3,5);
+        exped.add(expedition); // special card
+
+        List<Card> cards = move.getActivePlayer().getCards().getCards();
+        //when the requirements fulfilled
+        assertFalse(controller.checkExpeditionPossible(activePlayer, expedition));
+   //     assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
+
+        cards.add(cardFactory.generatePriest().get(0));
+        cards.add(cardFactory.generatePriest().get(0));
+        cards.add(cardFactory.generateSettlerCaptain().get(0));
+        cards.add(cardFactory.generateSettlerCaptain().get(0));
+        cards.add(cardFactory.generateSettlerCaptain().get(1));
+        cards.add(cardFactory.generateSettlerCaptain().get(1));
+        assertTrue(controller.checkExpeditionPossible(move.getActivePlayer(), expedition));
+        assertEquals(controller.getPossibleActions(move).get(1).getActionType(), START_EXPEDITION);
+//when the requirements not fulfilled
+        cards.clear();
+        cards.addAll(cardFactory.generateRedShips());
+        assertNotEquals(controller.getPossibleActions(move).get(0).getActionType(), START_EXPEDITION);
 
     }
 
@@ -590,6 +670,9 @@ public class GameControllerTest {
         controller.redo(moves.get(0));
         assertEquals(moves.indexOf(game.getLastMove()), n+1);
 
+        game.setLastMove(moves.get(2)); int m = moves.lastIndexOf(controller.currentMove());
+        assertFalse(m < moves.size()-1);
+        controller.redo(moves.get(0));
     }
 
     /**
@@ -664,23 +747,22 @@ public class GameControllerTest {
 
         CardStack harbour = moves.get(0).getHarbour();
         harbour.getCards().clear();
+        assertFalse(controller.isZonked(moves.get(0)));
+// in case of false - different ship color
         harbour.getCards().add(new Ship(YELLOW,1,1));
-        Ship zonked = new Ship(YELLOW,2,2);
+        Ship zonked = new Ship(GREEN,2,2);
         harbour.getCards().add(zonked);
-
-        assertNotEquals(harbour.getCards().get(0),harbour.getCards().get(1));
-        assertTrue(harbour.getCards().get(0) instanceof Ship);
-        assertEquals(((Ship) harbour.getCards().get(0)).getColour(), zonked.getColour());
+        assertFalse(controller.isZonked(moves.get(0)));
    // in case of true
+        harbour.getCards().add(new Ship(YELLOW,2,2));
+
         assertTrue(controller.isZonked(moves.get(0)));
         assertEquals(harbour.getSize(),0);
+ // in case of no Ship card
 
-/*/ in case of false - different ship color
-        Card zonked1= new Ship(GREEN,1,1);
-        harbour.getCards().add(zonked1);
+        harbour.getCards().add(cardFactory.generateJester().get(0));
+        harbour.getCards().add(new Ship(YELLOW,2,2));
         assertFalse(controller.isZonked(moves.get(0)));
-*/
-
     }
 
     /**

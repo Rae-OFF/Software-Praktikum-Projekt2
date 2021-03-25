@@ -171,19 +171,22 @@ public class CardFactory {
         person1.setValues(5,1,0);
         cards.add(person1);
  // 3pc with 7 coins
-        Person person2 = new Person();
-        person2.setMetaData(ADMIRAL.name(),null, ADMIRAL);
-        person2.setValues(7,2,0);
+
         for (int i = 0; i < 3; i++) {
+            Person person2 = new Person();
+            person2.setMetaData(ADMIRAL.name(),null, ADMIRAL);
+            person2.setValues(7,2,0);
+
             cards.add(person2);
         }
 // 2pc with 9 coins
-
+        for (int i = 0; i < 2; i++) {
         Person person3 = new Person();
         person3.setMetaData(ADMIRAL.name(),null, ADMIRAL);
         person3.setValues(9,3,0);
         cards.add(person3);
-        cards.add(person3);
+
+        }
 
         return cards;
 
@@ -197,20 +200,25 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
+        for (int i = 0; i < 2; i++) {
+
             Person trader = new Person();
             trader.setMetaData(TRADER.name(),GREEN,TRADER);  //2pcs green, 3 coins
             trader.setValues(3,1,0);
-            cards.add(trader); cards.add(trader);
+            cards.add(trader);
 
             Person black = new Person();
             black.setMetaData(TRADER.name(),BLACK,TRADER); //2pcs black, 3 coins
             black.setValues(3,1,0);
-            cards.add(black); cards.add(black);
+            cards.add(black);
 
             Person red = new Person();
             red.setMetaData(TRADER.name(),RED,TRADER); //2pcs red, 3 coins
             red.setValues(3,1,0);
-            cards.add(red); cards.add(red);
+            cards.add(red);
+        }
+
+
 
         Person trader1 = new Person();
         trader1.setMetaData(TRADER.name(),BLUE,TRADER); //1pc blue, 3 coins
@@ -241,21 +249,17 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-// add SETTLERS
-        Person settler = new Person();
-
-        settler.setValues(4,1,0);
-        settler.setMetaData(SETTLER.name(),null,SETTLER);
-
-// add Captain
-        Person captain = new Person();
-
-        captain.setValues(4,1,0);
-        captain.setMetaData(CAPTAIN.name(), null,CAPTAIN);
-
  // add both with 5 cards
         for(int i=0; i<5; i++){
+// add SETTLERS
+            Person settler = new Person();
+            settler.setValues(4,1,0);
+            settler.setMetaData(SETTLER.name(),null,SETTLER);
             cards.add(settler);
+// add Captain
+            Person captain = new Person();
+            captain.setValues(4,1,0);
+            captain.setMetaData(CAPTAIN.name(), null,CAPTAIN);
             cards.add(captain);
         }
 
@@ -272,12 +276,13 @@ public class CardFactory {
         List<Card> cards = new ArrayList<>();
 
  // add Priest - 5pcs
-        Person priest = new Person();
-
-        priest.setValues(4,1,0);
-        priest.setMetaData(PRIEST.name(), null,PRIEST);
 
         for(int i=0; i<5; i++){
+
+            Person priest = new Person();
+            priest.setValues(4,1,0);
+            priest.setMetaData(PRIEST.name(), null,PRIEST);
+
             cards.add(priest);
         }
 
@@ -293,13 +298,12 @@ public class CardFactory {
 
         List<Card> cards = new ArrayList<>();
 
-        Person jack = new Person();
-
 // add JackOfAllTrader  - 3 cards
-        jack.setValues(6,1,0);
-        jack.setMetaData(PersonType.JACK_OF_ALL_TRADES.name(), null,PersonType.JACK_OF_ALL_TRADES);
 
         for(int i=0; i<3; i++){
+            Person jack = new Person();
+            jack.setValues(6,1,0);
+            jack.setMetaData(PersonType.JACK_OF_ALL_TRADES.name(), null,PersonType.JACK_OF_ALL_TRADES);
             cards.add(jack);
         }
 
@@ -317,13 +321,13 @@ public class CardFactory {
         List<Card> cards = new ArrayList<>();
 
 // add Pirates - 3 cards
-        Person pirate = new Person();
 
-        pirate.setMetaData(PIRATE.name(), null, PIRATE);
-
-        pirate.setValues(7,2,2);
-        cards.add(pirate);
-        cards.add(pirate);
+        for(int i=0; i<2; i++){
+            Person pirate = new Person();
+            pirate.setMetaData(PIRATE.name(), null, PIRATE);
+            pirate.setValues(7,2,2);
+            cards.add(pirate);
+        }
 
         Person pirate2 = new Person();
         pirate2.setMetaData(PIRATE.name(), null, PIRATE);
@@ -348,13 +352,14 @@ public class CardFactory {
         jester.setValues(5,1,0);
         cards.add(jester);
 
-        Person jester1 = new Person();
-        jester1.setMetaData(JESTER.name(), null,JESTER);
-        jester1.setValues(7,2,0);
-        cards.add(jester1);
-        cards.add(jester1);
-        cards.add(jester1);
+        for(int i=0; i<3; i++){
 
+            Person jester1 = new Person();
+            jester1.setMetaData(JESTER.name(), null,JESTER);
+            jester1.setValues(7,2,0);
+            cards.add(jester1);
+
+        }
         Person jester2 = new Person();
         jester2.setMetaData(JESTER.name(), null,JESTER);
         jester2.setValues(9,3,0);
@@ -371,23 +376,24 @@ public class CardFactory {
     public List<Card> generateSailor() {
 
         List<Card> cards = new ArrayList<>();
-
 // add Sailor - 10 cards
-        Person sailor = new Person();
 
  // 7pcs - 3 coins, 1 victoryPoint
-        sailor.setMetaData(SAILOR.name(), null, SAILOR);
-        sailor.setValues(3,1,1);
         for(int i=0; i<7; i++){
+            Person sailor = new Person();
+            sailor.setMetaData(SAILOR.name(), null, SAILOR);
+            sailor.setValues(3,1,1);
             cards.add(sailor);
         }
 // 2pcs - 5 coins, 2 victoryPoint
+        for(int i=0; i<2; i++){
+            Person sailor2 = new Person();
+            sailor2.setMetaData(SAILOR.name(), null, SAILOR);
+            sailor2.setValues(5,2,1);
+            cards.add(sailor2);
+        }
 
-        Person sailor2 = new Person();
-        sailor2.setMetaData(SAILOR.name(), null, SAILOR);
-        sailor2.setValues(5,2,1);
-        cards.add(sailor2);
-        cards.add(sailor2);
+
 
  // 1pc - 7 coins, 3 victoryPoint
 
@@ -410,17 +416,20 @@ public class CardFactory {
         List<Card> cards = new ArrayList<>();
 
 // add	Mademoiselles - 4 cards
-        Person mademoiselles = new Person();
-        mademoiselles.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
-        mademoiselles.setValues(7,2,0);
-        cards.add(mademoiselles);
-        cards.add(mademoiselles);
 
-        Person mademoiselles2 = new Person();
-        mademoiselles2.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
-        mademoiselles2.setValues(9,3,0);
-        cards.add(mademoiselles2);
-        cards.add(mademoiselles2);
+        for(int i=0; i<2; i++){
+            Person mademoiselles = new Person();
+            mademoiselles.setMetaData(PersonType.MADEMOISELLE.name(), null,PersonType.MADEMOISELLE);
+            mademoiselles.setValues(7,2,0);
+            cards.add(mademoiselles);
+        }
+
+        for(int i=0; i<2; i++) {
+            Person mademoiselles2 = new Person();
+            mademoiselles2.setMetaData(PersonType.MADEMOISELLE.name(), null, PersonType.MADEMOISELLE);
+            mademoiselles2.setValues(9, 3, 0);
+            cards.add(mademoiselles2);
+        }
 
         return cards;
     }
@@ -435,12 +444,12 @@ public class CardFactory {
         List<Card> cards = new ArrayList<>();
 
         // add Governors 4 cards
-        Person governor = new Person();
 
-        governor.setMetaData(PersonType.GOVERNOR.name(), null,PersonType.GOVERNOR);
-        governor.setValues(8,0,0);
         for(int i=0; i<4; i++){
 
+            Person governor = new Person();
+            governor.setMetaData(PersonType.GOVERNOR.name(), null,PersonType.GOVERNOR);
+            governor.setValues(8,0,0);
             cards.add(governor);
         }
         return cards;

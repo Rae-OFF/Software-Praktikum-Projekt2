@@ -37,17 +37,19 @@ public class TestFactory {
      */
     public static List<PlayerState> getPlayerState() {
 
-        List<PlayerState> players = new ArrayList<>();
+        List<PlayerState> states = new ArrayList<>();
 
         CardFactory cardFactory = new CardFactory();
-//get all players' name and type, add them into players list
+//get all players' name and type, add them into states list
         for (int i = 0; i < 5; i++) {
 
-            players.add(new PlayerState(getPlayers().get(i)));
+            states.add(new PlayerState(getPlayers().get(i)));
+            states.get(i).setPlayer(getPlayers().get(i));
+
         }
 
   //generate cards for player 0;
-        CardStack stackPlayer0 = players.get(0).getCards();
+        CardStack stackPlayer0 = states.get(0).getCards();
         List<Card> cards0 = stackPlayer0.getCards();
 
         cards0.add(cardFactory.generateAdmiral().get(0));  //victoryPoint: 1
@@ -56,18 +58,18 @@ public class TestFactory {
         cards0.add(cardFactory.generateMademoiselles().get(3)); //victoryPoint: 3
 
 //generate cards for player 1;
-        CardStack stackPlayer1 = players.get(1).getCards();
+        CardStack stackPlayer1 = states.get(1).getCards();
         List<Card> cards1 = stackPlayer1.getCards();
 
         cards1.add(cardFactory.generateSailor().get(0));  //victoryPoint: 1, sword:1
         cards1.add(cardFactory.generateGovernor().get(0));  //victoryPoint: 0
         cards1.add(cardFactory.generateJester().get(0));  //victoryPoint: 2
 
-        CardStack coins = players.get(1).getCoins();
+        CardStack coins = states.get(1).getCoins();
         coins.setCards(cards0);
 
 //generate cards for player 2;
-        CardStack stackPlayer2 = players.get(2).getCards();
+        CardStack stackPlayer2 = states.get(2).getCards();
         List<Card> cards2 = stackPlayer2.getCards();
 
         cards2.add(cardFactory.generateTrader().get(5));  //red, 3 coins
@@ -75,7 +77,7 @@ public class TestFactory {
         cards2.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
 
 //generate cards for player 3;
-        CardStack stackPlayer3 = players.get(3).getCards();
+        CardStack stackPlayer3 = states.get(3).getCards();
         List<Card> cards3 = stackPlayer3.getCards();
 
         cards3.add(cardFactory.generateTrader().get(5));  //red, 3 coins
@@ -83,14 +85,14 @@ public class TestFactory {
         cards3.add(cardFactory.generateJackOfAllTrader().get(0));  //victoryPoint: 1
 
 //generate cards for player 4;
-        CardStack stackPlayer4 = players.get(4).getCards();
+        CardStack stackPlayer4 = states.get(4).getCards();
         List<Card> cards4 = stackPlayer4.getCards();
 
         cards4.add(cardFactory.generatePriest().get(0));  //victoryPoint: 1
         cards4.add(cardFactory.generateSettlerCaptain().get(7));  //victoryPoint: 1, Captain
         cards4.add(cardFactory.generateAdmiral().get(0));  //victoryPoint: 1
 
-        return players;
+        return states;
     }
 
     /**

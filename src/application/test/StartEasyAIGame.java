@@ -11,6 +11,22 @@ import java.util.List;
 
 import static java.lang.Thread.sleep;
 
+class Tuple{
+    int one;
+    int two;
+    public Tuple(int wins1, int wins2){
+        one = wins1;
+        two = wins2;
+    }
+    public int getOne(){
+        return one;
+    }
+
+    public int getTwo(){
+        return two;
+    }
+}
+
 public class StartEasyAIGame extends Application {
 
     private MainController mainController;
@@ -20,31 +36,49 @@ public class StartEasyAIGame extends Application {
     public void start(Stage primaryStage) {
         try {
             MainController mainController = new MainController();
-
             this.mainController = mainController;
 
-            Player player2 = new Player("EASY", PlayerType.EASYAI);
-            Player player1 = new Player("HARD", PlayerType.HARDAI);
-
-            List<Player> players = new ArrayList<>();
-            players.add(player1);
-            players.add(player2);
-
-            GameSystem gameSystem = new GameSystem();
-            gameSystem.setPlayers(players);
-            mainController.setGameSystem(gameSystem);
-            GameController gameController = mainController.getGameController();
-            String cardPilePath = "src/ressources/shuffled.csv";
-            gameController.init(cardPilePath, players, false, true, false);
-
-            gameLoop();
+            oneGame();
 
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void gameLoop(){
+    public void testAI(){
+        int easyWins = 0;
+        int medWins = 0;
+
+        for(int i = 0; i < 10; i++){
+            Tuple tuple = oneGame();
+            easyWins += tuple.getOne();
+            medWins += tuple.getTwo();
+        }
+
+
+        System.out.println("Easy: " + easyWins + " Medium: " + medWins);
+    }
+
+    public Tuple oneGame(){
+
+        Player player2 = new Player("EASY", PlayerType.EASYAI);
+        Player player1 = new Player("MEDIUM", PlayerType.EASYAI);
+
+        List<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+
+        GameSystem gameSystem = new GameSystem();
+        gameSystem.setPlayers(players);
+        mainController.setGameSystem(gameSystem);
+        GameController gameController = mainController.getGameController();
+        String cardPilePath = "src/ressources/shuffled.csv";
+        gameController.init(cardPilePath, players, false, true, false);
+
+        return gameLoop();
+    }
+
+    public Tuple gameLoop(){
         GameController gameController = mainController.getGameController();
 
         PlayerController playerController = mainController.getPlayerController();
@@ -59,6 +93,9 @@ public class StartEasyAIGame extends Application {
 
         IoController ioController = mainController.getIoController();
 
+        int easyWins = 0;
+        int medWins = 0;
+
 
         int i = 0;
         while(gameController.currentGameIsRunning()){
@@ -66,9 +103,28 @@ public class StartEasyAIGame extends Application {
             PlayerState actor = gameController.getActor();
 
             Move lastMove = gameController.currentMove();
-            gameController.finishRound(lastMove);
 
             ioController.log(lastMove,i);
+
+            for(PlayerState player : lastMove.getPlayers()){
+
+                if(player.getVictoryPoints() >= 12 && lastMove.getActivePlayer().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer()) && lastMove.getActivePlayer().getPlayer().equals(lastMove.getActor().getPlayer())){
+                    mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
+                    if(player.getPlayer().getPlayerType().equals(PlayerType.EASYAI)){
+                        easyWins++;
+                    }
+                    else if(player.getPlayer().getPlayerType().equals(PlayerType.MEDIUMAI)){
+                        medWins++;
+                    }
+
+                    if(easyWins + medWins > 1){
+                        System.out.println("BOTH_________________");
+                    }
+                    mainController.getGameSystem().getCurrentGame().setOngoing(false);
+                }
+
+            }
+
             Action action = null;
 
             Player player = actor.getPlayer();
@@ -88,19 +144,6 @@ public class StartEasyAIGame extends Application {
 
             System.out.println("Round: " + i);
             i++;
-
-
-
-/*            try{
-                sleep(5000);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }*/
-
-
-
-
         }
 
         System.out.println("Game finished");
@@ -117,6 +160,7 @@ public class StartEasyAIGame extends Application {
             System.out.println("Winner: " + winner.getPlayer().getName());
         }
         ioController.log(lastMove,999);
+        return new Tuple(easyWins,medWins);
     }
 
     public static void main(String[] args) {

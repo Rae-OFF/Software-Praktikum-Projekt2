@@ -1,21 +1,36 @@
 package view.assets;
 
-import javafx.scene.image.Image;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import model.*;
 
-import java.util.Map;
 import java.util.Set;
 
-public class CardImageViewController extends ImageView {
+public class CardImageViewController extends StackPane {
 
-    private Image cardImage;
+    private ImageView cardImage;
 
     public CardImageViewController(Card card){
+        super();
+        this.setPickOnBounds(false);
+        //this.setAlignment(Pos.TOP_LEFT);
+        //Rectangle rect = new Rectangle(50, 50, Color.RED);
+        //getChildren().add(rect);
+        this.setAlignment(Pos.TOP_LEFT);
+        this.setTranslateX(270);
+        this.setTranslateY(180);
+        this.setHeight(400);
+        this.setWidth(400);
         String fileName = "";
         //Personenkarten
         if(card instanceof Person){
-            fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            if(((Person) card).getPersonType().equals(PersonType.TRADER)){
+                fileName = ((Person) card).getName() + ((Person) card).getPrice() + ((Person) card).getColour();
+            } else{
+                fileName = ((Person) card).getName() + ((Person) card).getPrice();
+            }
+
 
         }
         //Expeditionskarten
@@ -33,7 +48,8 @@ public class CardImageViewController extends ImageView {
         }
         //Schiffskarten
         else if(card instanceof Ship){
-            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
+            fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins()+((Ship) card).getForce();
+            //fileName = "SHIP_"+((Ship) card).getColour().toString()+((Ship) card).getCoins();
         }
         //Steuererhöhungskarten
         else if(card instanceof TaxIncrease){
@@ -45,19 +61,29 @@ public class CardImageViewController extends ImageView {
 
         }
         if(!fileName.equals("")){
-            cardImage = new Image("view/resources/" +fileName + ".png");
+            System.out.println(fileName);
+            cardImage = new ImageView("view/cards/" +fileName + ".png");
+            cardImage.setFitWidth(80);
+            cardImage.setFitHeight(120);
+            getChildren().add(cardImage);
         }
-        else
-            this.setVisible(false);
+        else {
+
+            cardImage = new ImageView("view/cards/EXPEDITION_PCS.png");
+            cardImage.setVisible(false);
+            cardImage.setFitWidth(80);
+            cardImage.setFitHeight(120);
+            getChildren().add(cardImage);
             System.out.println("No Card");
+        }
 
     }
 
-    public Image getCardImage() {
+    public ImageView getCardImage() {
         return cardImage;
     }
 
-    public void setCardImage(Image cardImage) {
+    public void setCardImage(ImageView cardImage) {
         this.cardImage = cardImage;
     }
 }

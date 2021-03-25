@@ -18,7 +18,7 @@ public class CoinPileViewController extends Group {
 
     public CoinPileViewController(MainController controller, PlayerState player){
         int coinAmount = player.getCoins().getSize();
-        pileLabel = new PileLabelViewController(""+0);
+        pileLabel = new PileLabelViewController(""+coinAmount);
         pileLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 24));
         pileLabel.setTranslateX(15);
         pileLabel.setTranslateY(80);
@@ -32,7 +32,7 @@ public class CoinPileViewController extends Group {
         if(coinAmount>0)
             pileImage.setVisible(true);
         else
-            pileImage.setVisible(true);
+            pileImage.setVisible(false);
 
 
         getChildren().add(pileImage);

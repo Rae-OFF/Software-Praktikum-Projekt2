@@ -32,7 +32,7 @@ public class MediumAi extends AiController {
 
 		AINode root = AITree.generateTree(move,mainController,5);
 
-		Action action = AITree.getBestAction(root, move.getActor());
+		Action action = AITree.getBestActionMedium(root, move.getActor());
 
 		return action;
 

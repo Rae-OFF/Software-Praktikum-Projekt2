@@ -81,7 +81,7 @@ public class ChoosePlayerMenuViewController extends BorderPane { //TODO ChoosePl
                     /*if(item.getPlayerType().equals("EASYAI")||item.getPlayerType().equals("MEDIUMAI")||
                             item.getPlayerType().equals("HARDAI")){
                         setText(item.getName() + " " + item.getPlayerType().toString());
-                    } else setText(item.getName());*/ //TODO Flag für AI Spieler
+                    } else setText(item.getName());*/
                     setText(item.getName());
                 }
             }
@@ -127,7 +127,7 @@ public class ChoosePlayerMenuViewController extends BorderPane { //TODO ChoosePl
             boxPlayer1.setDisable(true);
             buttonP1.setDisable(true);
             TextField newP1 = new TextField();
-            newP1.setPromptText("Spielername");//TODO Textfeld anzeigen
+            newP1.setPromptText("Spielername");
             newP1.setAlignment(buttonP1.getAlignment());
             HBox hBox1 = new HBox();
             hBox1.getChildren().add(newP1);

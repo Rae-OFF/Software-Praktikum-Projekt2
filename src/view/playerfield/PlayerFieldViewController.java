@@ -39,6 +39,7 @@ public class PlayerFieldViewController extends StackPane {
     private PlayerState playerState;
 
     public PlayerFieldViewController(MainController mainController, PlayerState player, boolean horizontal) {
+        super();
         this.mainController = mainController;
         this.setAlignment(Pos.TOP_LEFT);
         playerState = player;
@@ -93,8 +94,6 @@ public class PlayerFieldViewController extends StackPane {
         List<Card> playerCards = player.getCards().getCards();
         // Settlers - Captains - Priests - Jack of All Trades - Trader - Sailor/Pirate - Admiral - Jester - Governor -
         //Mademoiselle
-
-
         boolean[] cardTypes = new boolean[10];
         for (Card card : playerCards) {
             if (card instanceof Person) {
@@ -176,14 +175,10 @@ public class PlayerFieldViewController extends StackPane {
                 }
             }
         }
-//        for(int i=0; i<iconList.size();i++){
-//            iconList.get(i).setTranslateX(110+i*40);
-//            iconList.get(i).setTranslateY(20);
-//            getChildren().add(iconList.get(i));
-//        }
+//
     }
 
-    public void refresh(Move move) {
+    public void refresh(Move move, List<Action> posAc) {
         // iconList wird geleert und neu erstellt
         for (IconsViewController i: iconList) {
             getChildren().remove(i);

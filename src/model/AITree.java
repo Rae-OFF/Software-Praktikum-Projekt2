@@ -52,7 +52,7 @@ public class AITree {
      * @param player Bekommt einen Spielerzustand übergeben.
      * @return Gibt den besten möglichen Zug zurück.
      */
-    public static Action getBestAction(AINode root, PlayerState player){
+    public static Action getBestActionMedium(AINode root, PlayerState player){
 
         List<AINode> children = root.getChildren();
 
@@ -73,7 +73,45 @@ public class AITree {
         }
 
         for(AINode node : children){
-            int value = getValue(node, player, root.getDepth());
+            int value = getValueMedium(node, player, root.getDepth());
+
+            if(value > maxValue){
+                maxValue = value;
+                maxNode = node;
+            }
+        }
+
+        return maxNode.getCurrentMove().getAction();
+    }
+
+    /**
+     * Sucht die beste Aktion heraus.
+     * @param root Bekommt den Wurzelknoten übergeben.
+     * @param player Bekommt einen Spielerzustand übergeben.
+     * @return Gibt den besten möglichen Zug zurück.
+     */
+    public static Action getBestActionHard(AINode root, PlayerState player){
+
+        List<AINode> children = root.getChildren();
+
+        int maxValue = -1;
+        AINode maxNode = null;
+
+        if(children.size() > 1){
+            AINode removeNode = null;
+            for(AINode child : children){
+                if(child.getCurrentMove().getAction().getActionType().equals(ActionType.SKIP)){
+                    removeNode = child;
+                }
+            }
+
+            if(removeNode != null){
+                children.remove(removeNode);
+            }
+        }
+
+        for(AINode node : children){
+            int value = getValueHard(node, player, root.getDepth());
 
             if(value > maxValue){
                 maxValue = value;
@@ -91,18 +129,18 @@ public class AITree {
      * @param depth Bekommt die Tiefe übergeben.
      * @return Gibt den Wert zurück.
      */
-    public static int getValue(AINode root, PlayerState player, int depth){
+    public static int getValueMedium(AINode root, PlayerState player, int depth){
         List<AINode> children = root.getChildren();
 
-        if(root.isLeaf()){
+        if(root.isLeaf()) {
             List<PlayerState> players = root.getCurrentMove().getPlayers();
 
-            for(PlayerState tplayer : players){
-                if(player.getPlayer().equals(tplayer.getPlayer())){
-                    return tplayer.getVictoryPoints();
+            for (PlayerState tplayer : players) {
+                if (player.getPlayer().equals(tplayer.getPlayer())) {
+                    return (tplayer.getCoins().getSize() / 2) + tplayer.getVictoryPoints();
                 }
-            }
 
+            }
             return 0;
         }
 
@@ -111,14 +149,64 @@ public class AITree {
             int sum = 0;
 
             for (AINode node : children) {
-                int value = getValue(node, player, depth);
+                int value = getValueMedium(node, player, depth);
                 sum += value;
             }
             int ownValue = 0;
 
            List<PlayerState> list = root.getCurrentMove().getPlayers();
 
-           int actDepth = root.getDepth();;
+           int actDepth = root.getDepth();
+
+            for(PlayerState tplayer : list){
+                if(player.getPlayer().equals(tplayer.getPlayer())){
+                    ownValue += (depth - actDepth)  * ((tplayer.getCoins().getSize() / 2) + tplayer.getVictoryPoints());
+                }
+            }
+            return ownValue + sum;
+        }
+    }
+
+    /**
+     * Berechnet den Wert eines Knoten.
+     * @param root Bekommt die Wurzel übergeben.
+     * @param player Bekommt einen Spielerzustand übergeben.
+     * @param depth Bekommt die Tiefe übergeben.
+     * @return Gibt den Wert zurück.
+     */
+    public static int getValueHard(AINode root, PlayerState player, int depth){
+        List<AINode> children = root.getChildren();
+        int secondBest=0;
+        int currentPlayervalue=0;
+        if(root.isLeaf()){
+            List<PlayerState> players = root.getCurrentMove().getPlayers();
+
+            for(PlayerState tplayer : players){
+                int evaluatePlayer = evaluateMove(tplayer);
+                if(player.getPlayer().equals(tplayer.getPlayer())){
+                    currentPlayervalue=evaluatePlayer;
+                    //return tplayer.getVictoryPoints();
+                }else if(evaluatePlayer>secondBest){
+                    secondBest=evaluatePlayer;
+                }
+            }
+
+            return currentPlayervalue-secondBest;
+        }
+
+        else {
+
+            int sum = 0;
+
+            for (AINode node : children) {
+                int value = getValueHard(node, player, depth);
+                sum += value;
+            }
+            int ownValue = 0;
+
+            List<PlayerState> list = root.getCurrentMove().getPlayers();
+
+            int actDepth = root.getDepth();
 
             for(PlayerState tplayer : list){
                 if(player.getPlayer().equals(tplayer.getPlayer())){
@@ -127,5 +215,34 @@ public class AITree {
             }
             return ownValue + sum;
         }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public static int evaluateMove(PlayerState player){
+        int coins = player.getCoins().getSize();
+        int victoryPoins = player.getVictoryPoints();
+        int specialCards=0;
+        for(Card card:player.getCards().getCards()){
+            if(card instanceof Person){
+                switch(((Person) card).getPersonType()){
+                    case PIRATE:
+                    case SAILOR:
+                    case JESTER:
+                        specialCards+=1;
+                        break;
+                    case MADEMOISELLE:
+                    case GOVERNOR:
+                    case JACK_OF_ALL_TRADES:
+                        specialCards+=2;
+                        break;
+                }
+            }
+        }
+
+        int value = (coins)+victoryPoins+specialCards;
+        return value;
     }
 }

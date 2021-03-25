@@ -15,7 +15,7 @@ import static model.PersonType.*;
  */
 public class GameController {
 
-	private MainController mainController;
+	private final MainController mainController;
 
 	/**
 	 * Konstruktor.
@@ -47,12 +47,10 @@ public class GameController {
 		CardStack cardStack = move.getCardPile();
 		List<Card> popCardPile = new ArrayList<>();
 		for( int i = 0; i< num ; i++ ){
-			if(cardStack.peek()!=null){
-				popCardPile.add(cardStack.pop());
-			}else{
+			if(cardStack.peek()==null){
 				shuffleDiscardPile(move);
-				popCardPile.add(cardStack.pop());
 			}
+			popCardPile.add(cardStack.pop());
 		}
 		return popCardPile;
 	}
@@ -67,7 +65,18 @@ public class GameController {
 		PlayerState actor = move.getActor();
 		int index = (playerList.indexOf(actor)+1) % playerList.size();
 		move.setActor(playerList.get(index));
-		move.setBuyLimit(1);
+
+		int govenors = mainController.getCardController().getAmountOf(GOVERNOR, move.getActor());
+		move.setBuyLimit(1 + govenors);
+
+
+		int admiral = mainController.getCardController().getAmountOf(ADMIRAL, move.getActor());
+
+		if(admiral > 0 && !move.isPhase1()){
+			for(int i = 1; i <= admiral; i++){
+				mainController.getCardController().execAdmiral(move,move.getActor());
+			}
+		}
 	}
 
 	/**
@@ -94,22 +103,26 @@ public class GameController {
 
 			if(lastAction.getActionType().equals(DRAW_CARD)){
 				if(isZonked(move)){
+					System.out.println("ZONKED____________");
+					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
 				}
 			}
 
 			if(lastAction.getActionType().equals(DEFEND)){
 				if(isZonked(move)){
+					System.out.println("ZONKED____________");
+					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
+
 				}
 			}
 
 			if(lastAction.getActionType().equals(ACCEPT_SHIP)){
 				if(isZonked(move)){
+					System.out.println("ZONKED____________");
+					mainController.getCardController().execJester(move);
 					changeActivePlayer(move);
-					mainController.getIoController().log("-----------------ZONK FOLLOWS---------------------");
 				}
 			}
 
@@ -131,19 +144,6 @@ public class GameController {
 				if(move.getActor().equals(move.getActivePlayer())){
 					changeActivePlayer(move);
 				}
-			}
-
-			if(lastAction.getActionType().equals(SHUFFLE)){
-
-			}
-
-			for(PlayerState player : move.getPlayers()){
-
-				if(player.getVictoryPoints() >= 12 && move.getActivePlayer().getPlayer().equals(mainController.getGameSystem().getCurrentGame().getStartPlayer().getPlayer())){
-					mainController.getIoController().log("_______________" + player.getPlayer().getName() + " WINS THE GAME!!!" + "______________");
-					mainController.getGameSystem().getCurrentGame().setOngoing(false);
-				}
-
 			}
 
 	}
@@ -172,13 +172,10 @@ public class GameController {
 	 * Führt das initialie Starten des Spiels aus (alle Spieler bekommen 3 Münzen, Nachziehstapel etc.)
 	 */
 
-	// nicht fertig. Nach Ergaenzung von CardFactory Controller wird die Methode fertig gemacht.
 	public void init(String cardPilePath, List<Player> players, boolean variant, boolean shuffleCards, boolean randomPlayerOrder) {
 
 		PlayerController playerController = mainController.getPlayerController();
 
-		CardStack discardPile = new CardStack();
-		CardStack harbourPile = new CardStack();
 		CardStack cardPile;
 		if(cardPilePath == null){
 			if(players.size() < 5){
@@ -210,15 +207,14 @@ public class GameController {
 		mainController.getGameSystem().setCurrentGame(game);
 
 		Move move = new Move(null, true, null, null);
-		Card firstCard = cardPile.pop();
 		move.setCardPile(cardPile);
-		move.getHarbour().push(firstCard);
 		move.setPlayers(game.getPlayerStates());
 		move.setActor(states.get(0));
 		move.setActivePlayer(states.get(0));
 		move.setBuyLimit(1);
 
-		Action action = new Action(SHUFFLE, null);
+		Action action = new Action(DRAW_CARD,move.getCardPile().peek());
+		mainController.getCardController().drawCard(move,action);
 		move.setAction(action);
 
 		game.setLastMove(move);
@@ -280,21 +276,12 @@ public class GameController {
 			case START_EXPEDITION:
 				mainController.getCardController().startExpedition(nextMove, action);
 				break;
-			case SKIP:
-				//mainController.getCardController().skip(nextMove, action);
-				break;
-			//Es gibt keine Methode acceptShip() in CardController;
 			case ACCEPT_SHIP:
-				//mainController.getCardController().(nextMove, action);
-				nextMove.getHarbour().push(nextMove.getShipToDefend());
-				nextMove.setShipToDefend(null);
+				mainController.getCardController().acceptShip(nextMove, action);
 				break;
-/*			case SHUFFLE:
-				mainController.getCardController().shuffle(nextMove, action);
-				break;*/
 		}
 		nextMove.setAction(action);
-		//finishRound(nextMove);
+		finishRound(nextMove);
 		return nextMove;
 	}
 
@@ -309,7 +296,6 @@ public class GameController {
 
 		List<Card> harbourCards = move.getHarbour().getCards();
 		List<Card> expeditionCards = move.getExpeditionPile().getCards();
-		List<Card> playerCards = move.getActivePlayer().getCards().getCards();
 		PlayerState activePlayer = move.getActivePlayer();
 		PlayerState actor = move.getActor();
 
@@ -319,7 +305,10 @@ public class GameController {
 		//DRAW_CARD;
 		if(move.getShipToDefend() != null)  {
 			//DEFEND
-			results.add(new Action(DEFEND, move.getShipToDefend()));
+			Ship ship = (Ship) move.getShipToDefend();
+			if(ship.getForce() <= mainController.getCardController().getNumSwords(move.getActor())){
+				results.add(new Action(DEFEND, move.getShipToDefend()));
+			}
 
 			//ACCEPT_SHIP
 			results.add(new Action(ACCEPT_SHIP, move.getShipToDefend()));
@@ -327,11 +316,9 @@ public class GameController {
 			return results;
 		}
 
-		if( actor == activePlayer && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
+		if(actor.getPlayer().equals(activePlayer.getPlayer()) && !isZonked(move) && move.isPhase1() && move.getCardPile().getSize() + move.getDiscardPile().getSize() > 0) {
 			results.add(new Action(DRAW_CARD,move.getCardPile().peek()));
 		}
-
-
 
 		if (move.getShipToDefend() == null && move.getBuyLimit() > 0) {
 			//TAKE_SHIP;
@@ -342,104 +329,114 @@ public class GameController {
 			}
 		}
 
-
 		//BUY_PERSON;
 		for (Card card : harbourCards) {
 			if(card instanceof Person){
 
-				if(actor.equals(activePlayer)){
-					if(move.getBuyLimit() >0 && ((Person) card).getPrice() <= actor.getCoins().getSize()){
-						results.add(new Action(BUY_PERSON, card));
-					}
+				int costs = ((Person) card).getPrice();
+
+				if(!actor.getPlayer().equals(activePlayer.getPlayer())){
+					costs++;
 				}
 
-				else {
-					if(move.getBuyLimit() >0 && ((Person) card).getPrice() + 1 <= actor.getCoins().getSize()){
-						results.add(new Action(BUY_PERSON, card));
-					}
+				int mademoiselle = mainController.getCardController().getAmountOf(MADEMOISELLE, actor);
+
+				costs = costs - mademoiselle;
+
+				if(costs < 0){
+					costs = 0;
 				}
+
+				if(move.getBuyLimit() >0 && costs <= actor.getCoins().getSize()){
+					results.add(new Action(BUY_PERSON, card));
+				}
+
 			}
 		}
 
-
 		//START_EXPEDITION;
-		for(Card expedition : expeditionCards){
-			if(expedition instanceof Expedition){
-				// Test if current expedition card is claimable
-				int captains = 0;
-				int priests = 0;
-				int settlers = 0;
-				int jacks = 0;
+		if (actor.getPlayer().equals(activePlayer.getPlayer())) {
+			for (Card expedition : expeditionCards) {
+				if (expedition instanceof Expedition) {
+					// Test if current expedition card is claimable
+					boolean fulfilled = checkExpeditionPossible(activePlayer, (Expedition) expedition);
 
-				Map<PersonType, Integer> require= ((Expedition) expedition).getRequirements();
-
-				List<Card> cards = actor.getCards().getCards();
-
-				for(Card card : cards){
-					if(card instanceof Person){
-						if(require.containsKey(((Person) card).getPersonType())){
-							if(((Person) card).getPersonType().equals(CAPTAIN)){
-								captains++;
-							}
-
-							if(((Person) card).getPersonType().equals(PRIEST)){
-								priests++;
-							}
-
-							if(((Person) card).getPersonType().equals(SETTLER)){
-								settlers++;
-							}
-
-							if(((Person) card).getPersonType().equals(JACK_OF_ALL_TRADES)){
-								jacks++;
-							}
-						}
+					if (fulfilled) {
+						results.add(new Action(START_EXPEDITION, expedition));
 					}
 				}
-
-				int captainDistance = (require.get(CAPTAIN) - captains);
-				int priestDistance = (require.get(PRIEST) - priests);
-				int settlerDistance = (require.get(SETTLER) - settlers);
-
-				if(captainDistance < 0){
-					captainDistance = 0;
-				}
-
-				if(priestDistance < 0){
-					priestDistance = 0;
-				}
-
-				if(settlerDistance < 0){
-					settlerDistance = 0;
-				}
-
-				boolean fulfilled = false;
-
-				if((captainDistance + priestDistance + settlerDistance) <= jacks){
-					fulfilled = true;
-				}
-				if(fulfilled == true){
-					results.add(new Action(START_EXPEDITION, expedition));
-					//mainController.getIoController().log("Expedition possible");
-				}
-				else{
-					/*int distance = captainDistance + priestDistance + settlerDistance;
-					mainController.getIoController().log("Actor: " +  actor.getPlayer().getName());
-					mainController.getIoController().log("Captains: " + captains);
-					mainController.getIoController().log("Settlers: " + settlers);
-					mainController.getIoController().log("Priests: " + priests);
-					mainController.getIoController().log("Whole distance: " + distance);*/
-
-				}
-
 			}
-
 		}
 
 		//SKIP;
 		results.add(new Action(SKIP, null));
 
 		return results;
+	}
+
+	/**
+	 * Überprüft, ob eine Expedition möglich ist.
+	 * @param activePlayer
+	 * 		Bekommt den aktiven Spieler.
+	 * @param expedition
+	 * 		Bekommt eine zu überprüfende Expedition.
+	 * @return Gibt zurück, ob die übergebene Expedition möglich ist.
+	 */
+	public boolean checkExpeditionPossible(PlayerState activePlayer, Expedition expedition){
+		int captains = 0;
+		int priests = 0;
+		int settlers = 0;
+		int jacks = 0;
+
+		Map<PersonType, Integer> require =  expedition.getRequirements();
+
+		List<Card> cards = activePlayer.getCards().getCards();
+
+		for (Card card : cards) {
+			if (card instanceof Person) {
+				if (require.containsKey(((Person) card).getPersonType())) {
+					if (((Person) card).getPersonType().equals(CAPTAIN)) {
+						captains++;
+					}
+
+					if (((Person) card).getPersonType().equals(PRIEST)) {
+						priests++;
+					}
+
+					if (((Person) card).getPersonType().equals(SETTLER)) {
+						settlers++;
+					}
+
+					if (((Person) card).getPersonType().equals(JACK_OF_ALL_TRADES)) {
+						jacks++;
+					}
+				}
+			}
+		}
+
+		int captainDistance = (require.get(CAPTAIN) - captains);
+		int priestDistance = (require.get(PRIEST) - priests);
+		int settlerDistance = (require.get(SETTLER) - settlers);
+
+		if (captainDistance < 0) {
+			captainDistance = 0;
+		}
+
+		if (priestDistance < 0) {
+			priestDistance = 0;
+		}
+
+		if (settlerDistance < 0) {
+			settlerDistance = 0;
+		}
+
+		boolean fulfilled = false;
+
+		if ((captainDistance + priestDistance + settlerDistance) <= jacks) {
+			fulfilled = true;
+		}
+
+		return fulfilled;
 	}
 
 	/**

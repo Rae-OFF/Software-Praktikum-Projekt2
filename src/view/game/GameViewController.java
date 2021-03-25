@@ -3,18 +3,24 @@ package view.game;
 import controller.MainController;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventTarget;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Action;
 import model.Move;
+import view.GameViewAUI;
 import view.events.ButtonClickEvent;
 import view.events.ButtonClickEventHandler;
 import view.menu.InGameMenuViewController;
 
-public class GameViewController extends StackPane {
+import java.util.List;
+
+public class GameViewController extends StackPane implements GameViewAUI {
 
     private GameFieldViewController gameField;
 
@@ -24,8 +30,11 @@ public class GameViewController extends StackPane {
 
     private ImageView menu;
 
-    public GameViewController(MainController mainController){
+    private MainController mainController;
 
+    public GameViewController(MainController mainController){
+        super();
+        this.mainController = mainController;
         GameViewController gameView = this;
         backgroundImage =  new ImageView("view/resources/backgroundImage.png");
         getChildren().add(backgroundImage);
@@ -65,8 +74,33 @@ public class GameViewController extends StackPane {
 
     }
 
+    /*public void mouseEventDebugger(){
+        this.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, (EventHandler<MouseEvent>) event -> {
+            EventTarget comp = event.getTarget();
+            System.out.println("## " + (comp != null ? comp.getClass().getSimpleName() : event.getClass().getSimpleName()) + " [" + event.getEventType() + "] ## Komponente: " + event.getTarget() + " --------> Details:" + event);
+        });
+    }*/
+
+    public void mouseEventDebugger() {
+        this.getScene().addEventFilter(MouseEvent.MOUSE_RELEASED, (EventHandler<MouseEvent>) event -> {
+            EventTarget comp = event.getTarget();
+            System.out.println("## " + (comp != null ? comp.getClass().getSimpleName() : event.getClass().getSimpleName()) + " [" + event.getEventType() + "] ## Komponente: " + event.getTarget() + " --------> Details:" + event);
+            // print scene graph
+
+            if (event.getTarget() instanceof Node) {
+                Node node = null;
+                do  {
+                    node = node == null ? (Node) event.getTarget() : node.getParent();
+                    System.out.println(node);
+                } while (node.getParent() != null);
+            }
+        });
+    }
+
     public void refresh(Move move){
-        gameField.refresh(move);
+        List<Action> posActions = mainController.getGameController().getPossibleActions(move);
+        gameField.refresh(move, posActions);
+        System.out.println("GameView refresh");
     }
 
 

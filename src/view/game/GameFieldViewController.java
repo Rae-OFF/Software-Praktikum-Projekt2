@@ -2,9 +2,11 @@ package view.game;
 
 import controller.MainController;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import model.Action;
 import model.Move;
 import model.Player;
 import model.PlayerState;
@@ -28,10 +30,8 @@ public class GameFieldViewController extends StackPane {
     private ImageView hint;
 
     public GameFieldViewController(MainController mainController, Move move){
-
-
-
-       /* for(PlayerState player : move.getPlayers()){
+        super();
+        /* for(PlayerState player : move.getPlayers()){
             playerFields.add(new PlayerFieldViewController(mainController,player));
         }*/
 
@@ -56,8 +56,9 @@ public class GameFieldViewController extends StackPane {
         hint.setFitWidth(50);
         hint.setTranslateX(-240);
         hint.setTranslateY(-270);
-        harbourField.setTranslateX(0);
-        harbourField.setTranslateY(-120);
+        harbourField.setAlignment(Pos.TOP_LEFT);
+        harbourField.setTranslateX(210);
+        harbourField.setTranslateY(0);
 
         undo.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -99,10 +100,11 @@ public class GameFieldViewController extends StackPane {
         getChildren().add(playerFields.get(2));
     }
 
-    public void refresh(Move move){
+    public void refresh(Move move, List<Action> posAc){
         for(PlayerFieldViewController player : playerFields){
-            player.refresh(move);
+            player.refresh(move, posAc);
         }
-        harbourField.refresh(move);
+        harbourField.refresh(move, posAc);
+        System.out.println("GameFieldView refresh");
     }
 }

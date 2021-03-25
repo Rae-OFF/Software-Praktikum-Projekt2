@@ -9,10 +9,6 @@ import model.PlayerState;
  */
 public abstract class AiController {
 
-	private MainController mainController;
-
-	private EasyAi easyAi;
-
 	/**
 	 *
 	 * @return Gibt die Aktion zurück die die KI ausführen soll.
@@ -21,10 +17,10 @@ public abstract class AiController {
 
 	/**
 	 * Setzt eine AI als Spieler der am Zug ist.
-	 * @param ai
+	 * @param aiState
 	 * 		Bekommt einen Spielerzustand übergeben.
 	 */
-	public void setAsActor(PlayerState ai){
+	public void setAsActor(PlayerState aiState){
 
 	}
 
